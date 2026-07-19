@@ -18,6 +18,6 @@ public class InterviewSchedule
     public Application? Application { get; set; }
 
     [ForeignKey("Interviewer")]
-    public int InterviewerId { get; set; }
+    public int? InterviewerId { get; set; }
     public User? Interviewer { get; set; }
 }
