@@ -13,6 +13,7 @@ const Navbar = () => {
         </Link>
         <div className="flex items-center gap-4">
           <Link to="/" style={{ color: location.pathname === '/' ? 'white' : 'var(--text-secondary)', fontWeight: 500, transition: 'var(--transition-smooth)' }}>Home</Link>
+          <Link to="/candidate/profile" style={{ color: location.pathname.startsWith('/candidate') ? 'white' : 'var(--text-secondary)', fontWeight: 500, transition: 'var(--transition-smooth)' }}>Portal</Link>
           <Link to="/login" className="btn btn-secondary">Log In</Link>
           <Link to="/register" className="btn btn-primary">Sign Up</Link>
         </div>

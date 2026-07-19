@@ -4,6 +4,10 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import CandidateLayout from './pages/candidate/CandidateLayout';
+import Profile from './pages/candidate/Profile';
+import CVUpload from './pages/candidate/CVUpload';
+import JobSearch from './pages/candidate/JobSearch';
 
 function App() {
   return (
@@ -16,6 +20,11 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/candidate" element={<CandidateLayout />}>
+              <Route path="profile" element={<Profile />} />
+              <Route path="cv-upload" element={<CVUpload />} />
+              <Route path="jobs" element={<JobSearch />} />
+            </Route>
           </Routes>
         </main>
       </div>
