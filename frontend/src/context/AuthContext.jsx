@@ -4,6 +4,26 @@ const AuthContext = createContext();
 
 const API_BASE_URL = '/api';
 
+const parseErrorMessage = (data, defaultMsg) => {
+  if (!data) return defaultMsg;
+  if (typeof data === 'string') return data;
+  if (data.message) return data.message;
+  if (data.errors && typeof data.errors === 'object') {
+    const errorKeys = Object.keys(data.errors);
+    if (errorKeys.length > 0) {
+      const firstKey = errorKeys[0];
+      const val = data.errors[firstKey];
+      if (Array.isArray(val) && val.length > 0) {
+        return `${firstKey}: ${val[0]}`;
+      } else if (typeof val === 'string') {
+        return `${firstKey}: ${val}`;
+      }
+    }
+  }
+  if (data.title) return data.title;
+  return defaultMsg;
+};
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user');
@@ -40,7 +60,7 @@ export const AuthProvider = ({ children }) => {
 
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        throw new Error(data.message || 'Invalid email or password.');
+        throw new Error(parseErrorMessage(data, 'Invalid email or password.'));
       }
 
       setToken(data.token);
@@ -108,7 +128,7 @@ export const AuthProvider = ({ children }) => {
 
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
-        throw new Error(data.message || 'Registration failed.');
+        throw new Error(parseErrorMessage(data, 'Registration failed. Please try a different email or check inputs.'));
       }
 
       setToken(data.token);
@@ -155,4 +175,3 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
-
