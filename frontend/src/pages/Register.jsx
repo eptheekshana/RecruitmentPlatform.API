@@ -8,11 +8,12 @@ const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>
 
 const Register = () => {
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'candidate' });
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [formStatus, setFormStatus] = useState(null);
-  const [submitting, setSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const nameInputRef = useRef(null);
   const emailInputRef = useRef(null);
@@ -93,11 +94,11 @@ const Register = () => {
       return;
     }
 
-    setSubmitting(true);
+    setLoading(true);
     setFormStatus({ type: 'success', message: 'Account created successfully! Redirecting...' });
 
-    const [firstName, ...lastNameParts] = formData.name.split(' ');
-    const lastName = lastNameParts.join(' ') || '';
+    const [firstName, ...lastNameParts] = formData.name.trim().split(' ');
+    const lastName = lastNameParts.join(' ') || firstName;
     const apiRole = formData.role === 'employer' ? 'Recruiter' : 'Candidate';
 
     try {
@@ -158,6 +159,7 @@ const Register = () => {
               onChange={handleChange}
               onBlur={handleBlur}
               autoComplete="name"
+              disabled={loading}
             />
           </FormField>
 
@@ -176,6 +178,7 @@ const Register = () => {
               onChange={handleChange}
               onBlur={handleBlur}
               autoComplete="email"
+              disabled={loading}
             />
           </FormField>
 
@@ -195,6 +198,7 @@ const Register = () => {
               onChange={handleChange}
               onBlur={handleBlur}
               autoComplete="new-password"
+              disabled={loading}
             />
           </FormField>
 
@@ -211,10 +215,11 @@ const Register = () => {
                     value="candidate"
                     checked={formData.role === 'candidate'}
                     onChange={handleChange}
+                    disabled={loading}
                     style={{ accentColor: 'var(--accent-primary)', width: '1.1rem', height: '1.1rem' }}
                   />
                   <span style={{ fontWeight: 600, color: formData.role === 'candidate' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
-                    Find a job
+                    Find a job (Candidate)
                   </span>
                 </div>
               </label>
@@ -227,10 +232,11 @@ const Register = () => {
                     value="employer"
                     checked={formData.role === 'employer'}
                     onChange={handleChange}
+                    disabled={loading}
                     style={{ accentColor: 'var(--accent-primary)', width: '1.1rem', height: '1.1rem' }}
                   />
                   <span style={{ fontWeight: 600, color: formData.role === 'employer' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
-                    Hire talent
+                    Hire talent (Recruiter)
                   </span>
                 </div>
               </label>
@@ -240,10 +246,10 @@ const Register = () => {
           <button
             type="submit"
             className="btn btn-primary"
-            disabled={submitting}
+            disabled={loading}
             style={{ width: '100%', padding: '1rem', fontSize: '1.125rem' }}
           >
-            {submitting ? 'Creating account...' : 'Create Account'}
+            {loading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 
