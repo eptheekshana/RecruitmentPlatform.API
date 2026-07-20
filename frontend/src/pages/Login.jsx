@@ -181,8 +181,6 @@ const Login = () => {
 
         <div style={{ marginTop: '1.5rem', padding: '1rem', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
           <p style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>Demo Test Accounts:</p>
-          <p>🧑‍💻 <strong>Candidate:</strong> bob@example.com / Candidate123!</p>
-          <p>💼 <strong>Recruiter:</strong> recruiter@techsolutions.com / Recruiter123!</p>
         </div>
 
         <p className="text-center mt-8" style={{ color: 'var(--text-secondary)' }}>
