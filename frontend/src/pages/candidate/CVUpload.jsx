@@ -249,7 +249,7 @@ const CVUpload = () => {
           borderRadius: '16px',
           padding: '3.5rem 2rem',
           textAlign: 'center',
-          background: dragActive ? 'rgba(99, 102, 241, 0.05)' : 'rgba(0, 0, 0, 0.2)',
+          background: dragActive ? 'rgba(37, 99, 235, 0.05)' : 'rgba(15, 23, 42, 0.05)',
           transition: 'var(--transition-smooth)',
           position: 'relative',
           outline: 'none',
