@@ -1,6 +1,6 @@
-// Manages users, roles, audit logs, and system analytics.using Microsoft.AspNetCore.Authorization;
+// Manages users, roles, audit logs, and system analytics.
 
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecruitmentPlatform.API.Data;
