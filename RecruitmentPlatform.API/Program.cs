@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using RecruitmentPlatform.API.Data;
 using RecruitmentPlatform.API.Services;
 using System.Text;
+using Amazon.S3;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,18 @@ builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<ResumeAnalysisService>();
 builder.Services.AddScoped<MatchingService>();
 builder.Services.AddScoped<AuditLogService>();
+
+builder.Services.AddSingleton<IAmazonS3>(sp =>
+{
+    var config = sp.GetRequiredService<IConfiguration>();
+    var s3Config = new Amazon.S3.AmazonS3Config
+    {
+        ServiceURL = config["AWS:ServiceURL"]
+    };
+    return new Amazon.S3.AmazonS3Client(s3Config);
+});
+
+builder.Services.AddScoped<ICloudStorageService, S3CloudStorageService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
