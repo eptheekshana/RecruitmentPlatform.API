@@ -179,10 +179,6 @@ const Login = () => {
           </button>
         </form>
 
-        <div style={{ marginTop: '1.5rem', padding: '1rem', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-          <p style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>Demo Test Accounts:</p>
-        </div>
-
         <p className="text-center mt-8" style={{ color: 'var(--text-secondary)' }}>
           Don't have an account?{' '}
           <Link to="/register" style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>
