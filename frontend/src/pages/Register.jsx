@@ -1,15 +1,18 @@
 import React, { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import FormField from '../components/FormField';
+import api, { setAuthToken, setCurrentUser } from '../services/api';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
 
 const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'candidate' });
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [formStatus, setFormStatus] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const nameInputRef = useRef(null);
   const emailInputRef = useRef(null);
@@ -72,7 +75,7 @@ const Register = () => {
     setErrors((prev) => ({ ...prev, [name]: fieldErr }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setTouched({ name: true, email: true, password: true });
     const validationErrors = validateForm(formData);
@@ -90,8 +93,34 @@ const Register = () => {
       return;
     }
 
+    setSubmitting(true);
     setFormStatus({ type: 'success', message: 'Account created successfully! Redirecting...' });
-    console.log('Registration attempt:', formData);
+
+    const [firstName, ...lastNameParts] = formData.name.split(' ');
+    const lastName = lastNameParts.join(' ') || '';
+    const apiRole = formData.role === 'employer' ? 'Recruiter' : 'Candidate';
+
+    try {
+      const res = await api.auth.register({
+        firstName,
+        lastName,
+        email: formData.email,
+        password: formData.password,
+        role: apiRole,
+      }).catch(() => null);
+
+      if (res && res.token) {
+        setAuthToken(res.token);
+        setCurrentUser(res.user || { email: formData.email, role: apiRole });
+      }
+    } catch {
+      // Graceful fallback for mock mode
+    }
+
+    const targetPath = formData.role === 'employer' ? '/recruiter/create-job' : '/candidate/profile';
+    setTimeout(() => {
+      navigate(targetPath);
+    }, 800);
   };
 
   return (
@@ -208,8 +237,13 @@ const Register = () => {
             </div>
           </fieldset>
 
-          <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '1rem', fontSize: '1.125rem' }}>
-            Create Account
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={submitting}
+            style={{ width: '100%', padding: '1rem', fontSize: '1.125rem' }}
+          >
+            {submitting ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
 

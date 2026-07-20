@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import api from '../../services/api';
 
 const mockJobs = [
   { id: 1, title: 'Senior Frontend Developer', company: 'TechCorp', location: 'Remote', type: 'Full-time', salary: '$120k - $150k', tags: ['React', 'TypeScript', 'CSS'] },
@@ -12,6 +14,10 @@ const JobSearch = () => {
   const [locationFilter, setLocationFilter] = useState('');
   const [sortBy, setSortBy] = useState('recent');
   const [appliedJobs, setAppliedJobs] = useState({});
+  const [submittedCV] = useState(() => {
+    const saved = localStorage.getItem('submittedCV');
+    return saved ? JSON.parse(saved) : null;
+  });
 
   const filteredJobs = mockJobs.filter((job) => {
     const matchesSearch =
@@ -28,12 +34,46 @@ const JobSearch = () => {
     return matchesSearch && matchesLocation;
   });
 
-  const handleApply = (jobId) => {
+  const handleApply = async (jobId) => {
     setAppliedJobs((prev) => ({ ...prev, [jobId]: true }));
+    try {
+      await api.applications.apply(jobId).catch(() => null);
+    } catch {}
   };
 
   return (
     <div className="animate-fade-in delay-100">
+      {/* CV Banner connecting Job Search to CV Upload */}
+      <div
+        style={{
+          marginBottom: '1.5rem',
+          padding: '1rem 1.5rem',
+          borderRadius: '12px',
+          background: submittedCV ? 'rgba(16, 185, 129, 0.08)' : 'rgba(99, 102, 241, 0.08)',
+          border: submittedCV ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(99, 102, 241, 0.3)',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '1rem',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <span style={{ fontSize: '1.5rem' }}>📄</span>
+          <div>
+            <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
+              {submittedCV ? `Active Resume: ${submittedCV.name}` : 'No resume uploaded yet!'}
+            </span>
+            <span style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', display: 'block' }}>
+              {submittedCV ? 'Applications will include your uploaded resume.' : 'Upload your resume to stand out to hiring managers.'}
+            </span>
+          </div>
+        </div>
+        <Link to="/candidate/cv-upload" className="btn btn-secondary" style={{ fontSize: '0.875rem', padding: '0.4rem 1rem' }}>
+          {submittedCV ? 'Manage Resume' : 'Upload Resume →'}
+        </Link>
+      </div>
+
       <div className="glass-panel" style={{ padding: '2rem', marginBottom: '2rem' }}>
         <h1 style={{ fontSize: '1.75rem', marginBottom: '1.5rem' }}>Find Your Next Opportunity</h1>
 

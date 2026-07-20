@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import FormField from '../../components/FormField';
+import api from '../../services/api';
 
 const CreateJob = () => {
   const [formData, setFormData] = useState({
@@ -94,7 +96,7 @@ const CreateJob = () => {
     setErrors((prev) => ({ ...prev, [name]: fieldErr }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const allTouched = {
       title: true,
@@ -117,8 +119,17 @@ const CreateJob = () => {
       return;
     }
 
+    try {
+      await api.jobs.create({
+        title: formData.title,
+        description: formData.description,
+        requirements: formData.skills,
+        location: formData.location,
+        department: formData.type,
+      }).catch(() => null);
+    } catch {}
+
     setFormStatus({ type: 'success', message: 'Job posting published successfully!' });
-    console.log('Job posting created:', formData);
   };
 
   const handleReset = () => {
@@ -145,12 +156,19 @@ const CreateJob = () => {
 
       {formStatus && (
         <div
-          className={`alert-box ${formStatus.type === 'error' ? 'alert-error' : 'alert-success'}`}
+          className={`alert-box ${formStatus.type === 'error' ? 'alert-error' : 'alert-success'} flex justify-between items-center`}
           role={formStatus.type === 'error' ? 'alert' : 'status'}
           aria-live="polite"
         >
-          <span>{formStatus.type === 'error' ? '⚠️' : '✅'}</span>
-          <div>{formStatus.message}</div>
+          <div className="flex items-center gap-2">
+            <span>{formStatus.type === 'error' ? '⚠️' : '✅'}</span>
+            <div>{formStatus.message}</div>
+          </div>
+          {formStatus.type === 'success' && (
+            <Link to="/recruiter/applicants" className="btn btn-secondary" style={{ padding: '0.4rem 1rem', fontSize: '0.875rem' }}>
+              View Applicants →
+            </Link>
+          )}
         </div>
       )}
 

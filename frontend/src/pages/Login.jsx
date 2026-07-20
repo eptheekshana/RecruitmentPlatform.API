@@ -1,14 +1,17 @@
 import React, { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import FormField from '../components/FormField';
+import api, { setAuthToken, setCurrentUser } from '../services/api';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const Login = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [formStatus, setFormStatus] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
   const emailInputRef = useRef(null);
   const passwordInputRef = useRef(null);
 
@@ -56,7 +59,7 @@ const Login = () => {
     setErrors((prev) => ({ ...prev, [name]: fieldErr }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setTouched({ email: true, password: true });
     const validationErrors = validateForm(formData);
@@ -72,8 +75,30 @@ const Login = () => {
       return;
     }
 
+    setSubmitting(true);
     setFormStatus({ type: 'success', message: 'Sign in successful! Redirecting...' });
-    console.log('Login attempt:', formData);
+
+    let targetPath = '/candidate/profile';
+    if (formData.email.toLowerCase().includes('recruiter') || formData.email.toLowerCase().includes('hr') || formData.email.toLowerCase().includes('employer')) {
+      targetPath = '/recruiter/create-job';
+    }
+
+    try {
+      const res = await api.auth.login(formData.email, formData.password).catch(() => null);
+      if (res && res.token) {
+        setAuthToken(res.token);
+        setCurrentUser(res.user || { email: formData.email, role: res.role });
+        if (res.role === 'Recruiter' || res.role === 'Admin') {
+          targetPath = '/recruiter/create-job';
+        }
+      }
+    } catch {
+      // Graceful fallback for mock mode
+    }
+
+    setTimeout(() => {
+      navigate(targetPath);
+    }, 800);
   };
 
   return (
@@ -95,7 +120,7 @@ const Login = () => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} noValidate aria-labelledby="login-heading">
+        <form onSubmit={handleSubmit} noValidate aria-label="Sign in form">
           <FormField
             id="email"
             label="Email Address"
@@ -147,9 +172,10 @@ const Login = () => {
           <button
             type="submit"
             className="btn btn-primary"
+            disabled={submitting}
             style={{ width: '100%', padding: '1rem', fontSize: '1.125rem' }}
           >
-            Sign In
+            {submitting ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 

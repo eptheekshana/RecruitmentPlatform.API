@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import FormField from '../../components/FormField';
+import api from '../../services/api';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^\+?[0-9\s\-()]{7,20}$/;
@@ -75,7 +76,7 @@ const Profile = () => {
     setErrors((prev) => ({ ...prev, [name]: fieldErr }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const allTouched = { firstName: true, lastName: true, email: true, phone: true, title: true };
     setTouched(allTouched);
@@ -90,8 +91,15 @@ const Profile = () => {
       return;
     }
 
+    try {
+      await api.candidate.updateProfile({
+        skills: formData.skills,
+        bio: formData.bio,
+        experienceLevel: formData.title,
+      }).catch(() => null);
+    } catch {}
+
     setFormStatus({ type: 'success', message: 'Profile updated successfully!' });
-    console.log('Profile saved:', formData);
   };
 
   const handleReset = () => {

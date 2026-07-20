@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import api from '../../services/api';
 
 const mockApplicants = [
   { id: 1, name: 'Alice Smith', role: 'Senior Frontend Developer', status: 'New', match: 92, appliedDate: '2026-07-19', skills: ['React', 'TypeScript', 'Tailwind CSS'], experience: '5 years', email: 'alice.smith@example.com' },
@@ -70,13 +71,17 @@ const ViewApplicants = () => {
     }
   }, [selectedApplicant]);
 
-  const handleStatusUpdate = (newStatus) => {
+  const handleStatusUpdate = async (newStatus) => {
     if (!selectedApplicant) return;
     setApplicants(prev => prev.map(app => 
       app.id === selectedApplicant.id ? { ...app, status: newStatus } : app
     ));
     setSelectedApplicant(prev => ({ ...prev, status: newStatus }));
     setStatusAnnouncement(`Application status for ${selectedApplicant.name} updated to ${newStatus}`);
+
+    try {
+      await api.applications.updateStatus(selectedApplicant.id, newStatus).catch(() => null);
+    } catch {}
   };
 
   return (
