@@ -16,6 +16,16 @@ builder.Services.AddScoped<ResumeAnalysisService>();
 builder.Services.AddScoped<MatchingService>();
 builder.Services.AddScoped<AuditLogService>();
 
+// Register Calendar Integration Services
+builder.Services.AddScoped<GoogleCalendarService>();
+builder.Services.AddScoped<OutlookCalendarService>();
+builder.Services.AddScoped<ICalendarIntegrationService, CalendarIntegrationService>();
+
+// Register Notification Services
+builder.Services.AddScoped<EmailNotificationService>();
+builder.Services.AddScoped<SmsNotificationService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
