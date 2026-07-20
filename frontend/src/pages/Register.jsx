@@ -1,13 +1,14 @@
 import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import FormField from '../components/FormField';
-import api, { setAuthToken, setCurrentUser } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
 
 const Register = () => {
   const navigate = useNavigate();
+  const { register } = useAuth();
 
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'candidate' });
   const [errors, setErrors] = useState({});
@@ -95,33 +96,35 @@ const Register = () => {
     }
 
     setLoading(true);
-    setFormStatus({ type: 'success', message: 'Account created successfully! Redirecting...' });
+    setFormStatus(null);
 
     const [firstName, ...lastNameParts] = formData.name.trim().split(' ');
     const lastName = lastNameParts.join(' ') || firstName;
     const apiRole = formData.role === 'employer' ? 'Recruiter' : 'Candidate';
 
     try {
-      const res = await api.auth.register({
+      const userSession = await register({
         firstName,
         lastName,
         email: formData.email,
         password: formData.password,
         role: apiRole,
-      }).catch(() => null);
+      });
 
-      if (res && res.token) {
-        setAuthToken(res.token);
-        setCurrentUser(res.user || { email: formData.email, role: apiRole });
-      }
-    } catch {
-      // Graceful fallback for mock mode
+      setFormStatus({ type: 'success', message: 'Account created successfully! Redirecting...' });
+
+      const targetPath = (userSession && (userSession.role === 'Recruiter' || userSession.role === 'Admin'))
+        ? '/recruiter/create-job'
+        : '/candidate/profile';
+
+      setTimeout(() => {
+        navigate(targetPath);
+      }, 800);
+    } catch (err) {
+      setFormStatus({ type: 'error', message: err.message || 'Registration failed. Please try again.' });
+    } finally {
+      setLoading(false);
     }
-
-    const targetPath = formData.role === 'employer' ? '/recruiter/create-job' : '/candidate/profile';
-    setTimeout(() => {
-      navigate(targetPath);
-    }, 800);
   };
 
   return (

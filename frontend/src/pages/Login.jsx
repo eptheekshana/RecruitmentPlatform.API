@@ -1,12 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import FormField from '../components/FormField';
-import api, { setAuthToken, setCurrentUser } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
@@ -81,21 +82,15 @@ const Login = () => {
     setFormStatus(null);
 
     try {
+      const userSession = await login(formData.email, formData.password);
+
+      setFormStatus({ type: 'success', message: 'Sign in successful! Redirecting...' });
+
       let targetPath = '/candidate/profile';
-      if (formData.email.toLowerCase().includes('recruiter') || formData.email.toLowerCase().includes('hr') || formData.email.toLowerCase().includes('employer')) {
+      if (userSession && (userSession.role === 'Recruiter' || userSession.role === 'Admin')) {
         targetPath = '/recruiter/create-job';
       }
 
-      const res = await api.auth.login(formData.email, formData.password).catch(() => null);
-      if (res && res.token) {
-        setAuthToken(res.token);
-        setCurrentUser(res.user || { email: formData.email, role: res.role });
-        if (res.role === 'Recruiter' || res.role === 'Admin') {
-          targetPath = '/recruiter/create-job';
-        }
-      }
-
-      setFormStatus({ type: 'success', message: 'Sign in successful! Redirecting...' });
       setTimeout(() => navigate(targetPath), 600);
     } catch (err) {
       setFormStatus({ type: 'error', message: err.message || 'Login failed. Please check your credentials.' });
