@@ -1,208 +1,203 @@
-import React, { useState } from 'react';
-
-const mockJobs = [
-  { id: 1, title: 'Senior Frontend Developer', company: 'TechCorp', location: 'Remote', type: 'Full-time', salary: '$120k - $150k', tags: ['React', 'TypeScript', 'CSS'] },
-  { id: 2, title: 'UX/UI Designer', company: 'DesignStudio', location: 'New York, NY', type: 'Contract', salary: '$80/hr', tags: ['Figma', 'UI Design', 'Prototyping'] },
-  { id: 3, title: 'Backend Engineer', company: 'DataSystems', location: 'San Francisco, CA', type: 'Full-time', salary: '$140k - $170k', tags: ['Node.js', 'PostgreSQL', 'AWS'] },
-  { id: 4, title: 'Product Manager', company: 'InnovateInc', location: 'Remote', type: 'Full-time', salary: '$130k - $160k', tags: ['Agile', 'Strategy', 'Leadership'] },
-];
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../context/AuthContext';
 
 const JobSearch = () => {
+  const { token, API_BASE_URL } = useAuth();
+  const [jobs, setJobs] = useState([]);
+  const [myApplications, setMyApplications] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [locationFilter, setLocationFilter] = useState('');
-  const [sortBy, setSortBy] = useState('recent');
-  const [appliedJobs, setAppliedJobs] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [applyingJobId, setApplyingJobId] = useState(null);
+  const [coverLetters, setCoverLetters] = useState({});
+  const [statusMsg, setStatusMsg] = useState(null);
 
-  const filteredJobs = mockJobs.filter((job) => {
-    const matchesSearch =
-      job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+  useEffect(() => {
+    fetchJobs();
+    fetchMyApplications();
+  }, []);
 
-    const matchesLocation =
-      !locationFilter ||
-      (locationFilter === 'remote' && job.location.toLowerCase().includes('remote')) ||
-      (locationFilter === 'ny' && job.location.toLowerCase().includes('new york')) ||
-      (locationFilter === 'sf' && job.location.toLowerCase().includes('san francisco'));
-
-    return matchesSearch && matchesLocation;
-  });
-
-  const handleApply = (jobId) => {
-    setAppliedJobs((prev) => ({ ...prev, [jobId]: true }));
+  const fetchJobs = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/jobpostings`);
+      if (res.ok) {
+        const data = await res.json();
+        setJobs(data);
+      }
+    } catch (err) {
+      console.error('Failed to load jobs:', err);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const fetchMyApplications = async () => {
+    if (!token) return;
+    try {
+      const res = await fetch(`${API_BASE_URL}/applications`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setMyApplications(data);
+      }
+    } catch (err) {
+      console.error('Failed to load applications:', err);
+    }
+  };
+
+  const handleApply = async (jobId) => {
+    if (!token) return;
+    setApplyingJobId(jobId);
+    setStatusMsg(null);
+
+    const coverLetter = coverLetters[jobId] || "I am enthusiastic about applying for this opportunity.";
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/applications`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ jobId, coverLetter })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setStatusMsg({ type: 'success', text: `Successfully applied! AI Match Score: ${data.aiScore}%` });
+        fetchMyApplications();
+      } else {
+        setStatusMsg({ type: 'error', text: data.message || 'Failed to submit application.' });
+      }
+    } catch (err) {
+      setStatusMsg({ type: 'error', text: 'An error occurred while submitting application.' });
+    } finally {
+      setApplyingJobId(null);
+    }
+  };
+
+  const appliedJobIds = new Set(myApplications.map(a => a.jobId));
+
+  const filteredJobs = jobs.filter(j => 
+    j.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    j.department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    j.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (j.requirements && j.requirements.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
 
   return (
     <div className="animate-fade-in delay-100">
       <div className="glass-panel" style={{ padding: '2rem', marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '1.75rem', marginBottom: '1.5rem' }}>Find Your Next Opportunity</h1>
+        <h1 style={{ fontSize: '1.75rem', marginBottom: '1.5rem' }}>Find & Apply for Opportunities</h1>
 
-        <form onSubmit={(e) => e.preventDefault()} role="search">
-          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-            <div style={{ flex: '1 1 300px', position: 'relative' }}>
-              <label htmlFor="job-search-input" className="sr-only">
-                Search jobs by title, company, or skills
-              </label>
-              <span
-                style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', fontSize: '1.25rem' }}
-                aria-hidden="true"
-              >
-                🔍
-              </span>
-              <input
-                id="job-search-input"
-                type="text"
-                className="form-input"
-                placeholder="Search by job title, company, or skills..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                style={{ paddingLeft: '3rem' }}
-              />
-              {searchTerm && (
-                <button
-                  type="button"
-                  onClick={() => setSearchTerm('')}
-                  aria-label="Clear search field"
-                  style={{
-                    position: 'absolute',
-                    right: '1rem',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    background: 'transparent',
-                    border: 'none',
-                    color: 'var(--text-secondary)',
-                    cursor: 'pointer',
-                    fontSize: '1rem'
-                  }}
-                >
-                  ✕
-                </button>
-              )}
-            </div>
-
-            <div style={{ flex: '0 0 200px' }}>
-              <label htmlFor="location-filter" className="sr-only">
-                Filter by location
-              </label>
-              <select
-                id="location-filter"
-                className="form-input"
-                value={locationFilter}
-                onChange={(e) => setLocationFilter(e.target.value)}
-                style={{ appearance: 'none', cursor: 'pointer' }}
-              >
-                <option value="">All Locations</option>
-                <option value="remote">Remote</option>
-                <option value="ny">New York, NY</option>
-                <option value="sf">San Francisco, CA</option>
-              </select>
-            </div>
+        {statusMsg && (
+          <div className={`alert-box ${statusMsg.type === 'error' ? 'alert-error' : 'alert-success'}`} style={{ marginBottom: '1.5rem' }}>
+            <span>{statusMsg.type === 'error' ? '⚠️' : '✅'}</span>
+            <div>{statusMsg.text}</div>
           </div>
-        </form>
-      </div>
+        )}
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', itemsCenter: 'center', marginBottom: '1.5rem' }}>
-        <h2 style={{ fontSize: '1.25rem' }} aria-live="polite" aria-atomic="true">
-          {filteredJobs.length} {filteredJobs.length === 1 ? 'Job' : 'Jobs'} Found
-        </h2>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <label htmlFor="sort-by-select" style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
-            Sort by:
-          </label>
-          <select
-            id="sort-by-select"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: 'var(--text-primary)',
-              outline: 'none',
-              cursor: 'pointer',
-              fontWeight: 600
-            }}
-          >
-            <option value="recent">Most Recent</option>
-            <option value="relevant">Most Relevant</option>
-          </select>
+        <div style={{ position: 'relative' }}>
+          <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', fontSize: '1.25rem' }}>🔍</span>
+          <input
+            type="text"
+            className="form-input"
+            placeholder="Search by job title, department, skills, or location..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ paddingLeft: '3rem' }}
+          />
         </div>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        {filteredJobs.length > 0 ? (
-          filteredJobs.map((job) => {
-            const isApplied = appliedJobs[job.id];
-            return (
-              <article
-                key={job.id}
-                className="glass-panel"
-                style={{
-                  padding: '1.5rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '1rem',
-                  transition: 'var(--transition-smooth)'
-                }}
-              >
-                <div className="flex justify-between" style={{ flexWrap: 'wrap', gap: '1rem' }}>
-                  <div>
-                    <h3 style={{ fontSize: '1.25rem', marginBottom: '0.25rem' }}>{job.title}</h3>
-                    <p style={{ color: 'var(--text-secondary)', display: 'flex', gap: '1rem', alignItems: 'center', fontSize: '0.875rem' }}>
-                      <span style={{ color: 'var(--text-primary)', fontWeight: 500 }}>{job.company}</span>
-                      <span>
-                        <span aria-hidden="true">📍 </span>
-                        {job.location}
-                      </span>
-                      <span>
-                        <span aria-hidden="true">💼 </span>
-                        {job.type}
-                      </span>
-                    </p>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontWeight: 600, color: 'var(--accent-primary)', marginBottom: '0.5rem' }}>{job.salary}</div>
-                    <button
-                      type="button"
-                      className={`btn ${isApplied ? 'btn-secondary' : 'btn-primary'}`}
-                      onClick={() => handleApply(job.id)}
-                      disabled={isApplied}
-                      aria-label={isApplied ? `Applied for ${job.title} at ${job.company}` : `Apply for ${job.title} at ${job.company}`}
-                      style={{ padding: '0.5rem 1.5rem', fontSize: '0.875rem' }}
-                    >
-                      {isApplied ? '✓ Applied' : 'Apply Now'}
-                    </button>
-                  </div>
-                </div>
-
-                <div className="flex" style={{ gap: '0.5rem', flexWrap: 'wrap' }} aria-label={`Skills required for ${job.title}`}>
-                  {job.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      style={{
-                        padding: '0.25rem 0.75rem',
-                        background: 'rgba(255, 255, 255, 0.05)',
-                        borderRadius: '99px',
-                        fontSize: '0.75rem',
-                        color: 'var(--text-secondary)'
-                      }}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </article>
-            );
-          })
-        ) : (
-          <div className="glass-panel text-center" style={{ padding: '4rem 2rem' }} role="status" aria-live="polite">
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }} aria-hidden="true">
-              😕
-            </div>
-            <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>No jobs found</h3>
-            <p style={{ color: 'var(--text-secondary)' }}>Try adjusting your search criteria or filters.</p>
-          </div>
-        )}
+      <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2 style={{ fontSize: '1.25rem' }}>{filteredJobs.length} Active Positions</h2>
+        <span style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Your Applications: {myApplications.length}</span>
       </div>
+
+      {loading ? (
+        <div className="glass-panel text-center" style={{ padding: '3rem' }}>
+          <p style={{ color: 'var(--text-secondary)' }}>Loading job postings...</p>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          {filteredJobs.length > 0 ? (
+            filteredJobs.map((job) => {
+              const isApplied = appliedJobIds.has(job.jobId);
+              const appRecord = myApplications.find(a => a.jobId === job.jobId);
+
+              return (
+                <article key={job.jobId} className="glass-panel" style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div className="flex justify-between" style={{ flexWrap: 'wrap', gap: '1rem' }}>
+                    <div>
+                      <h3 style={{ fontSize: '1.35rem', color: 'var(--text-primary)', marginBottom: '0.35rem' }}>{job.title}</h3>
+                      <p style={{ color: 'var(--text-secondary)', display: 'flex', gap: '1.25rem', alignItems: 'center', fontSize: '0.9rem' }}>
+                        <span style={{ color: '#38bdf8', fontWeight: 600 }}>🏢 {job.department}</span>
+                        <span>📍 {job.location}</span>
+                        <span>📅 {new Date(job.postedDate).toLocaleDateString()}</span>
+                      </p>
+                    </div>
+
+                    <div>
+                      {isApplied ? (
+                        <div style={{ textAlign: 'right' }}>
+                          <span style={{
+                            padding: '0.4rem 1rem',
+                            borderRadius: '99px',
+                            background: 'rgba(56, 189, 248, 0.15)',
+                            color: '#38bdf8',
+                            border: '1px solid rgba(56, 189, 248, 0.3)',
+                            fontWeight: 600,
+                            fontSize: '0.85rem'
+                          }}>
+                            ✓ {appRecord?.status || 'Applied'} (AI Match: {appRecord?.aiScore}%)
+                          </span>
+                        </div>
+                      ) : (
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => handleApply(job.jobId)}
+                          disabled={applyingJobId === job.jobId}
+                          style={{ padding: '0.6rem 1.5rem', fontSize: '0.9rem' }}
+                        >
+                          {applyingJobId === job.jobId ? 'Submitting...' : 'Apply Now'}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6 }}>{job.description}</p>
+
+                  {job.requirements && (
+                    <div style={{ background: 'rgba(255,255,255,0.02)', padding: '0.75rem 1rem', borderRadius: '8px', borderLeft: '3px solid var(--accent-primary)', fontSize: '0.875rem' }}>
+                      <strong>Requirements:</strong> {job.requirements}
+                    </div>
+                  )}
+
+                  {!isApplied && (
+                    <div style={{ marginTop: '0.5rem' }}>
+                      <input
+                        type="text"
+                        className="form-input"
+                        placeholder="Optional Cover Letter note..."
+                        value={coverLetters[job.jobId] || ''}
+                        onChange={(e) => setCoverLetters({ ...coverLetters, [job.jobId]: e.target.value })}
+                        style={{ fontSize: '0.85rem', padding: '0.5rem 0.75rem' }}
+                      />
+                    </div>
+                  )}
+                </article>
+              );
+            })
+          ) : (
+            <div className="glass-panel text-center" style={{ padding: '4rem 2rem' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>💼</div>
+              <h3>No jobs found</h3>
+              <p style={{ color: 'var(--text-secondary)' }}>Check back soon for new openings!</p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

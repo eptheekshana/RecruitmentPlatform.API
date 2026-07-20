@@ -1,14 +1,20 @@
 import React, { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import FormField from '../components/FormField';
+import { useAuth } from '../context/AuthContext';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const Login = () => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [formStatus, setFormStatus] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   const emailInputRef = useRef(null);
   const passwordInputRef = useRef(null);
 
@@ -56,7 +62,7 @@ const Login = () => {
     setErrors((prev) => ({ ...prev, [name]: fieldErr }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setTouched({ email: true, password: true });
     const validationErrors = validateForm(formData);
@@ -72,8 +78,27 @@ const Login = () => {
       return;
     }
 
-    setFormStatus({ type: 'success', message: 'Sign in successful! Redirecting...' });
-    console.log('Login attempt:', formData);
+    setLoading(true);
+    setFormStatus(null);
+
+    try {
+      const user = await login(formData.email, formData.password);
+      setFormStatus({ type: 'success', message: `Welcome back, ${user.firstName}! Redirecting to ${user.role} portal...` });
+
+      setTimeout(() => {
+        if (user.role === 'Candidate') {
+          navigate('/candidate/jobs');
+        } else if (user.role === 'Recruiter' || user.role === 'Admin') {
+          navigate('/recruiter/applicants');
+        } else {
+          navigate('/');
+        }
+      }, 600);
+    } catch (err) {
+      setFormStatus({ type: 'error', message: err.message || 'Login failed. Please check your credentials.' });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -111,6 +136,7 @@ const Login = () => {
               onChange={handleChange}
               onBlur={handleBlur}
               autoComplete="email"
+              disabled={loading}
             />
           </FormField>
 
@@ -140,6 +166,7 @@ const Login = () => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 autoComplete="current-password"
+                disabled={loading}
               />
             </div>
           </FormField>
@@ -147,11 +174,18 @@ const Login = () => {
           <button
             type="submit"
             className="btn btn-primary"
+            disabled={loading}
             style={{ width: '100%', padding: '1rem', fontSize: '1.125rem' }}
           >
-            Sign In
+            {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
+
+        <div style={{ marginTop: '1.5rem', padding: '1rem', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+          <p style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>Demo Test Accounts:</p>
+          <p>🧑‍💻 <strong>Candidate:</strong> bob@example.com / Candidate123!</p>
+          <p>💼 <strong>Recruiter:</strong> recruiter@techsolutions.com / Recruiter123!</p>
+        </div>
 
         <p className="text-center mt-8" style={{ color: 'var(--text-secondary)' }}>
           Don't have an account?{' '}

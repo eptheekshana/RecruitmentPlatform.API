@@ -1,267 +1,161 @@
 import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import FormField from '../../components/FormField';
+import { useAuth } from '../../context/AuthContext';
 
 const CreateJob = () => {
+  const { token, API_BASE_URL } = useAuth();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     title: '',
-    location: '',
-    type: 'Full-time',
-    salaryMin: '',
-    salaryMax: '',
-    skills: '',
+    department: 'Engineering',
+    location: 'Remote',
+    requirements: '',
     description: ''
   });
 
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [formStatus, setFormStatus] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const fieldRefs = {
-    title: useRef(null),
-    location: useRef(null),
-    type: useRef(null),
-    salaryMin: useRef(null),
-    salaryMax: useRef(null),
-    skills: useRef(null),
-    description: useRef(null)
-  };
-
-  const validateField = (name, value, allData = formData) => {
-    let error = '';
-    if (name === 'title') {
-      if (!value.trim()) error = 'Job title is required.';
-      else if (value.trim().length < 3) error = 'Job title must be at least 3 characters.';
-    } else if (name === 'location') {
-      if (!value.trim()) error = 'Location is required.';
-    } else if (name === 'type') {
-      if (!value) error = 'Job type is required.';
-    } else if (name === 'salaryMin') {
-      if (!value) {
-        error = 'Minimum salary is required.';
-      } else if (Number(value) < 0) {
-        error = 'Minimum salary cannot be negative.';
-      } else if (allData.salaryMax && Number(value) > Number(allData.salaryMax)) {
-        error = 'Minimum salary cannot exceed maximum salary.';
-      }
-    } else if (name === 'salaryMax') {
-      if (!value) {
-        error = 'Maximum salary is required.';
-      } else if (Number(value) < 0) {
-        error = 'Maximum salary cannot be negative.';
-      } else if (allData.salaryMin && Number(value) < Number(allData.salaryMin)) {
-        error = 'Maximum salary must be greater than or equal to minimum salary.';
-      }
-    } else if (name === 'skills') {
-      if (!value.trim()) error = 'Required skills are required.';
-    } else if (name === 'description') {
-      if (!value.trim()) error = 'Job description is required.';
-      else if (value.trim().length < 20) error = 'Job description must be at least 20 characters.';
-    }
-    return error;
-  };
-
-  const validateForm = (data) => {
-    const newErrors = {};
-    Object.keys(data).forEach((key) => {
-      const err = validateField(key, data[key], data);
-      if (err) newErrors[key] = err;
-    });
-    return newErrors;
-  };
+  const titleRef = useRef(null);
+  const descriptionRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const nextData = { ...formData, [name]: value };
-    setFormData(nextData);
-
-    if (touched[name]) {
-      const fieldErr = validateField(name, value, nextData);
-      setErrors((prev) => ({ ...prev, [name]: fieldErr }));
-    }
-
-    // Re-validate opposite salary field if touched
-    if (name === 'salaryMin' && touched.salaryMax) {
-      setErrors((prev) => ({ ...prev, salaryMax: validateField('salaryMax', nextData.salaryMax, nextData) }));
-    } else if (name === 'salaryMax' && touched.salaryMin) {
-      setErrors((prev) => ({ ...prev, salaryMin: validateField('salaryMin', nextData.salaryMin, nextData) }));
-    }
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleBlur = (e) => {
-    const { name, value } = e.target;
-    setTouched((prev) => ({ ...prev, [name]: true }));
-    const fieldErr = validateField(name, value, formData);
-    setErrors((prev) => ({ ...prev, [name]: fieldErr }));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const allTouched = {
-      title: true,
-      location: true,
-      type: true,
-      salaryMin: true,
-      salaryMax: true,
-      skills: true,
-      description: true
-    };
-    setTouched(allTouched);
-
-    const validationErrors = validateForm(formData);
-    setErrors(validationErrors);
-
-    if (Object.keys(validationErrors).length > 0) {
-      setFormStatus({ type: 'error', message: 'Please fix the highlighted errors before publishing the job posting.' });
-      const firstErrorKey = Object.keys(validationErrors)[0];
-      fieldRefs[firstErrorKey]?.current?.focus();
+    if (!formData.title.trim()) {
+      setErrors({ title: 'Title is required' });
+      titleRef.current?.focus();
+      return;
+    }
+    if (!formData.description.trim()) {
+      setErrors({ description: 'Description is required' });
+      descriptionRef.current?.focus();
       return;
     }
 
-    setFormStatus({ type: 'success', message: 'Job posting published successfully!' });
-    console.log('Job posting created:', formData);
-  };
-
-  const handleReset = () => {
-    setFormData({
-      title: '',
-      location: '',
-      type: 'Full-time',
-      salaryMin: '',
-      salaryMax: '',
-      skills: '',
-      description: ''
-    });
-    setErrors({});
-    setTouched({});
+    setLoading(true);
     setFormStatus(null);
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/jobpostings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          title: formData.title,
+          department: formData.department,
+          location: formData.location,
+          requirements: formData.requirements,
+          description: formData.description
+        })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setFormStatus({ type: 'success', message: 'Job posting published successfully!' });
+        setTimeout(() => {
+          navigate('/recruiter/applicants');
+        }, 1000);
+      } else {
+        setFormStatus({ type: 'error', message: data.message || 'Failed to create job posting.' });
+      }
+    } catch (err) {
+      setFormStatus({ type: 'error', message: 'An error occurred while publishing job posting.' });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="glass-panel animate-fade-in delay-100" style={{ padding: '3rem' }}>
       <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Create Job Posting</h1>
       <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem' }}>
-        Fill out the details below to publish a new open position.
+        Publish a new position to attract top candidate talent.
       </p>
 
       {formStatus && (
-        <div
-          className={`alert-box ${formStatus.type === 'error' ? 'alert-error' : 'alert-success'}`}
-          role={formStatus.type === 'error' ? 'alert' : 'status'}
-          aria-live="polite"
-        >
+        <div className={`alert-box ${formStatus.type === 'error' ? 'alert-error' : 'alert-success'}`}>
           <span>{formStatus.type === 'error' ? '⚠️' : '✅'}</span>
           <div>{formStatus.message}</div>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} noValidate aria-label="Create job posting form">
-        <FormField id="title" label="Job Title" error={touched.title ? errors.title : ''} required>
+      <form onSubmit={handleSubmit}>
+        <FormField id="title" label="Job Title" error={errors.title} required>
           <input
-            ref={fieldRefs.title}
+            ref={titleRef}
             type="text"
             name="title"
-            placeholder="e.g. Senior Frontend Developer"
+            placeholder="e.g. Senior .NET Full-Stack Engineer"
             value={formData.title}
             onChange={handleChange}
-            onBlur={handleBlur}
+            required
+            disabled={loading}
           />
         </FormField>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-          <FormField id="location" label="Location" error={touched.location ? errors.location : ''} required>
-            <input
-              ref={fieldRefs.location}
-              type="text"
-              name="location"
-              placeholder="e.g. New York, NY or Remote"
-              value={formData.location}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
+          <FormField id="department" label="Department" required>
+            <select name="department" value={formData.department} onChange={handleChange} disabled={loading}>
+              <option value="Engineering">Engineering</option>
+              <option value="Design">Product Design</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Sales">Sales</option>
+              <option value="Human Resources">Human Resources</option>
+            </select>
           </FormField>
 
-          <FormField id="type" label="Job Type" error={touched.type ? errors.type : ''} required>
-            <select
-              ref={fieldRefs.type}
-              name="type"
-              value={formData.type}
+          <FormField id="location" label="Location" required>
+            <input
+              type="text"
+              name="location"
+              placeholder="e.g. Remote / New York / Colombo"
+              value={formData.location}
               onChange={handleChange}
-              onBlur={handleBlur}
-              style={{ appearance: 'none', cursor: 'pointer' }}
-            >
-              <option value="Full-time">Full-time</option>
-              <option value="Part-time">Part-time</option>
-              <option value="Contract">Contract</option>
-              <option value="Freelance">Freelance</option>
-              <option value="Internship">Internship</option>
-            </select>
+              required
+              disabled={loading}
+            />
           </FormField>
         </div>
 
-        <fieldset style={{ border: 'none', padding: 0, margin: '0 0 1.5rem 0' }}>
-          <legend className="form-label" style={{ marginBottom: '0.5rem' }}>
-            Salary Range (USD / Year) <span style={{ color: '#ef4444' }} aria-hidden="true">*</span>
-          </legend>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-            <FormField id="salaryMin" label="Minimum Salary" error={touched.salaryMin ? errors.salaryMin : ''} required>
-              <input
-                ref={fieldRefs.salaryMin}
-                type="number"
-                name="salaryMin"
-                placeholder="Minimum e.g. 100000"
-                value={formData.salaryMin}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                min="0"
-              />
-            </FormField>
-
-            <FormField id="salaryMax" label="Maximum Salary" error={touched.salaryMax ? errors.salaryMax : ''} required>
-              <input
-                ref={fieldRefs.salaryMax}
-                type="number"
-                name="salaryMax"
-                placeholder="Maximum e.g. 150000"
-                value={formData.salaryMax}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                min="0"
-              />
-            </FormField>
-          </div>
-        </fieldset>
-
-        <FormField id="skills" label="Required Skills" error={touched.skills ? errors.skills : ''} hint="Comma separated list of key skills" required>
+        <FormField id="requirements" label="Required Skills & Qualifications" hint="Comma-separated list (e.g. C#, ASP.NET Core, React, SQL)">
           <input
-            ref={fieldRefs.skills}
             type="text"
-            name="skills"
-            placeholder="e.g. React, Node.js, AWS"
-            value={formData.skills}
+            name="requirements"
+            placeholder="e.g. C#, ASP.NET Core, React, SQL"
+            value={formData.requirements}
             onChange={handleChange}
-            onBlur={handleBlur}
+            disabled={loading}
           />
         </FormField>
 
-        <FormField id="description" label="Job Description" error={touched.description ? errors.description : ''} required style={{ marginBottom: '2.5rem' }}>
+        <FormField id="description" label="Job Description" error={errors.description} required style={{ marginBottom: '2.5rem' }}>
           <textarea
-            ref={fieldRefs.description}
+            ref={descriptionRef}
             name="description"
-            rows="8"
-            placeholder="Describe the responsibilities, requirements, and benefits..."
+            rows="6"
+            placeholder="Detailed description of role responsibilities..."
             value={formData.description}
             onChange={handleChange}
-            onBlur={handleBlur}
-            style={{ resize: 'vertical' }}
-          ></textarea>
+            required
+            disabled={loading}
+          />
         </FormField>
 
         <div className="flex justify-end gap-4">
-          <button type="button" className="btn btn-secondary" onClick={handleReset}>
-            Discard
-          </button>
-          <button type="submit" className="btn btn-primary">
-            Publish Job
+          <button type="submit" className="btn btn-primary" disabled={loading}>
+            {loading ? 'Publishing Job...' : 'Publish Position'}
           </button>
         </div>
       </form>

@@ -1,15 +1,20 @@
 import React, { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import FormField from '../components/FormField';
+import { useAuth } from '../context/AuthContext';
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
 
 const Register = () => {
+  const { register } = useAuth();
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'candidate' });
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [formStatus, setFormStatus] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const nameInputRef = useRef(null);
   const emailInputRef = useRef(null);
@@ -72,7 +77,7 @@ const Register = () => {
     setErrors((prev) => ({ ...prev, [name]: fieldErr }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setTouched({ name: true, email: true, password: true });
     const validationErrors = validateForm(formData);
@@ -90,8 +95,37 @@ const Register = () => {
       return;
     }
 
-    setFormStatus({ type: 'success', message: 'Account created successfully! Redirecting...' });
-    console.log('Registration attempt:', formData);
+    setLoading(true);
+    setFormStatus(null);
+
+    const nameParts = formData.name.trim().split(' ');
+    const firstName = nameParts[0];
+    const lastName = nameParts.slice(1).join(' ') || nameParts[0];
+    const role = formData.role === 'employer' ? 'Recruiter' : 'Candidate';
+
+    try {
+      const user = await register({
+        firstName,
+        lastName,
+        email: formData.email,
+        password: formData.password,
+        role
+      });
+
+      setFormStatus({ type: 'success', message: `Account created successfully! Redirecting to ${role} portal...` });
+
+      setTimeout(() => {
+        if (role === 'Candidate') {
+          navigate('/candidate/jobs');
+        } else {
+          navigate('/recruiter/applicants');
+        }
+      }, 600);
+    } catch (err) {
+      setFormStatus({ type: 'error', message: err.message || 'Registration failed. Please try again.' });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -129,6 +163,7 @@ const Register = () => {
               onChange={handleChange}
               onBlur={handleBlur}
               autoComplete="name"
+              disabled={loading}
             />
           </FormField>
 
@@ -147,6 +182,7 @@ const Register = () => {
               onChange={handleChange}
               onBlur={handleBlur}
               autoComplete="email"
+              disabled={loading}
             />
           </FormField>
 
@@ -166,6 +202,7 @@ const Register = () => {
               onChange={handleChange}
               onBlur={handleBlur}
               autoComplete="new-password"
+              disabled={loading}
             />
           </FormField>
 
@@ -182,10 +219,11 @@ const Register = () => {
                     value="candidate"
                     checked={formData.role === 'candidate'}
                     onChange={handleChange}
+                    disabled={loading}
                     style={{ accentColor: 'var(--accent-primary)', width: '1.1rem', height: '1.1rem' }}
                   />
                   <span style={{ fontWeight: 600, color: formData.role === 'candidate' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
-                    Find a job
+                    Find a job (Candidate)
                   </span>
                 </div>
               </label>
@@ -198,18 +236,24 @@ const Register = () => {
                     value="employer"
                     checked={formData.role === 'employer'}
                     onChange={handleChange}
+                    disabled={loading}
                     style={{ accentColor: 'var(--accent-primary)', width: '1.1rem', height: '1.1rem' }}
                   />
                   <span style={{ fontWeight: 600, color: formData.role === 'employer' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
-                    Hire talent
+                    Hire talent (Recruiter)
                   </span>
                 </div>
               </label>
             </div>
           </fieldset>
 
-          <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '1rem', fontSize: '1.125rem' }}>
-            Create Account
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={loading}
+            style={{ width: '100%', padding: '1rem', fontSize: '1.125rem' }}
+          >
+            {loading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 
