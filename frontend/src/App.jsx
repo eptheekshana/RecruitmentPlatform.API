@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import SkipLink from './components/SkipLink';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -15,10 +16,11 @@ import ViewApplicants from './pages/recruiter/ViewApplicants';
 function App() {
   return (
     <Router>
+      <SkipLink />
       <div className="bg-glow"></div>
       <div className="min-h-screen flex flex-col">
         <Navbar />
-        <main style={{ flex: 1, padding: '2rem 0' }}>
+        <main id="main-content" tabIndex="-1" style={{ flex: 1, padding: '2rem 0', outline: 'none' }}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
@@ -40,3 +42,4 @@ function App() {
 }
 
 export default App;
+

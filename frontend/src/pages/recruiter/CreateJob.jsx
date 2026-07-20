@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import FormField from '../../components/FormField';
 
 const CreateJob = () => {
   const [formData, setFormData] = useState({
@@ -11,60 +12,181 @@ const CreateJob = () => {
     description: ''
   });
 
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
+  const [formStatus, setFormStatus] = useState(null);
+
+  const fieldRefs = {
+    title: useRef(null),
+    location: useRef(null),
+    type: useRef(null),
+    salaryMin: useRef(null),
+    salaryMax: useRef(null),
+    skills: useRef(null),
+    description: useRef(null)
+  };
+
+  const validateField = (name, value, allData = formData) => {
+    let error = '';
+    if (name === 'title') {
+      if (!value.trim()) error = 'Job title is required.';
+      else if (value.trim().length < 3) error = 'Job title must be at least 3 characters.';
+    } else if (name === 'location') {
+      if (!value.trim()) error = 'Location is required.';
+    } else if (name === 'type') {
+      if (!value) error = 'Job type is required.';
+    } else if (name === 'salaryMin') {
+      if (!value) {
+        error = 'Minimum salary is required.';
+      } else if (Number(value) < 0) {
+        error = 'Minimum salary cannot be negative.';
+      } else if (allData.salaryMax && Number(value) > Number(allData.salaryMax)) {
+        error = 'Minimum salary cannot exceed maximum salary.';
+      }
+    } else if (name === 'salaryMax') {
+      if (!value) {
+        error = 'Maximum salary is required.';
+      } else if (Number(value) < 0) {
+        error = 'Maximum salary cannot be negative.';
+      } else if (allData.salaryMin && Number(value) < Number(allData.salaryMin)) {
+        error = 'Maximum salary must be greater than or equal to minimum salary.';
+      }
+    } else if (name === 'skills') {
+      if (!value.trim()) error = 'Required skills are required.';
+    } else if (name === 'description') {
+      if (!value.trim()) error = 'Job description is required.';
+      else if (value.trim().length < 20) error = 'Job description must be at least 20 characters.';
+    }
+    return error;
+  };
+
+  const validateForm = (data) => {
+    const newErrors = {};
+    Object.keys(data).forEach((key) => {
+      const err = validateField(key, data[key], data);
+      if (err) newErrors[key] = err;
+    });
+    return newErrors;
+  };
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    const nextData = { ...formData, [name]: value };
+    setFormData(nextData);
+
+    if (touched[name]) {
+      const fieldErr = validateField(name, value, nextData);
+      setErrors((prev) => ({ ...prev, [name]: fieldErr }));
+    }
+
+    // Re-validate opposite salary field if touched
+    if (name === 'salaryMin' && touched.salaryMax) {
+      setErrors((prev) => ({ ...prev, salaryMax: validateField('salaryMax', nextData.salaryMax, nextData) }));
+    } else if (name === 'salaryMax' && touched.salaryMin) {
+      setErrors((prev) => ({ ...prev, salaryMin: validateField('salaryMin', nextData.salaryMin, nextData) }));
+    }
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    setTouched((prev) => ({ ...prev, [name]: true }));
+    const fieldErr = validateField(name, value, formData);
+    setErrors((prev) => ({ ...prev, [name]: fieldErr }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const allTouched = {
+      title: true,
+      location: true,
+      type: true,
+      salaryMin: true,
+      salaryMax: true,
+      skills: true,
+      description: true
+    };
+    setTouched(allTouched);
+
+    const validationErrors = validateForm(formData);
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length > 0) {
+      setFormStatus({ type: 'error', message: 'Please fix the highlighted errors before publishing the job posting.' });
+      const firstErrorKey = Object.keys(validationErrors)[0];
+      fieldRefs[firstErrorKey]?.current?.focus();
+      return;
+    }
+
+    setFormStatus({ type: 'success', message: 'Job posting published successfully!' });
     console.log('Job posting created:', formData);
-    alert('Job posted successfully!');
-    // Reset form after submission if needed
+  };
+
+  const handleReset = () => {
+    setFormData({
+      title: '',
+      location: '',
+      type: 'Full-time',
+      salaryMin: '',
+      salaryMax: '',
+      skills: '',
+      description: ''
+    });
+    setErrors({});
+    setTouched({});
+    setFormStatus(null);
   };
 
   return (
     <div className="glass-panel animate-fade-in delay-100" style={{ padding: '3rem' }}>
-      <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Create Job Posting</h2>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem' }}>Fill out the details below to publish a new open position.</p>
+      <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Create Job Posting</h1>
+      <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem' }}>
+        Fill out the details below to publish a new open position.
+      </p>
 
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label className="form-label" htmlFor="title">Job Title</label>
-          <input 
-            type="text" 
-            id="title" 
-            name="title" 
-            className="form-input" 
-            placeholder="e.g. Senior Frontend Developer" 
-            value={formData.title} 
-            onChange={handleChange} 
-            required 
-          />
+      {formStatus && (
+        <div
+          className={`alert-box ${formStatus.type === 'error' ? 'alert-error' : 'alert-success'}`}
+          role={formStatus.type === 'error' ? 'alert' : 'status'}
+          aria-live="polite"
+        >
+          <span>{formStatus.type === 'error' ? '⚠️' : '✅'}</span>
+          <div>{formStatus.message}</div>
         </div>
+      )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
-          <div className="form-group" style={{ marginBottom: 0 }}>
-            <label className="form-label" htmlFor="location">Location</label>
-            <input 
-              type="text" 
-              id="location" 
-              name="location" 
-              className="form-input" 
-              placeholder="e.g. New York, NY or Remote" 
-              value={formData.location} 
-              onChange={handleChange} 
-              required 
+      <form onSubmit={handleSubmit} noValidate aria-label="Create job posting form">
+        <FormField id="title" label="Job Title" error={touched.title ? errors.title : ''} required>
+          <input
+            ref={fieldRefs.title}
+            type="text"
+            name="title"
+            placeholder="e.g. Senior Frontend Developer"
+            value={formData.title}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+        </FormField>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+          <FormField id="location" label="Location" error={touched.location ? errors.location : ''} required>
+            <input
+              ref={fieldRefs.location}
+              type="text"
+              name="location"
+              placeholder="e.g. New York, NY or Remote"
+              value={formData.location}
+              onChange={handleChange}
+              onBlur={handleBlur}
             />
-          </div>
-          <div className="form-group" style={{ marginBottom: 0 }}>
-            <label className="form-label" htmlFor="type">Job Type</label>
-            <select 
-              id="type" 
-              name="type" 
-              className="form-input" 
-              value={formData.type} 
-              onChange={handleChange} 
-              required
+          </FormField>
+
+          <FormField id="type" label="Job Type" error={touched.type ? errors.type : ''} required>
+            <select
+              ref={fieldRefs.type}
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              onBlur={handleBlur}
               style={{ appearance: 'none', cursor: 'pointer' }}
             >
               <option value="Full-time">Full-time</option>
@@ -73,68 +195,74 @@ const CreateJob = () => {
               <option value="Freelance">Freelance</option>
               <option value="Internship">Internship</option>
             </select>
-          </div>
+          </FormField>
         </div>
 
-        <div className="form-group">
-          <label className="form-label">Salary Range</label>
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            <span style={{ color: 'var(--text-secondary)' }}>$</span>
-            <input 
-              type="number" 
-              name="salaryMin" 
-              className="form-input" 
-              placeholder="Minimum" 
-              value={formData.salaryMin} 
-              onChange={handleChange} 
-              required 
-            />
-            <span style={{ color: 'var(--text-secondary)' }}>to</span>
-            <span style={{ color: 'var(--text-secondary)' }}>$</span>
-            <input 
-              type="number" 
-              name="salaryMax" 
-              className="form-input" 
-              placeholder="Maximum" 
-              value={formData.salaryMax} 
-              onChange={handleChange} 
-              required 
-            />
-          </div>
-        </div>
+        <fieldset style={{ border: 'none', padding: 0, margin: '0 0 1.5rem 0' }}>
+          <legend className="form-label" style={{ marginBottom: '0.5rem' }}>
+            Salary Range (USD / Year) <span style={{ color: '#ef4444' }} aria-hidden="true">*</span>
+          </legend>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+            <FormField id="salaryMin" label="Minimum Salary" error={touched.salaryMin ? errors.salaryMin : ''} required>
+              <input
+                ref={fieldRefs.salaryMin}
+                type="number"
+                name="salaryMin"
+                placeholder="Minimum e.g. 100000"
+                value={formData.salaryMin}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                min="0"
+              />
+            </FormField>
 
-        <div className="form-group">
-          <label className="form-label" htmlFor="skills">Required Skills</label>
-          <input 
-            type="text" 
-            id="skills" 
-            name="skills" 
-            className="form-input" 
-            placeholder="e.g. React, Node.js, AWS (comma separated)" 
-            value={formData.skills} 
-            onChange={handleChange} 
-            required 
+            <FormField id="salaryMax" label="Maximum Salary" error={touched.salaryMax ? errors.salaryMax : ''} required>
+              <input
+                ref={fieldRefs.salaryMax}
+                type="number"
+                name="salaryMax"
+                placeholder="Maximum e.g. 150000"
+                value={formData.salaryMax}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                min="0"
+              />
+            </FormField>
+          </div>
+        </fieldset>
+
+        <FormField id="skills" label="Required Skills" error={touched.skills ? errors.skills : ''} hint="Comma separated list of key skills" required>
+          <input
+            ref={fieldRefs.skills}
+            type="text"
+            name="skills"
+            placeholder="e.g. React, Node.js, AWS"
+            value={formData.skills}
+            onChange={handleChange}
+            onBlur={handleBlur}
           />
-        </div>
+        </FormField>
 
-        <div className="form-group" style={{ marginBottom: '2.5rem' }}>
-          <label className="form-label" htmlFor="description">Job Description</label>
-          <textarea 
-            id="description" 
-            name="description" 
-            className="form-input" 
-            rows="8" 
+        <FormField id="description" label="Job Description" error={touched.description ? errors.description : ''} required style={{ marginBottom: '2.5rem' }}>
+          <textarea
+            ref={fieldRefs.description}
+            name="description"
+            rows="8"
             placeholder="Describe the responsibilities, requirements, and benefits..."
-            value={formData.description} 
-            onChange={handleChange} 
-            required
+            value={formData.description}
+            onChange={handleChange}
+            onBlur={handleBlur}
             style={{ resize: 'vertical' }}
           ></textarea>
-        </div>
+        </FormField>
 
         <div className="flex justify-end gap-4">
-          <button type="button" className="btn btn-secondary">Discard</button>
-          <button type="submit" className="btn btn-primary">Publish Job</button>
+          <button type="button" className="btn btn-secondary" onClick={handleReset}>
+            Discard
+          </button>
+          <button type="submit" className="btn btn-primary">
+            Publish Job
+          </button>
         </div>
       </form>
     </div>

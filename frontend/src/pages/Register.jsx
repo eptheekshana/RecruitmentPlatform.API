@@ -1,91 +1,223 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import FormField from '../components/FormField';
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
 
 const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'candidate' });
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
+  const [formStatus, setFormStatus] = useState(null);
+
+  const nameInputRef = useRef(null);
+  const emailInputRef = useRef(null);
+  const passwordInputRef = useRef(null);
+
+  const validateField = (name, value) => {
+    let error = '';
+    if (name === 'name') {
+      if (!value.trim()) {
+        error = 'Full name is required.';
+      } else if (value.trim().length < 2) {
+        error = 'Full name must be at least 2 characters.';
+      }
+    } else if (name === 'email') {
+      if (!value.trim()) {
+        error = 'Email address is required.';
+      } else if (!emailRegex.test(value.trim())) {
+        error = 'Please enter a valid email address.';
+      }
+    } else if (name === 'password') {
+      if (!value) {
+        error = 'Password is required.';
+      } else if (value.length < 8) {
+        error = 'Password must be at least 8 characters long.';
+      } else if (!passwordRegex.test(value)) {
+        error = 'Password must include at least 1 uppercase letter, 1 number, and 1 special character.';
+      }
+    }
+    return error;
+  };
+
+  const validateForm = (data) => {
+    const newErrors = {};
+    const nameErr = validateField('name', data.name);
+    if (nameErr) newErrors.name = nameErr;
+
+    const emailErr = validateField('email', data.email);
+    if (emailErr) newErrors.email = emailErr;
+
+    const passwordErr = validateField('password', data.password);
+    if (passwordErr) newErrors.password = passwordErr;
+
+    return newErrors;
+  };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    if (touched[name]) {
+      const fieldErr = validateField(name, value);
+      setErrors((prev) => ({ ...prev, [name]: fieldErr }));
+    }
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    setTouched((prev) => ({ ...prev, [name]: true }));
+    const fieldErr = validateField(name, value);
+    setErrors((prev) => ({ ...prev, [name]: fieldErr }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setTouched({ name: true, email: true, password: true });
+    const validationErrors = validateForm(formData);
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length > 0) {
+      setFormStatus({ type: 'error', message: 'Please fix the highlighted errors before creating your account.' });
+      if (validationErrors.name) {
+        nameInputRef.current?.focus();
+      } else if (validationErrors.email) {
+        emailInputRef.current?.focus();
+      } else if (validationErrors.password) {
+        passwordInputRef.current?.focus();
+      }
+      return;
+    }
+
+    setFormStatus({ type: 'success', message: 'Account created successfully! Redirecting...' });
     console.log('Registration attempt:', formData);
-    // Add logic here later
   };
 
   return (
     <div className="container flex items-center justify-center animate-fade-in" style={{ minHeight: 'calc(100vh - 100px)' }}>
       <div className="glass-panel" style={{ width: '100%', maxWidth: '500px', padding: '3rem' }}>
         <div className="text-center mb-8">
-          <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Create an Account</h2>
+          <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Create an Account</h1>
           <p style={{ color: 'var(--text-secondary)' }}>Join RecruitHub today</p>
         </div>
-        
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="form-label" htmlFor="name">Full Name</label>
-            <input 
-              type="text" 
-              id="name" 
-              name="name" 
-              className="form-input" 
-              placeholder="John Doe" 
-              value={formData.name} 
-              onChange={handleChange} 
-              required 
-            />
-          </div>
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="email">Email Address</label>
-            <input 
-              type="email" 
-              id="email" 
-              name="email" 
-              className="form-input" 
-              placeholder="you@example.com" 
-              value={formData.email} 
-              onChange={handleChange} 
-              required 
-            />
+        {formStatus && (
+          <div
+            className={`alert-box ${formStatus.type === 'error' ? 'alert-error' : 'alert-success'}`}
+            role={formStatus.type === 'error' ? 'alert' : 'status'}
+            aria-live="polite"
+          >
+            <span>{formStatus.type === 'error' ? '⚠️' : '✅'}</span>
+            <div>{formStatus.message}</div>
           </div>
-          
-          <div className="form-group">
-            <label className="form-label" htmlFor="password">Password</label>
-            <input 
-              type="password" 
-              id="password" 
-              name="password" 
-              className="form-input" 
-              placeholder="••••••••" 
-              value={formData.password} 
-              onChange={handleChange} 
-              required 
-            />
-          </div>
+        )}
 
-          <div className="form-group" style={{ marginBottom: '2rem' }}>
-            <label className="form-label">I am looking to...</label>
+        <form onSubmit={handleSubmit} noValidate>
+          <FormField
+            id="name"
+            label="Full Name"
+            error={touched.name ? errors.name : ''}
+            required
+          >
+            <input
+              ref={nameInputRef}
+              type="text"
+              name="name"
+              placeholder="John Doe"
+              value={formData.name}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              autoComplete="name"
+            />
+          </FormField>
+
+          <FormField
+            id="email"
+            label="Email Address"
+            error={touched.email ? errors.email : ''}
+            required
+          >
+            <input
+              ref={emailInputRef}
+              type="email"
+              name="email"
+              placeholder="you@example.com"
+              value={formData.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              autoComplete="email"
+            />
+          </FormField>
+
+          <FormField
+            id="password"
+            label="Password"
+            hint="Must be at least 8 characters with 1 uppercase letter, 1 number, and 1 special symbol."
+            error={touched.password ? errors.password : ''}
+            required
+          >
+            <input
+              ref={passwordInputRef}
+              type="password"
+              name="password"
+              placeholder="••••••••"
+              value={formData.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              autoComplete="new-password"
+            />
+          </FormField>
+
+          <fieldset style={{ border: 'none', padding: 0, margin: '0 0 2rem 0' }}>
+            <legend className="form-label" style={{ marginBottom: '0.75rem' }}>
+              I am looking to... <span style={{ color: '#ef4444' }} aria-hidden="true">*</span>
+            </legend>
             <div className="flex gap-4">
-              <label style={{ flex: 1, cursor: 'pointer', border: formData.role === 'candidate' ? '2px solid var(--accent-primary)' : '2px solid rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '12px', textAlign: 'center', transition: 'var(--transition-smooth)', background: formData.role === 'candidate' ? 'rgba(99, 102, 241, 0.1)' : 'transparent' }}>
-                <input type="radio" name="role" value="candidate" checked={formData.role === 'candidate'} onChange={handleChange} style={{ display: 'none' }} />
-                <span style={{ fontWeight: 600, color: formData.role === 'candidate' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>Find a job</span>
+              <label className={`radio-card ${formData.role === 'candidate' ? 'radio-card-active' : ''}`}>
+                <div className="flex items-center justify-center gap-2">
+                  <input
+                    type="radio"
+                    name="role"
+                    value="candidate"
+                    checked={formData.role === 'candidate'}
+                    onChange={handleChange}
+                    style={{ accentColor: 'var(--accent-primary)', width: '1.1rem', height: '1.1rem' }}
+                  />
+                  <span style={{ fontWeight: 600, color: formData.role === 'candidate' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
+                    Find a job
+                  </span>
+                </div>
               </label>
-              <label style={{ flex: 1, cursor: 'pointer', border: formData.role === 'employer' ? '2px solid var(--accent-primary)' : '2px solid rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '12px', textAlign: 'center', transition: 'var(--transition-smooth)', background: formData.role === 'employer' ? 'rgba(99, 102, 241, 0.1)' : 'transparent' }}>
-                <input type="radio" name="role" value="employer" checked={formData.role === 'employer'} onChange={handleChange} style={{ display: 'none' }} />
-                <span style={{ fontWeight: 600, color: formData.role === 'employer' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>Hire talent</span>
+
+              <label className={`radio-card ${formData.role === 'employer' ? 'radio-card-active' : ''}`}>
+                <div className="flex items-center justify-center gap-2">
+                  <input
+                    type="radio"
+                    name="role"
+                    value="employer"
+                    checked={formData.role === 'employer'}
+                    onChange={handleChange}
+                    style={{ accentColor: 'var(--accent-primary)', width: '1.1rem', height: '1.1rem' }}
+                  />
+                  <span style={{ fontWeight: 600, color: formData.role === 'employer' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
+                    Hire talent
+                  </span>
+                </div>
               </label>
             </div>
-          </div>
-          
+          </fieldset>
+
           <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '1rem', fontSize: '1.125rem' }}>
             Create Account
           </button>
         </form>
-        
+
         <p className="text-center mt-8" style={{ color: 'var(--text-secondary)' }}>
-          Already have an account? <Link to="/login" style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>Sign in</Link>
+          Already have an account?{' '}
+          <Link to="/login" style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>
+            Sign in
+          </Link>
         </p>
       </div>
     </div>
