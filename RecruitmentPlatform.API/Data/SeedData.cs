@@ -60,7 +60,17 @@ public static class SeedData
         };
         candidateUser.PasswordHash = passwordService.HashPassword(candidateUser, "Candidate123!");
 
-        context.Users.AddRange(adminUser, recruiterUser, candidateUser);
+        var managerUser = new User
+        {
+            FirstName = "John",
+            LastName = "Manager",
+            Email = "manager@techsolutions.com",
+            Role = "HiringManager",
+            OrganizationId = org.OrganizationId
+        };
+        managerUser.PasswordHash = passwordService.HashPassword(managerUser, "Manager123!");
+
+        context.Users.AddRange(adminUser, recruiterUser, candidateUser, managerUser);
         await context.SaveChangesAsync();
 
         // Seed Candidate
@@ -114,6 +124,19 @@ public static class SeedData
             Status = "Scheduled"
         };
         context.InterviewSchedules.Add(interview);
+        await context.SaveChangesAsync();
+
+        // Seed Evaluation
+        var evaluation = new Evaluation
+        {
+            ApplicationId = app.ApplicationId,
+            EvaluatorId = managerUser.UserId,
+            Score = 8,
+            Comments = "Excellent skill set in ASP.NET Core and Clean Architecture. Recommended for final panel technical interview.",
+            Recommendation = "Recommended",
+            CreatedDate = DateTime.UtcNow.AddDays(-1)
+        };
+        context.Evaluations.Add(evaluation);
         await context.SaveChangesAsync();
     }
 }
