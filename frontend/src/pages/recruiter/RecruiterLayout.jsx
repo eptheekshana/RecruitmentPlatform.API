@@ -6,9 +6,7 @@ const RecruiterLayout = () => {
 
   const navItems = [
     { name: 'Post a Job', path: '/recruiter/create-job', icon: '📝' },
-    // More recruiter features can be added here in the future
-    // { name: 'Manage Postings', path: '/recruiter/manage-jobs', icon: '📋' },
-    // { name: 'View Applicants', path: '/recruiter/applicants', icon: '👥' },
+    { name: 'View Applicants', path: '/recruiter/applicants', icon: '👥' },
   ];
 
   return (
