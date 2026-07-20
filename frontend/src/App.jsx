@@ -8,6 +8,8 @@ import CandidateLayout from './pages/candidate/CandidateLayout';
 import Profile from './pages/candidate/Profile';
 import CVUpload from './pages/candidate/CVUpload';
 import JobSearch from './pages/candidate/JobSearch';
+import RecruiterLayout from './pages/recruiter/RecruiterLayout';
+import CreateJob from './pages/recruiter/CreateJob';
 
 function App() {
   return (
@@ -24,6 +26,9 @@ function App() {
               <Route path="profile" element={<Profile />} />
               <Route path="cv-upload" element={<CVUpload />} />
               <Route path="jobs" element={<JobSearch />} />
+            </Route>
+            <Route path="/recruiter" element={<RecruiterLayout />}>
+              <Route path="create-job" element={<CreateJob />} />
             </Route>
           </Routes>
         </main>
