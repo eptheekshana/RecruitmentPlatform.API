@@ -104,7 +104,7 @@ const ViewApplicants = () => {
                 transition: 'var(--transition-smooth)',
                 borderColor: selectedApplicant?.id === app.id ? 'var(--accent-primary)' : 'var(--glass-border)',
                 transform: selectedApplicant?.id === app.id ? 'translateY(-2px)' : 'none',
-                boxShadow: selectedApplicant?.id === app.id ? '0 0 20px rgba(99,102,241,0.2)' : 'var(--glass-shadow)'
+                boxShadow: selectedApplicant?.id === app.id ? '0 0 20px rgba(37,99,235,0.2)' : 'var(--glass-shadow)'
               }}
               onClick={() => setSelectedApplicant(app)}
             >
@@ -114,7 +114,7 @@ const ViewApplicants = () => {
                   <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>{app.role}</p>
                 </div>
                 <div style={{ 
-                  background: 'rgba(255,255,255,0.05)', 
+                  background: 'rgba(15,23,42,0.05)', 
                   padding: '0.25rem 0.5rem', 
                   borderRadius: '6px', 
                   fontSize: '0.875rem',
@@ -149,7 +149,7 @@ const ViewApplicants = () => {
           height: '100vh',
           background: 'var(--bg-secondary)',
           borderLeft: '1px solid var(--glass-border)',
-          boxShadow: '-10px 0 30px rgba(0,0,0,0.5)',
+          boxShadow: '-10px 0 30px rgba(15,23,42,0.1)',
           transition: 'right 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)',
           zIndex: 100,
           display: 'flex',
@@ -203,7 +203,7 @@ const ViewApplicants = () => {
 
               <div style={{ marginBottom: '2rem' }}>
                 <h4 style={{ marginBottom: '1rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: '0.875rem' }}>Overview</h4>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', background: 'rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '12px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', background: 'rgba(15,23,42,0.05)', padding: '1rem', borderRadius: '12px' }}>
                   <div>
                     <div style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginBottom: '0.25rem' }}>Match Score</div>
                     <div style={{ fontSize: '1.25rem', fontWeight: 600, color: '#10b981' }}>{selectedApplicant.match}%</div>
@@ -219,7 +219,7 @@ const ViewApplicants = () => {
                 <h4 style={{ marginBottom: '1rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: '0.875rem' }}>Skills</h4>
                 <div className="flex" style={{ gap: '0.5rem', flexWrap: 'wrap' }}>
                   {selectedApplicant.skills.map(skill => (
-                    <span key={skill} style={{ padding: '0.35rem 0.85rem', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '99px', fontSize: '0.875rem' }}>
+                    <span key={skill} style={{ padding: '0.35rem 0.85rem', background: 'rgba(15, 23, 42, 0.05)', borderRadius: '99px', fontSize: '0.875rem' }}>
                       {skill}
                     </span>
                   ))}

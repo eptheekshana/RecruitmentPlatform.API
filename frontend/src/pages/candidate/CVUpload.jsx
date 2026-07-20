@@ -67,7 +67,7 @@ const CVUpload = () => {
           borderRadius: '16px',
           padding: '4rem 2rem',
           textAlign: 'center',
-          background: dragActive ? 'rgba(99, 102, 241, 0.05)' : 'rgba(0, 0, 0, 0.2)',
+          background: dragActive ? 'rgba(37, 99, 235, 0.05)' : 'rgba(15, 23, 42, 0.05)',
           transition: 'var(--transition-smooth)',
           position: 'relative'
         }}
@@ -90,7 +90,7 @@ const CVUpload = () => {
       </div>
 
       {file && (
-        <div style={{ marginTop: '2rem', background: 'rgba(255, 255, 255, 0.05)', padding: '1.5rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+        <div style={{ marginTop: '2rem', background: 'rgba(15, 23, 42, 0.05)', padding: '1.5rem', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <div style={{ fontSize: '2rem' }}>📑</div>
           <div style={{ flex: 1 }}>
             <div className="flex justify-between" style={{ marginBottom: '0.5rem' }}>
@@ -99,7 +99,7 @@ const CVUpload = () => {
             </div>
             
             {uploading ? (
-              <div style={{ width: '100%', height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
+              <div style={{ width: '100%', height: '6px', background: 'rgba(15,23,42,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
                 <div style={{ width: `${progress}%`, height: '100%', background: 'var(--accent-gradient)', transition: 'width 0.2s ease' }}></div>
               </div>
             ) : (

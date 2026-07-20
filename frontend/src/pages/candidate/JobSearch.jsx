@@ -60,7 +60,7 @@ const JobSearch = () => {
         {filteredJobs.length > 0 ? (
           filteredJobs.map(job => (
             <div key={job.id} className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', transition: 'var(--transition-smooth)' }} 
-                 onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderColor = 'rgba(99, 102, 241, 0.3)'; }}
+                 onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderColor = 'rgba(37, 99, 235, 0.3)'; }}
                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--glass-border)'; }}
             >
               <div className="flex justify-between" style={{ flexWrap: 'wrap', gap: '1rem' }}>
@@ -80,7 +80,7 @@ const JobSearch = () => {
               
               <div className="flex" style={{ gap: '0.5rem', flexWrap: 'wrap' }}>
                 {job.tags.map(tag => (
-                  <span key={tag} style={{ padding: '0.25rem 0.75rem', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '99px', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                  <span key={tag} style={{ padding: '0.25rem 0.75rem', background: 'rgba(15, 23, 42, 0.05)', borderRadius: '99px', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                     {tag}
                   </span>
                 ))}

@@ -68,11 +68,11 @@ const Register = () => {
           <div className="form-group" style={{ marginBottom: '2rem' }}>
             <label className="form-label">I am looking to...</label>
             <div className="flex gap-4">
-              <label style={{ flex: 1, cursor: 'pointer', border: formData.role === 'candidate' ? '2px solid var(--accent-primary)' : '2px solid rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '12px', textAlign: 'center', transition: 'var(--transition-smooth)', background: formData.role === 'candidate' ? 'rgba(99, 102, 241, 0.1)' : 'transparent' }}>
+              <label style={{ flex: 1, cursor: 'pointer', border: formData.role === 'candidate' ? '2px solid var(--accent-primary)' : '2px solid rgba(15,23,42,0.1)', padding: '1rem', borderRadius: '12px', textAlign: 'center', transition: 'var(--transition-smooth)', background: formData.role === 'candidate' ? 'rgba(37, 99, 235, 0.1)' : 'transparent' }}>
                 <input type="radio" name="role" value="candidate" checked={formData.role === 'candidate'} onChange={handleChange} style={{ display: 'none' }} />
                 <span style={{ fontWeight: 600, color: formData.role === 'candidate' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>Find a job</span>
               </label>
-              <label style={{ flex: 1, cursor: 'pointer', border: formData.role === 'employer' ? '2px solid var(--accent-primary)' : '2px solid rgba(255,255,255,0.1)', padding: '1rem', borderRadius: '12px', textAlign: 'center', transition: 'var(--transition-smooth)', background: formData.role === 'employer' ? 'rgba(99, 102, 241, 0.1)' : 'transparent' }}>
+              <label style={{ flex: 1, cursor: 'pointer', border: formData.role === 'employer' ? '2px solid var(--accent-primary)' : '2px solid rgba(15,23,42,0.1)', padding: '1rem', borderRadius: '12px', textAlign: 'center', transition: 'var(--transition-smooth)', background: formData.role === 'employer' ? 'rgba(37, 99, 235, 0.1)' : 'transparent' }}>
                 <input type="radio" name="role" value="employer" checked={formData.role === 'employer'} onChange={handleChange} style={{ display: 'none' }} />
                 <span style={{ fontWeight: 600, color: formData.role === 'employer' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>Hire talent</span>
               </label>
