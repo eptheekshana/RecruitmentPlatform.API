@@ -167,14 +167,6 @@ const ViewApplicants = () => {
           )}
         </div>
       )}
-            ))
-          ) : (
-            <div className="glass-panel text-center" style={{ gridColumn: '1 / -1', padding: '3rem' }}>
-              <p style={{ color: 'var(--text-secondary)' }}>No applications match your filter.</p>
-            </div>
-          )}
-        </div>
-      )}
 
       {/* Slide-out Candidate Drawer */}
       {selectedApplicant && (
