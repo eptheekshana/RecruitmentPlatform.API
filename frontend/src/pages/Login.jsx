@@ -187,8 +187,6 @@ const Login = () => {
           </button>
         </form>
 
-
-
         <p className="text-center mt-8" style={{ color: 'var(--text-secondary)' }}>
           Don't have an account?{' '}
           <Link to="/register" style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>

@@ -160,7 +160,7 @@ const Register = () => {
               ref={nameInputRef}
               type="text"
               name="name"
-              placeholder="John Doe"
+              placeholder="Sadewma Marasinghe"
               value={formData.name}
               onChange={handleChange}
               onBlur={handleBlur}

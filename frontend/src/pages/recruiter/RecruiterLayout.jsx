@@ -50,7 +50,7 @@ const RecruiterLayout = () => {
                     padding: '1.05rem 1.25rem',
                     borderRadius: '12px',
                     transition: 'var(--transition-smooth)',
-                    background: isActive ? 'rgba(99, 102, 241, 0.15)' : 'transparent',
+                    background: isActive ? 'rgba(37, 99, 235, 0.1)' : 'transparent',
                     color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
                     fontWeight: isActive ? 600 : 500,
                     border: isActive ? '1px solid var(--accent-primary)' : '1px solid transparent'
