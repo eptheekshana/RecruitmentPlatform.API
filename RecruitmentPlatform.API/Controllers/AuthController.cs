@@ -41,7 +41,7 @@ public class AuthController : ControllerBase
             return BadRequest(new { message = "User with this email address already exists." });
         }
 
-        var allowedRoles = new[] { "Candidate", "Recruiter", "Admin" };
+        var allowedRoles = new[] { "Candidate", "Recruiter", "HiringManager", "Admin" };
         var role = allowedRoles.Contains(dto.Role, StringComparer.OrdinalIgnoreCase) ? dto.Role : "Candidate";
 
         var user = new User

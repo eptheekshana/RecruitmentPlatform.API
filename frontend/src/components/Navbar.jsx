@@ -76,7 +76,7 @@ const Navbar = () => {
                 </Link>
               )}
 
-              {(user.role === 'Recruiter' || user.role === 'Admin') && (
+              {user.role === 'Recruiter' && (
                 <Link
                   to="/recruiter/applicants"
                   aria-current={location.pathname.startsWith('/recruiter') ? 'page' : undefined}
@@ -89,6 +89,44 @@ const Navbar = () => {
                 </Link>
               )}
 
+              {user.role === 'HiringManager' && (
+                <Link
+                  to="/hiring-manager/shortlist"
+                  aria-current={location.pathname.startsWith('/hiring-manager') ? 'page' : undefined}
+                  style={{
+                    color: location.pathname.startsWith('/hiring-manager') ? '#ffffff' : 'var(--text-secondary)',
+                    fontWeight: 500
+                  }}
+                >
+                  Hiring Manager
+                </Link>
+              )}
+
+              {user.role === 'Admin' && (
+                <>
+                  <Link
+                    to="/recruiter/applicants"
+                    aria-current={location.pathname.startsWith('/recruiter') ? 'page' : undefined}
+                    style={{
+                      color: location.pathname.startsWith('/recruiter') ? '#ffffff' : 'var(--text-secondary)',
+                      fontWeight: 500
+                    }}
+                  >
+                    Recruiter Portal
+                  </Link>
+                  <Link
+                    to="/admin/analytics"
+                    aria-current={location.pathname.startsWith('/admin') ? 'page' : undefined}
+                    style={{
+                      color: location.pathname.startsWith('/admin') ? '#ffffff' : 'var(--text-secondary)',
+                      fontWeight: 500
+                    }}
+                  >
+                    Admin Portal
+                  </Link>
+                </>
+              )}
+
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', paddingLeft: '0.5rem', borderLeft: '1px solid rgba(255,255,255,0.1)' }}>
                 <div style={{ fontSize: '0.875rem', textAlign: 'right' }}>
                   <div style={{ fontWeight: 600, color: '#ffffff' }}>{user.firstName} {user.lastName}</div>
@@ -97,11 +135,21 @@ const Navbar = () => {
                     padding: '2px 8px',
                     borderRadius: '12px',
                     fontWeight: 700,
-                    background: user.role === 'Candidate' ? 'rgba(56, 189, 248, 0.15)' : 'rgba(168, 85, 247, 0.15)',
-                    color: user.role === 'Candidate' ? '#38bdf8' : '#c084fc',
-                    border: `1px solid ${user.role === 'Candidate' ? 'rgba(56, 189, 248, 0.3)' : 'rgba(168, 85, 247, 0.3)'}`
+                    background: user.role === 'Candidate' ? 'rgba(56, 189, 248, 0.15)' :
+                      user.role === 'HiringManager' ? 'rgba(16, 185, 129, 0.15)' :
+                        user.role === 'Admin' ? 'rgba(239, 68, 68, 0.15)' :
+                          'rgba(168, 85, 247, 0.15)',
+                    color: user.role === 'Candidate' ? '#38bdf8' :
+                      user.role === 'HiringManager' ? '#10b981' :
+                        user.role === 'Admin' ? '#ef4444' :
+                          '#c084fc',
+                    border: `1px solid ${user.role === 'Candidate' ? 'rgba(56, 189, 248, 0.3)' :
+                        user.role === 'HiringManager' ? 'rgba(16, 185, 129, 0.3)' :
+                          user.role === 'Admin' ? 'rgba(239, 68, 68, 0.3)' :
+                            'rgba(168, 85, 247, 0.3)'
+                      }`
                   }}>
-                    {user.role}
+                    {user.role === 'HiringManager' ? 'Hiring Mngr' : user.role}
                   </span>
                 </div>
 

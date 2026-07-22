@@ -136,7 +136,7 @@ public class CandidateController : ControllerBase
     /// Get single candidate details by Candidate ID (Recruiter or Admin only).
     /// </summary>
     [HttpGet("{id}")]
-    [Authorize(Roles = "Recruiter,Admin")]
+    [Authorize(Roles = "Recruiter,Admin,HiringManager")]
     public async Task<ActionResult<CandidateResponseDto>> GetCandidateById(int id)
     {
         var c = await _context.Candidates
