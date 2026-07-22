@@ -1,29 +1,30 @@
 import React from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 
-const RecruiterLayout = () => {
+const HiringManagerLayout = () => {
   const location = useLocation();
 
   const navItems = [
     {
-      name: 'Post a Job',
-      path: '/recruiter/create-job',
+      name: 'Shortlisted Candidates',
+      path: '/hiring-manager/shortlist',
       icon: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-          <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z" />
+          <circle cx="12" cy="8" r="7" />
+          <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
         </svg>
       )
     },
     {
-      name: 'View Applicants',
-      path: '/recruiter/applicants',
+      name: 'My Evaluations',
+      path: '/hiring-manager/evaluations',
       icon: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+          <polyline points="10 9 9 9 8 9" />
         </svg>
       )
     },
@@ -34,8 +35,8 @@ const RecruiterLayout = () => {
       {/* Sidebar Navigation */}
       <aside style={{ width: '240px', flexShrink: 0 }}>
         <div className="glass-panel" style={{ padding: '2.5rem 2rem', position: 'sticky', top: '100px' }}>
-          <h2 style={{ fontSize: '1.25rem', marginBottom: '2rem', color: 'var(--text-secondary)' }}>Recruiter Portal</h2>
-          <nav className="flex flex-col gap-2" aria-label="Recruiter Portal Navigation">
+          <h2 style={{ fontSize: '1.25rem', marginBottom: '2rem', color: 'var(--text-secondary)' }}>Manager Portal</h2>
+          <nav className="flex flex-col gap-2" aria-label="Hiring Manager Portal Navigation">
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;
               return (
@@ -50,13 +51,13 @@ const RecruiterLayout = () => {
                     padding: '1.05rem 1.25rem',
                     borderRadius: '12px',
                     transition: 'var(--transition-smooth)',
-                    background: isActive ? 'rgba(37, 99, 235, 0.1)' : 'transparent',
+                    background: isActive ? 'rgba(16, 185, 129, 0.15)' : 'transparent',
                     color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
                     fontWeight: isActive ? 600 : 500,
-                    border: isActive ? '1px solid var(--accent-primary)' : '1px solid transparent'
+                    border: isActive ? '1px solid #10b981' : '1px solid transparent'
                   }}
                 >
-                  <span style={{ display: 'flex', alignItems: 'center', color: isActive ? 'var(--accent-primary)' : 'var(--text-secondary)' }} aria-hidden="true">{item.icon}</span>
+                  <span style={{ display: 'flex', alignItems: 'center', color: isActive ? '#10b981' : 'var(--text-secondary)' }} aria-hidden="true">{item.icon}</span>
                   {item.name}
                 </NavLink>
               );
@@ -73,4 +74,4 @@ const RecruiterLayout = () => {
   );
 };
 
-export default RecruiterLayout;
+export default HiringManagerLayout;

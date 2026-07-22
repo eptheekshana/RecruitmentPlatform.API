@@ -16,6 +16,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<InterviewSchedule> InterviewSchedules { get; set; }
     public DbSet<Organization> Organizations { get; set; }
     public DbSet<AuditLog> AuditLogs { get; set; }
+    public DbSet<Evaluation> Evaluations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -62,5 +63,17 @@ public class ApplicationDbContext : DbContext
             .WithMany()
             .HasForeignKey(i => i.InterviewerId)
             .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<Evaluation>()
+            .HasOne(e => e.Application)
+            .WithMany()
+            .HasForeignKey(e => e.ApplicationId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Evaluation>()
+            .HasOne(e => e.Evaluator)
+            .WithMany()
+            .HasForeignKey(e => e.EvaluatorId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

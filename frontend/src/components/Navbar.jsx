@@ -77,7 +77,7 @@ const Navbar = () => {
                 </Link>
               )}
 
-              {(user.role === 'Recruiter' || user.role === 'Admin') && (
+              {user.role === 'Recruiter' && (
                 <Link
                   to="/recruiter/applicants"
                   aria-current={location.pathname.startsWith('/recruiter') ? 'page' : undefined}
@@ -91,6 +91,47 @@ const Navbar = () => {
                 </Link>
               )}
 
+              {user.role === 'HiringManager' && (
+                <Link
+                  to="/hiring-manager/shortlist"
+                  aria-current={location.pathname.startsWith('/hiring-manager') ? 'page' : undefined}
+                  style={{
+                    color: location.pathname.startsWith('/hiring-manager') ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                    fontWeight: 500,
+                    transition: 'var(--transition-smooth)'
+                  }}
+                >
+                  Hiring Manager
+                </Link>
+              )}
+
+              {user.role === 'Admin' && (
+                <>
+                  <Link
+                    to="/recruiter/applicants"
+                    aria-current={location.pathname.startsWith('/recruiter') ? 'page' : undefined}
+                    style={{
+                      color: location.pathname.startsWith('/recruiter') ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                      fontWeight: 500,
+                      transition: 'var(--transition-smooth)'
+                    }}
+                  >
+                    Recruiter Portal
+                  </Link>
+                  <Link
+                    to="/admin/analytics"
+                    aria-current={location.pathname.startsWith('/admin') ? 'page' : undefined}
+                    style={{
+                      color: location.pathname.startsWith('/admin') ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                      fontWeight: 500,
+                      transition: 'var(--transition-smooth)'
+                    }}
+                  >
+                    Admin Portal
+                  </Link>
+                </>
+              )}
+
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', paddingLeft: '0.5rem', borderLeft: '1px solid var(--glass-border)' }}>
                 <div style={{ fontSize: '0.875rem', textAlign: 'right' }}>
                   <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{user.firstName} {user.lastName}</div>
@@ -99,11 +140,21 @@ const Navbar = () => {
                     padding: '2px 8px',
                     borderRadius: '12px',
                     fontWeight: 700,
-                    background: user.role === 'Candidate' ? 'rgba(37, 99, 235, 0.1)' : 'rgba(147, 51, 234, 0.1)',
-                    color: user.role === 'Candidate' ? 'var(--accent-primary)' : '#9333ea',
-                    border: `1px solid ${user.role === 'Candidate' ? 'rgba(37, 99, 235, 0.2)' : 'rgba(147, 51, 234, 0.2)'}`
+                    background: user.role === 'Candidate' ? 'rgba(37, 99, 235, 0.1)' :
+                      user.role === 'HiringManager' ? 'rgba(16, 185, 129, 0.1)' :
+                        user.role === 'Admin' ? 'rgba(239, 68, 68, 0.1)' :
+                          'rgba(147, 51, 234, 0.1)',
+                    color: user.role === 'Candidate' ? 'var(--accent-primary)' :
+                      user.role === 'HiringManager' ? '#10b981' :
+                        user.role === 'Admin' ? '#ef4444' :
+                          '#9333ea',
+                    border: `1px solid ${user.role === 'Candidate' ? 'rgba(37, 99, 235, 0.2)' :
+                        user.role === 'HiringManager' ? 'rgba(16, 185, 129, 0.2)' :
+                          user.role === 'Admin' ? 'rgba(239, 68, 68, 0.2)' :
+                            'rgba(147, 51, 234, 0.2)'
+                      }`
                   }}>
-                    {user.role}
+                    {user.role === 'HiringManager' ? 'Hiring Mngr' : user.role}
                   </span>
                 </div>
 

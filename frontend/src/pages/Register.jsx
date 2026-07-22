@@ -7,8 +7,8 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
 
 const Register = () => {
-  const navigate = useNavigate();
   const { register } = useAuth();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'candidate' });
   const [errors, setErrors] = useState({});
@@ -98,28 +98,31 @@ const Register = () => {
     setLoading(true);
     setFormStatus(null);
 
-    const [firstName, ...lastNameParts] = formData.name.trim().split(' ');
-    const lastName = lastNameParts.join(' ') || firstName;
-    const apiRole = formData.role === 'employer' ? 'Recruiter' : 'Candidate';
+    const nameParts = formData.name.trim().split(' ');
+    const firstName = nameParts[0];
+    const lastName = nameParts.slice(1).join(' ') || nameParts[0];
+    const role = formData.role === 'employer' ? 'Recruiter' : formData.role === 'hiringmanager' ? 'HiringManager' : 'Candidate';
 
     try {
-      const userSession = await register({
+      const user = await register({
         firstName,
         lastName,
         email: formData.email,
         password: formData.password,
-        role: apiRole,
+        role
       });
 
-      setFormStatus({ type: 'success', message: 'Account created successfully! Redirecting...' });
-
-      const targetPath = (userSession && (userSession.role === 'Recruiter' || userSession.role === 'Admin'))
-        ? '/recruiter/create-job'
-        : '/candidate/profile';
+      setFormStatus({ type: 'success', message: `Account created successfully! Redirecting to ${role} portal...` });
 
       setTimeout(() => {
-        navigate(targetPath);
-      }, 800);
+        if (role === 'Candidate') {
+          navigate('/candidate/jobs');
+        } else if (role === 'HiringManager') {
+          navigate('/hiring-manager/shortlist');
+        } else {
+          navigate('/recruiter/applicants');
+        }
+      }, 600);
     } catch (err) {
       setFormStatus({ type: 'error', message: err.message || 'Registration failed. Please try again.' });
     } finally {
@@ -217,6 +220,31 @@ const Register = () => {
               <label style={{ flex: 1, cursor: 'pointer', border: formData.role === 'employer' ? '2px solid var(--accent-primary)' : '2px solid rgba(15,23,42,0.1)', padding: '1rem', borderRadius: '12px', textAlign: 'center', transition: 'var(--transition-smooth)', background: formData.role === 'employer' ? 'rgba(37, 99, 235, 0.1)' : 'transparent' }}>
                 <input type="radio" name="role" value="employer" checked={formData.role === 'employer'} onChange={handleChange} style={{ display: 'none' }} />
                 <span style={{ fontWeight: 600, color: formData.role === 'employer' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>Hire talent (Recruiter)</span>
+              </label>
+            </div>
+          </fieldset>
+
+          {/* Hiring Manager option */}
+          <fieldset style={{ border: 'none', padding: 0, margin: '0 0 2rem 0' }}>
+            <legend className="form-label" style={{ marginBottom: '0.75rem' }}>
+              Or register as a Hiring Manager?
+            </legend>
+            <div className="flex gap-4">
+              <label className={`radio-card ${formData.role === 'hiringmanager' ? 'radio-card-active' : ''}`}>
+                <div className="flex items-center justify-center gap-2">
+                  <input
+                    type="radio"
+                    name="role"
+                    value="hiringmanager"
+                    checked={formData.role === 'hiringmanager'}
+                    onChange={handleChange}
+                    disabled={loading}
+                    style={{ accentColor: 'var(--accent-primary)', width: '1.1rem', height: '1.1rem' }}
+                  />
+                  <span style={{ fontWeight: 600, color: formData.role === 'hiringmanager' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
+                    Evaluate candidates (Hiring Manager)
+                  </span>
+                </div>
               </label>
             </div>
           </fieldset>

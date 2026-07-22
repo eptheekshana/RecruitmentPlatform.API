@@ -1,29 +1,39 @@
 import React from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 
-const RecruiterLayout = () => {
+const AdminLayout = () => {
   const location = useLocation();
 
   const navItems = [
-    {
-      name: 'Post a Job',
-      path: '/recruiter/create-job',
+    { 
+      name: 'System Analytics', 
+      path: '/admin/analytics', 
       icon: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-          <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z" />
+          <line x1="18" y1="20" x2="18" y2="10" />
+          <line x1="12" y1="20" x2="12" y2="4" />
+          <line x1="6" y1="20" x2="6" y2="14" />
         </svg>
       )
     },
-    {
-      name: 'View Applicants',
-      path: '/recruiter/applicants',
+    { 
+      name: 'User Management', 
+      path: '/admin/users', 
       icon: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
           <circle cx="9" cy="7" r="4" />
           <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
           <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>
+      )
+    },
+    { 
+      name: 'System Security Logs', 
+      path: '/admin/logs', 
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7s0 6 8 10z" />
         </svg>
       )
     },
@@ -34,8 +44,8 @@ const RecruiterLayout = () => {
       {/* Sidebar Navigation */}
       <aside style={{ width: '240px', flexShrink: 0 }}>
         <div className="glass-panel" style={{ padding: '2.5rem 2rem', position: 'sticky', top: '100px' }}>
-          <h2 style={{ fontSize: '1.25rem', marginBottom: '2rem', color: 'var(--text-secondary)' }}>Recruiter Portal</h2>
-          <nav className="flex flex-col gap-2" aria-label="Recruiter Portal Navigation">
+          <h2 style={{ fontSize: '1.25rem', marginBottom: '2rem', color: 'var(--text-secondary)' }}>Admin Portal</h2>
+          <nav className="flex flex-col gap-2" aria-label="Admin Portal Navigation">
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;
               return (
@@ -50,13 +60,13 @@ const RecruiterLayout = () => {
                     padding: '1.05rem 1.25rem',
                     borderRadius: '12px',
                     transition: 'var(--transition-smooth)',
-                    background: isActive ? 'rgba(37, 99, 235, 0.1)' : 'transparent',
+                    background: isActive ? 'rgba(239, 68, 68, 0.15)' : 'transparent',
                     color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
                     fontWeight: isActive ? 600 : 500,
-                    border: isActive ? '1px solid var(--accent-primary)' : '1px solid transparent'
+                    border: isActive ? '1px solid #ef4444' : '1px solid transparent'
                   }}
                 >
-                  <span style={{ display: 'flex', alignItems: 'center', color: isActive ? 'var(--accent-primary)' : 'var(--text-secondary)' }} aria-hidden="true">{item.icon}</span>
+                  <span style={{ display: 'flex', alignItems: 'center', color: isActive ? '#ef4444' : 'var(--text-secondary)' }} aria-hidden="true">{item.icon}</span>
                   {item.name}
                 </NavLink>
               );
@@ -73,4 +83,4 @@ const RecruiterLayout = () => {
   );
 };
 
-export default RecruiterLayout;
+export default AdminLayout;

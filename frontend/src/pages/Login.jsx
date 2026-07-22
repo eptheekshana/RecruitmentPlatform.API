@@ -6,8 +6,8 @@ import { useAuth } from '../context/AuthContext';
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const Login = () => {
-  const navigate = useNavigate();
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
@@ -82,16 +82,22 @@ const Login = () => {
     setFormStatus(null);
 
     try {
-      const userSession = await login(formData.email, formData.password);
+      const user = await login(formData.email, formData.password);
+      setFormStatus({ type: 'success', message: `Welcome back, ${user.firstName}! Redirecting to ${user.role} portal...` });
 
-      setFormStatus({ type: 'success', message: 'Sign in successful! Redirecting...' });
-
-      let targetPath = '/candidate/profile';
-      if (userSession && (userSession.role === 'Recruiter' || userSession.role === 'Admin')) {
-        targetPath = '/recruiter/create-job';
-      }
-
-      setTimeout(() => navigate(targetPath), 600);
+      setTimeout(() => {
+        if (user.role === 'Candidate') {
+          navigate('/candidate/jobs');
+        } else if (user.role === 'Recruiter') {
+          navigate('/recruiter/applicants');
+        } else if (user.role === 'HiringManager') {
+          navigate('/hiring-manager/shortlist');
+        } else if (user.role === 'Admin') {
+          navigate('/admin/analytics');
+        } else {
+          navigate('/');
+        }
+      }, 600);
     } catch (err) {
       setFormStatus({ type: 'error', message: err.message || 'Login failed. Please check your credentials.' });
     } finally {
@@ -118,7 +124,7 @@ const Login = () => {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} noValidate aria-label="Sign in form">
+        <form onSubmit={handleSubmit} noValidate aria-labelledby="login-heading">
           <FormField
             id="email"
             label="Email Address"
@@ -138,36 +144,38 @@ const Login = () => {
             />
           </FormField>
 
-          <FormField
-            id="password"
-            label="Password"
-            error={touched.password ? errors.password : ''}
-            required
-            style={{ marginBottom: '2rem' }}
-          >
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <a
-                  href="#"
-                  onClick={(e) => e.preventDefault()}
-                  style={{ fontSize: '0.875rem', color: 'var(--accent-primary)', float: 'right' }}
-                >
-                  Forgot password?
-                </a>
-              </div>
-              <input
-                ref={passwordInputRef}
-                type="password"
-                name="password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                autoComplete="current-password"
-                disabled={loading}
-              />
+          <div className="form-group" style={{ marginBottom: '2rem' }}>
+            <div className="flex justify-between items-center mb-1">
+              <label htmlFor="password" className="form-label" style={{ marginBottom: 0 }}>
+                Password <span style={{ color: '#ef4444' }} aria-hidden="true">*</span>
+              </label>
+              <a
+                href="#"
+                onClick={(e) => e.preventDefault()}
+                style={{ fontSize: '0.875rem', color: 'var(--accent-primary)', fontWeight: 500 }}
+              >
+                Forgot password?
+              </a>
             </div>
-          </FormField>
+            <input
+              id="password"
+              ref={passwordInputRef}
+              type="password"
+              name="password"
+              placeholder="••••••••"
+              value={formData.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              autoComplete="current-password"
+              disabled={loading}
+              className={`form-input ${touched.password && errors.password ? 'form-input-error' : ''}`}
+            />
+            {touched.password && errors.password && (
+              <p className="form-error-message" role="alert">
+                <span aria-hidden="true">⚠️</span> {errors.password}
+              </p>
+            )}
+          </div>
 
           <button
             type="submit"
@@ -175,7 +183,7 @@ const Login = () => {
             disabled={loading}
             style={{ width: '100%', padding: '1rem', fontSize: '1.125rem' }}
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
 
