@@ -14,6 +14,13 @@ const UserManagement = () => {
     fetchUsers();
   }, []);
 
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => setToast(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
+
   const fetchUsers = async () => {
     if (!token) return;
     try {
@@ -124,7 +131,7 @@ const UserManagement = () => {
         <div className="glass-panel" style={{ padding: '1.5rem', overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '750px' }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+              <tr style={{ borderBottom: '1px solid var(--glass-border)', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
                 <th style={{ padding: '1rem', width: '20%' }}>User Name</th>
                 <th style={{ padding: '1rem', width: '32%' }}>Email Address</th>
                 <th style={{ padding: '1rem', width: '13%' }}>System Role</th>
@@ -137,7 +144,7 @@ const UserManagement = () => {
                 filtered.map(u => {
                   const isSelf = u.userId === currentUser?.userId;
                   return (
-                    <tr key={u.userId} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', fontSize: '0.95rem' }}>
+                    <tr key={u.userId} style={{ borderBottom: '1px solid var(--glass-border)', fontSize: '0.95rem' }}>
                       <td style={{ padding: '1rem', fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {u.firstName} {u.lastName} {isSelf && <span style={{ color: '#10b981', fontSize: '0.75rem' }}>(You)</span>}
                       </td>
@@ -177,18 +184,18 @@ const UserManagement = () => {
                             padding: '3px 8px',
                             borderRadius: '10px',
                             fontWeight: 700,
-                            background: u.role === 'Candidate' ? 'rgba(56, 189, 248, 0.15)' :
-                              u.role === 'HiringManager' ? 'rgba(16, 185, 129, 0.15)' :
-                                u.role === 'Admin' ? 'rgba(239, 68, 68, 0.15)' :
-                                  'rgba(168, 85, 247, 0.15)',
-                            color: u.role === 'Candidate' ? '#38bdf8' :
+                            background: u.role === 'Candidate' ? 'rgba(37, 99, 235, 0.1)' :
+                              u.role === 'HiringManager' ? 'rgba(16, 185, 129, 0.1)' :
+                                u.role === 'Admin' ? 'rgba(239, 68, 68, 0.1)' :
+                                  'rgba(147, 51, 234, 0.1)',
+                            color: u.role === 'Candidate' ? 'var(--accent-primary)' :
                               u.role === 'HiringManager' ? '#10b981' :
                                 u.role === 'Admin' ? '#ef4444' :
-                                  '#c084fc',
-                            border: `1px solid ${u.role === 'Candidate' ? 'rgba(56, 189, 248, 0.3)' :
-                                u.role === 'HiringManager' ? 'rgba(16, 185, 129, 0.3)' :
-                                  u.role === 'Admin' ? 'rgba(239, 68, 68, 0.3)' :
-                                    'rgba(168, 85, 247, 0.3)'
+                                  '#9333ea',
+                            border: `1px solid ${u.role === 'Candidate' ? 'rgba(37, 99, 235, 0.2)' :
+                                u.role === 'HiringManager' ? 'rgba(16, 185, 129, 0.2)' :
+                                  u.role === 'Admin' ? 'rgba(239, 68, 68, 0.2)' :
+                                    'rgba(147, 51, 234, 0.2)'
                               }`
                           }}>
                             {u.role}

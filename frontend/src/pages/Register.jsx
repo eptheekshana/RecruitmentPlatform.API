@@ -212,38 +212,25 @@ const Register = () => {
             <legend className="form-label" style={{ marginBottom: '0.75rem' }}>
               I am looking to... <span style={{ color: '#ef4444' }} aria-hidden="true">*</span>
             </legend>
-            <div className="flex gap-4">
-              <label style={{ flex: 1, cursor: 'pointer', border: formData.role === 'candidate' ? '2px solid var(--accent-primary)' : '2px solid rgba(15,23,42,0.1)', padding: '1rem', borderRadius: '12px', textAlign: 'center', transition: 'var(--transition-smooth)', background: formData.role === 'candidate' ? 'rgba(37, 99, 235, 0.1)' : 'transparent' }}>
-                <input type="radio" name="role" value="candidate" checked={formData.role === 'candidate'} onChange={handleChange} style={{ display: 'none' }} />
-                <span style={{ fontWeight: 600, color: formData.role === 'candidate' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>Find a job (Candidate)</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <label style={{ display: 'block', cursor: 'pointer', border: formData.role === 'candidate' ? '2px solid var(--accent-primary)' : '2px solid var(--glass-border)', padding: '1rem', borderRadius: '12px', transition: 'var(--transition-smooth)', background: formData.role === 'candidate' ? 'rgba(37, 99, 235, 0.05)' : 'transparent' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <input type="radio" name="role" value="candidate" checked={formData.role === 'candidate'} onChange={handleChange} disabled={loading} style={{ accentColor: 'var(--accent-primary)', width: '1.1rem', height: '1.1rem' }} />
+                  <span style={{ fontWeight: 600, color: formData.role === 'candidate' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>Find a job (Candidate)</span>
+                </div>
               </label>
-              <label style={{ flex: 1, cursor: 'pointer', border: formData.role === 'employer' ? '2px solid var(--accent-primary)' : '2px solid rgba(15,23,42,0.1)', padding: '1rem', borderRadius: '12px', textAlign: 'center', transition: 'var(--transition-smooth)', background: formData.role === 'employer' ? 'rgba(37, 99, 235, 0.1)' : 'transparent' }}>
-                <input type="radio" name="role" value="employer" checked={formData.role === 'employer'} onChange={handleChange} style={{ display: 'none' }} />
-                <span style={{ fontWeight: 600, color: formData.role === 'employer' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>Hire talent (Recruiter)</span>
-              </label>
-            </div>
-          </fieldset>
 
-          {/* Hiring Manager option */}
-          <fieldset style={{ border: 'none', padding: 0, margin: '0 0 2rem 0' }}>
-            <legend className="form-label" style={{ marginBottom: '0.75rem' }}>
-              Or register as a Hiring Manager?
-            </legend>
-            <div className="flex gap-4">
-              <label className={`radio-card ${formData.role === 'hiringmanager' ? 'radio-card-active' : ''}`}>
-                <div className="flex items-center justify-center gap-2">
-                  <input
-                    type="radio"
-                    name="role"
-                    value="hiringmanager"
-                    checked={formData.role === 'hiringmanager'}
-                    onChange={handleChange}
-                    disabled={loading}
-                    style={{ accentColor: 'var(--accent-primary)', width: '1.1rem', height: '1.1rem' }}
-                  />
-                  <span style={{ fontWeight: 600, color: formData.role === 'hiringmanager' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
-                    Evaluate candidates (Hiring Manager)
-                  </span>
+              <label style={{ display: 'block', cursor: 'pointer', border: formData.role === 'employer' ? '2px solid var(--accent-primary)' : '2px solid var(--glass-border)', padding: '1rem', borderRadius: '12px', transition: 'var(--transition-smooth)', background: formData.role === 'employer' ? 'rgba(37, 99, 235, 0.05)' : 'transparent' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <input type="radio" name="role" value="employer" checked={formData.role === 'employer'} onChange={handleChange} disabled={loading} style={{ accentColor: 'var(--accent-primary)', width: '1.1rem', height: '1.1rem' }} />
+                  <span style={{ fontWeight: 600, color: formData.role === 'employer' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>Hire talent (Recruiter)</span>
+                </div>
+              </label>
+
+              <label style={{ display: 'block', cursor: 'pointer', border: formData.role === 'hiringmanager' ? '2px solid var(--accent-primary)' : '2px solid var(--glass-border)', padding: '1rem', borderRadius: '12px', transition: 'var(--transition-smooth)', background: formData.role === 'hiringmanager' ? 'rgba(37, 99, 235, 0.05)' : 'transparent' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <input type="radio" name="role" value="hiringmanager" checked={formData.role === 'hiringmanager'} onChange={handleChange} disabled={loading} style={{ accentColor: 'var(--accent-primary)', width: '1.1rem', height: '1.1rem' }} />
+                  <span style={{ fontWeight: 600, color: formData.role === 'hiringmanager' ? 'var(--text-primary)' : 'var(--text-secondary)' }}>Evaluate candidates (Hiring Manager)</span>
                 </div>
               </label>
             </div>

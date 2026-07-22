@@ -21,6 +21,7 @@ const Profile = () => {
   }, []);
 
   const fetchProfile = async () => {
+    setLoading(true);
     try {
       const data = await api.candidate.getProfile().catch(() => null);
       if (data) {
@@ -33,6 +34,8 @@ const Profile = () => {
       }
     } catch (err) {
       console.error('Failed to load profile:', err);
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -35,15 +35,15 @@ const SystemLogs = () => {
   const getActionBadgeStyle = (action) => {
     const act = action.toLowerCase();
     if (act.includes('delete') || act.includes('remove') || act.includes('revoke')) {
-      return { background: 'rgba(239, 68, 68, 0.15)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.3)' };
+      return { background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)' };
     }
     if (act.includes('update') || act.includes('change') || act.includes('edit')) {
-      return { background: 'rgba(168, 85, 247, 0.15)', color: '#c084fc', border: '1px solid rgba(168, 85, 247, 0.3)' };
+      return { background: 'rgba(147, 51, 234, 0.1)', color: '#9333ea', border: '1px solid rgba(147, 51, 234, 0.2)' };
     }
     if (act.includes('evaluate') || act.includes('approve') || act.includes('match')) {
-      return { background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.3)' };
+      return { background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.2)' };
     }
-    return { background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.3)' };
+    return { background: 'rgba(37, 99, 235, 0.1)', color: 'var(--accent-primary)', border: '1px solid rgba(37, 99, 235, 0.2)' };
   };
 
   return (
@@ -75,7 +75,7 @@ const SystemLogs = () => {
         <div className="glass-panel" style={{ padding: '1.5rem', overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '600px' }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+              <tr style={{ borderBottom: '1px solid var(--glass-border)', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
                 <th style={{ padding: '1.0rem', width: '20%' }}>Timestamp</th>
                 <th style={{ padding: '1.0rem', width: '20%' }}>Action Event</th>
                 <th style={{ padding: '1.0rem', width: '40%' }}>Details Description</th>
@@ -85,7 +85,7 @@ const SystemLogs = () => {
             <tbody>
               {logs.length > 0 ? (
                 logs.map(log => (
-                  <tr key={log.auditLogId} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)', fontSize: '0.95rem' }}>
+                  <tr key={log.auditLogId} style={{ borderBottom: '1px solid var(--glass-border)', fontSize: '0.95rem' }}>
                     <td style={{ padding: '1.0rem', color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
                       {new Date(log.timestamp).toLocaleString()}
                     </td>

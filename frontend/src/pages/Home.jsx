@@ -103,7 +103,7 @@ const Home = () => {
           </div>
 
           <div className="text-center">
-            <Link to="/candidate/search" className="btn btn-secondary" style={{ padding: '0.75rem 2rem' }}>
+            <Link to="/candidate/jobs" className="btn btn-secondary" style={{ padding: '0.75rem 2rem' }}>
               View All Open Positions
             </Link>
           </div>

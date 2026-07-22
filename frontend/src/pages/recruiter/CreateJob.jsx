@@ -49,11 +49,19 @@ const CreateJob = () => {
         requirements: formData.requirements,
         location: formData.location,
         department: formData.department
-      }).catch(() => null);
+      });
 
       setFormStatus({ type: 'success', message: 'Job posting published successfully!' });
-    } catch {
-      setFormStatus({ type: 'success', message: 'Job posting published successfully!' });
+      setFormData({
+        title: '',
+        department: 'Engineering',
+        location: 'Remote',
+        requirements: '',
+        description: ''
+      });
+      setErrors({});
+    } catch (err) {
+      setFormStatus({ type: 'error', message: err.message || 'An error occurred while creating job posting.' });
     } finally {
       setLoading(false);
     }
