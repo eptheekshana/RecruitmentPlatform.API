@@ -6,10 +6,28 @@ using RecruitmentPlatform.API.Services;
 using System.Text;
 using Amazon.S3;
 
+using RecruitmentPlatform.API.Services.AI;
+using RecruitmentPlatform.API.Services.AI.Strategies;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=recruitment-platform.db"));
+
+// Register AI Strategies (Strategy Pattern)
+builder.Services.AddScoped<IResumeParsingStrategy, OpenAiResumeParsingStrategy>();
+builder.Services.AddScoped<IResumeParsingStrategy, RuleBasedResumeParsingStrategy>();
+builder.Services.AddScoped<IResumeParsingStrategy, MockResumeParsingStrategy>();
+
+builder.Services.AddScoped<ISkillExtractionStrategy, OpenAiSkillExtractionStrategy>();
+builder.Services.AddScoped<ISkillExtractionStrategy, TaxonomySkillExtractionStrategy>();
+builder.Services.AddScoped<ISkillExtractionStrategy, MockSkillExtractionStrategy>();
+
+builder.Services.AddScoped<ICandidateRankingStrategy, SemanticAiRankingStrategy>();
+builder.Services.AddScoped<ICandidateRankingStrategy, WeightedKeywordRankingStrategy>();
+builder.Services.AddScoped<ICandidateRankingStrategy, RuleBasedRankingStrategy>();
+
+builder.Services.AddScoped<IAiStrategyFactory, AiStrategyFactory>();
 
 builder.Services.AddScoped<PasswordService>();
 builder.Services.AddScoped<TokenService>();

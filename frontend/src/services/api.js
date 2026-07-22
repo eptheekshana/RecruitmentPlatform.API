@@ -61,6 +61,12 @@ export const api = {
     apply: (jobId, coverLetter = '') => fetchAPI('/Application', { method: 'POST', body: JSON.stringify({ jobId, coverLetter }) }),
     updateStatus: (id, status) => fetchAPI(`/Application/${id}/status`, { method: 'PUT', body: JSON.stringify({ status }) }),
   },
+  ai: {
+    getStrategies: () => fetchAPI('/Ai/strategies'),
+    parseResume: (resumeText, preferredStrategy) => fetchAPI('/Ai/parse-resume', { method: 'POST', body: JSON.stringify({ resumeText, preferredStrategy }) }),
+    extractSkills: (content, preferredStrategy) => fetchAPI('/Ai/extract-skills', { method: 'POST', body: JSON.stringify({ content, preferredStrategy }) }),
+    rankCandidate: (data) => fetchAPI('/Ai/rank-candidate', { method: 'POST', body: JSON.stringify(data) }),
+  },
 };
 
 export default api;

@@ -1,40 +1,30 @@
+using RecruitmentPlatform.API.DTOs;
 using RecruitmentPlatform.API.Entities;
+using RecruitmentPlatform.API.Services.AI;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RecruitmentPlatform.API.Services;
 
 public class MatchingService
 {
-    public Task<decimal> CalculateMatchScoreAsync(Candidate candidate, JobPosting jobPosting)
+    private readonly IAiStrategyFactory _aiStrategyFactory;
+
+    public MatchingService(IAiStrategyFactory aiStrategyFactory)
     {
-        // Simple mock matching based on keyword overlap
-        decimal score = 50.0m;
-        
-        if (!string.IsNullOrEmpty(candidate.Skills) && !string.IsNullOrEmpty(jobPosting.Requirements))
-        {
-            var candidateSkills = candidate.Skills.Split(new[] { ',', ';' }, System.StringSplitOptions.RemoveEmptyEntries);
-            int matchCount = 0;
-            foreach (var skill in candidateSkills)
-            {
-                var trimmedSkill = skill.Trim();
-                if (jobPosting.Requirements.Contains(trimmedSkill, System.StringComparison.OrdinalIgnoreCase))
-                {
-                    matchCount++;
-                }
-            }
-            score += matchCount * 10m;
-        }
+        _aiStrategyFactory = aiStrategyFactory;
+    }
 
-        if (candidate.ExperienceLevel == "Senior")
-        {
-            score += 15m;
-        }
-        else if (candidate.ExperienceLevel == "Mid")
-        {
-            score += 5m;
-        }
+    public async Task<decimal> CalculateMatchScoreAsync(Candidate candidate, JobPosting jobPosting, string? preferredStrategy = null)
+    {
+        var rankingStrategy = _aiStrategyFactory.GetCandidateRankingStrategy(preferredStrategy);
+        var rankingResult = await rankingStrategy.RankCandidateAsync(candidate, jobPosting);
+        return rankingResult.Score;
+    }
 
-        if (score > 100m) score = 100m;
-        return Task.FromResult(score);
+    public async Task<CandidateRankingResult> RankCandidateWithDetailsAsync(Candidate candidate, JobPosting jobPosting, string? preferredStrategy = null, CancellationToken cancellationToken = default)
+    {
+        var rankingStrategy = _aiStrategyFactory.GetCandidateRankingStrategy(preferredStrategy);
+        return await rankingStrategy.RankCandidateAsync(candidate, jobPosting, cancellationToken);
     }
 }
