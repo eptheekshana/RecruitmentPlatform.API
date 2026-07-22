@@ -17,6 +17,16 @@ builder.Services.AddScoped<ResumeAnalysisService>();
 builder.Services.AddScoped<MatchingService>();
 builder.Services.AddScoped<AuditLogService>();
 
+// Register Calendar Integration Services
+builder.Services.AddScoped<GoogleCalendarService>();
+builder.Services.AddScoped<OutlookCalendarService>();
+builder.Services.AddScoped<ICalendarIntegrationService, CalendarIntegrationService>();
+
+// Register Notification Services
+builder.Services.AddScoped<EmailNotificationService>();
+builder.Services.AddScoped<SmsNotificationService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+
 builder.Services.AddSingleton<IAmazonS3>(sp =>
 {
     var config = sp.GetRequiredService<IConfiguration>();
@@ -52,7 +62,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173", "http://localhost:3000", "http://localhost:5128")
+        policy.SetIsOriginAllowed(origin => true)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();

@@ -5,6 +5,9 @@ using RecruitmentPlatform.API.Data;
 using RecruitmentPlatform.API.DTOs;
 using RecruitmentPlatform.API.Entities;
 using RecruitmentPlatform.API.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 
 namespace RecruitmentPlatform.API.Controllers;
@@ -16,11 +19,19 @@ public class InterviewController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly AuditLogService _auditLogService;
+    private readonly ICalendarIntegrationService _calendarService;
+    private readonly INotificationService _notificationService;
 
-    public InterviewController(ApplicationDbContext context, AuditLogService auditLogService)
+    public InterviewController(
+        ApplicationDbContext context,
+        AuditLogService auditLogService,
+        ICalendarIntegrationService calendarService,
+        INotificationService notificationService)
     {
         _context = context;
         _auditLogService = auditLogService;
+        _calendarService = calendarService;
+        _notificationService = notificationService;
     }
 
     /// <summary>
@@ -44,12 +55,13 @@ public class InterviewController : ControllerBase
         int.TryParse(userIdClaim, out int currentUserId);
 
         int interviewerId = dto.InterviewerId ?? currentUserId;
+        var interviewerUser = await _context.Users.FindAsync(interviewerId);
 
         var interview = new InterviewSchedule
         {
             ApplicationId = dto.ApplicationId,
             ScheduledTime = dto.ScheduledTime,
-            MeetingLink = dto.MeetingLink,
+            MeetingLink = string.IsNullOrEmpty(dto.MeetingLink) ? $"https://meet.google.com/interview-{Guid.NewGuid().ToString().Substring(0, 8)}" : dto.MeetingLink,
             InterviewType = dto.InterviewType,
             Status = "Scheduled",
             InterviewerId = interviewerId
@@ -60,7 +72,33 @@ public class InterviewController : ControllerBase
 
         await _auditLogService.LogAsync("Interview Scheduled", $"Scheduled interview for Application ID {dto.ApplicationId} at {dto.ScheduledTime}", currentUserId);
 
-        var interviewerUser = await _context.Users.FindAsync(interviewerId);
+        // Generate Calendar Events
+        var calendarRequest = new CalendarEventRequestDto
+        {
+            Title = $"Interview: {application.JobPosting?.Title ?? "Position"} - {application.Candidate?.User?.FirstName} {application.Candidate?.User?.LastName}",
+            Description = $"Type: {interview.InterviewType}\nPosition: {application.JobPosting?.Title}",
+            StartTime = interview.ScheduledTime,
+            EndTime = interview.ScheduledTime.AddHours(1),
+            LocationOrMeetingLink = interview.MeetingLink,
+            CandidateEmail = application.Candidate?.User?.Email ?? string.Empty,
+            InterviewerEmail = interviewerUser?.Email ?? string.Empty
+        };
+
+        var calendarResult = _calendarService.GenerateCalendarEvent(calendarRequest);
+
+        // Dispatch Email & SMS Notifications
+        if (application.Candidate?.User != null)
+        {
+            await _notificationService.SendInterviewNotificationAsync(
+                application.Candidate.User.Email,
+                $"{application.Candidate.User.FirstName} {application.Candidate.User.LastName}",
+                application.JobPosting?.Title ?? "Position",
+                interview.ScheduledTime.ToString("f"),
+                interview.MeetingLink,
+                calendarResult.GoogleCalendarUrl,
+                calendarResult.OutlookCalendarUrl
+            );
+        }
 
         return Ok(new InterviewResponseDto
         {
@@ -73,7 +111,9 @@ public class InterviewController : ControllerBase
             JobTitle = application.JobPosting?.Title ?? "Job",
             CandidateName = application.Candidate?.User != null ? $"{application.Candidate.User.FirstName} {application.Candidate.User.LastName}" : "Candidate",
             InterviewerId = interviewerId,
-            InterviewerName = interviewerUser != null ? $"{interviewerUser.FirstName} {interviewerUser.LastName}" : "Interviewer"
+            InterviewerName = interviewerUser != null ? $"{interviewerUser.FirstName} {interviewerUser.LastName}" : "Interviewer",
+            GoogleCalendarUrl = calendarResult.GoogleCalendarUrl,
+            OutlookCalendarUrl = calendarResult.OutlookCalendarUrl
         });
     }
 
@@ -102,9 +142,22 @@ public class InterviewController : ControllerBase
             query = query.Where(i => i.Application != null && i.Application.Candidate != null && i.Application.Candidate.UserId == userId);
         }
 
-        var interviews = await query
-            .OrderBy(i => i.ScheduledTime)
-            .Select(i => new InterviewResponseDto
+        var list = await query.OrderBy(i => i.ScheduledTime).ToListAsync();
+
+        var dtos = list.Select(i =>
+        {
+            var calReq = new CalendarEventRequestDto
+            {
+                Title = $"Interview: {i.Application?.JobPosting?.Title ?? "Position"}",
+                Description = $"Type: {i.InterviewType}",
+                StartTime = i.ScheduledTime,
+                EndTime = i.ScheduledTime.AddHours(1),
+                LocationOrMeetingLink = i.MeetingLink
+            };
+
+            var calRes = _calendarService.GenerateCalendarEvent(calReq);
+
+            return new InterviewResponseDto
             {
                 InterviewId = i.InterviewId,
                 ScheduledTime = i.ScheduledTime,
@@ -112,16 +165,18 @@ public class InterviewController : ControllerBase
                 InterviewType = i.InterviewType,
                 Status = i.Status,
                 ApplicationId = i.ApplicationId,
-                JobTitle = i.Application != null && i.Application.JobPosting != null ? i.Application.JobPosting.Title : "Job",
-                CandidateName = i.Application != null && i.Application.Candidate != null && i.Application.Candidate.User != null
+                JobTitle = i.Application?.JobPosting?.Title ?? "Job",
+                CandidateName = i.Application?.Candidate?.User != null
                     ? $"{i.Application.Candidate.User.FirstName} {i.Application.Candidate.User.LastName}"
                     : "Candidate",
                 InterviewerId = i.InterviewerId,
-                InterviewerName = i.Interviewer != null ? $"{i.Interviewer.FirstName} {i.Interviewer.LastName}" : "Interviewer"
-            })
-            .ToListAsync();
+                InterviewerName = i.Interviewer != null ? $"{i.Interviewer.FirstName} {i.Interviewer.LastName}" : "Interviewer",
+                GoogleCalendarUrl = calRes.GoogleCalendarUrl,
+                OutlookCalendarUrl = calRes.OutlookCalendarUrl
+            };
+        }).ToList();
 
-        return Ok(interviews);
+        return Ok(dtos);
     }
 
     /// <summary>
@@ -142,7 +197,7 @@ public class InterviewController : ControllerBase
             return NotFound(new { message = "Interview schedule not found." });
         }
 
-        interview.ScheduledTime = dto.ScheduledTime;
+        if (dto.ScheduledTime != default) interview.ScheduledTime = dto.ScheduledTime;
         if (!string.IsNullOrEmpty(dto.MeetingLink)) interview.MeetingLink = dto.MeetingLink;
         if (!string.IsNullOrEmpty(dto.InterviewType)) interview.InterviewType = dto.InterviewType;
         if (!string.IsNullOrEmpty(dto.Status)) interview.Status = dto.Status;
@@ -153,6 +208,16 @@ public class InterviewController : ControllerBase
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         int.TryParse(userIdClaim, out int currentUserId);
         await _auditLogService.LogAsync("Interview Updated", $"Updated interview ID {id} status to '{interview.Status}'", currentUserId);
+
+        var calReq = new CalendarEventRequestDto
+        {
+            Title = $"Interview: {interview.Application?.JobPosting?.Title ?? "Position"}",
+            Description = $"Type: {interview.InterviewType}",
+            StartTime = interview.ScheduledTime,
+            EndTime = interview.ScheduledTime.AddHours(1),
+            LocationOrMeetingLink = interview.MeetingLink
+        };
+        var calRes = _calendarService.GenerateCalendarEvent(calReq);
 
         return Ok(new InterviewResponseDto
         {
@@ -165,7 +230,9 @@ public class InterviewController : ControllerBase
             JobTitle = interview.Application?.JobPosting?.Title ?? "Job",
             CandidateName = interview.Application?.Candidate?.User != null ? $"{interview.Application.Candidate.User.FirstName} {interview.Application.Candidate.User.LastName}" : "Candidate",
             InterviewerId = interview.InterviewerId,
-            InterviewerName = interview.Interviewer != null ? $"{interview.Interviewer.FirstName} {interview.Interviewer.LastName}" : "Interviewer"
+            InterviewerName = interview.Interviewer != null ? $"{interview.Interviewer.FirstName} {interview.Interviewer.LastName}" : "Interviewer",
+            GoogleCalendarUrl = calRes.GoogleCalendarUrl,
+            OutlookCalendarUrl = calRes.OutlookCalendarUrl
         });
     }
 }
