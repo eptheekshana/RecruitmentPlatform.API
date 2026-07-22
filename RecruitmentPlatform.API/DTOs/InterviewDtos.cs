@@ -37,4 +37,6 @@ public class InterviewResponseDto
     public string CandidateName { get; set; } = string.Empty;
     public int? InterviewerId { get; set; }
     public string InterviewerName { get; set; } = string.Empty;
+    public string GoogleCalendarUrl { get; set; } = string.Empty;
+    public string OutlookCalendarUrl { get; set; } = string.Empty;
 }

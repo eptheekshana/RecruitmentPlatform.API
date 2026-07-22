@@ -29,6 +29,16 @@ builder.Services.AddSingleton<IAmazonS3>(sp =>
 
 builder.Services.AddScoped<ICloudStorageService, S3CloudStorageService>();
 
+// Register Calendar Integration Services
+builder.Services.AddScoped<GoogleCalendarService>();
+builder.Services.AddScoped<OutlookCalendarService>();
+builder.Services.AddScoped<ICalendarIntegrationService, CalendarIntegrationService>();
+
+// Register Notification Services
+builder.Services.AddScoped<EmailNotificationService>();
+builder.Services.AddScoped<SmsNotificationService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -52,7 +62,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173", "http://localhost:3000", "http://localhost:5128")
+        policy.SetIsOriginAllowed(origin => true)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();

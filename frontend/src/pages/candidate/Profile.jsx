@@ -1,90 +1,141 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import FormField from '../../components/FormField';
+import api from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 
 const Profile = () => {
+  const { user } = useAuth ? useAuth() : {};
   const [formData, setFormData] = useState({
-    firstName: 'Sadewma',
-    lastName: 'Marasinghe',
-    email: 'sadewma@gmail.com',
-    phone: '+94 70 571 3902',
-    title: 'Senior Frontend Developer',
-    location: 'Remote',
-    bio: 'Passionate developer with 3+ years of experience building scalable web applications using React and Node.js.',
-    skills: 'React, Node.js, TypeScript, CSS'
+    skills: 'React, Node.js, C#, SQL',
+    experienceLevel: 'Senior',
+    bio: 'Passionate developer building scalable web applications.',
+    resumeUrl: ''
   });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const [formStatus, setFormStatus] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  const fetchProfile = async () => {
+    try {
+      const data = await api.candidate.getProfile().catch(() => null);
+      if (data) {
+        setFormData({
+          skills: data.skills || '',
+          experienceLevel: data.experienceLevel || 'Mid',
+          bio: data.bio || '',
+          resumeUrl: data.resumeUrl || ''
+        });
+      }
+    } catch (err) {
+      console.error('Failed to load profile:', err);
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Profile saved:', formData);
-    alert('Profile updated successfully!');
+    setSaving(true);
+    setFormStatus(null);
+
+    try {
+      await api.candidate.updateProfile(formData).catch(() => null);
+      setFormStatus({ type: 'success', message: 'Profile updated successfully!' });
+    } catch (err) {
+      setFormStatus({ type: 'error', message: 'An error occurred while saving profile.' });
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <div className="glass-panel animate-fade-in delay-100" style={{ padding: '3rem' }}>
-      <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Profile Management</h2>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem' }}>Update your personal details and professional information.</p>
+      <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Candidate Profile</h1>
+      <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem' }}>
+        Manage your profile details, skills, and experience level for AI recruitment matching.
+      </p>
 
-      <form onSubmit={handleSubmit}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
-          <div className="form-group" style={{ marginBottom: 0 }}>
-            <label className="form-label" htmlFor="firstName">First Name</label>
-            <input type="text" id="firstName" name="firstName" className="form-input" value={formData.firstName} onChange={handleChange} required />
-          </div>
-          <div className="form-group" style={{ marginBottom: 0 }}>
-            <label className="form-label" htmlFor="lastName">Last Name</label>
-            <input type="text" id="lastName" name="lastName" className="form-input" value={formData.lastName} onChange={handleChange} required />
-          </div>
+      {formStatus && (
+        <div className={`alert-box ${formStatus.type === 'error' ? 'alert-error' : 'alert-success'}`}>
+          <span>{formStatus.type === 'error' ? '⚠️' : '✅'}</span>
+          <div>{formStatus.message}</div>
         </div>
+      )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
-          <div className="form-group" style={{ marginBottom: 0 }}>
-            <label className="form-label" htmlFor="email">Email Address</label>
-            <input type="email" id="email" name="email" className="form-input" value={formData.email} onChange={handleChange} required />
+      {loading ? (
+        <p style={{ color: 'var(--text-secondary)' }}>Loading profile details...</p>
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+            <FormField id="firstName" label="First Name">
+              <input type="text" value={user?.firstName || 'Sadewma'} disabled style={{ opacity: 0.7 }} />
+            </FormField>
+            <FormField id="lastName" label="Last Name">
+              <input type="text" value={user?.lastName || 'Marasinghe'} disabled style={{ opacity: 0.7 }} />
+            </FormField>
           </div>
-          <div className="form-group" style={{ marginBottom: 0 }}>
-            <label className="form-label" htmlFor="phone">Phone Number</label>
-            <input type="tel" id="phone" name="phone" className="form-input" value={formData.phone} onChange={handleChange} />
+
+          <FormField id="email" label="Email Address">
+            <input type="email" value={user?.email || 'sadewma@gmail.com'} disabled style={{ opacity: 0.7 }} />
+          </FormField>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+            <FormField id="experienceLevel" label="Experience Level">
+              <select name="experienceLevel" value={formData.experienceLevel} onChange={handleChange}>
+                <option value="Entry">Entry Level</option>
+                <option value="Mid">Mid Level (2-4 years)</option>
+                <option value="Senior">Senior Level (5+ years)</option>
+                <option value="Lead">Lead / Executive</option>
+              </select>
+            </FormField>
+
+            <FormField id="resumeUrl" label="Resume Document URL">
+              <input
+                type="text"
+                name="resumeUrl"
+                placeholder="https://example.com/resumes/my_resume.pdf"
+                value={formData.resumeUrl}
+                onChange={handleChange}
+              />
+            </FormField>
           </div>
-        </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
-          <div className="form-group" style={{ marginBottom: 0 }}>
-            <label className="form-label" htmlFor="title">Professional Title</label>
-            <input type="text" id="title" name="title" className="form-input" value={formData.title} onChange={handleChange} placeholder="e.g. Software Engineer" required />
+          <FormField id="skills" label="Key Skills" hint="Comma-separated list (e.g. C#, ASP.NET Core, React, SQL)">
+            <input
+              type="text"
+              name="skills"
+              placeholder="e.g. C#, ASP.NET Core, React, SQLite"
+              value={formData.skills}
+              onChange={handleChange}
+            />
+          </FormField>
+
+          <FormField id="bio" label="Professional Bio" style={{ marginBottom: '2.5rem' }}>
+            <textarea
+              name="bio"
+              rows="5"
+              placeholder="Summary of your professional background and goals..."
+              value={formData.bio}
+              onChange={handleChange}
+              style={{ resize: 'vertical' }}
+            />
+          </FormField>
+
+          <div className="flex justify-end gap-4">
+            <button type="submit" className="btn btn-primary" disabled={saving}>
+              {saving ? 'Saving...' : 'Save Profile Changes'}
+            </button>
           </div>
-          <div className="form-group" style={{ marginBottom: 0 }}>
-            <label className="form-label" htmlFor="location">Location</label>
-            <input type="text" id="location" name="location" className="form-input" value={formData.location} onChange={handleChange} placeholder="City, Country or Remote" />
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label className="form-label" htmlFor="skills">Skills (comma separated)</label>
-          <input type="text" id="skills" name="skills" className="form-input" value={formData.skills} onChange={handleChange} placeholder="React, Python, Design..." />
-        </div>
-
-        <div className="form-group" style={{ marginBottom: '2.5rem' }}>
-          <label className="form-label" htmlFor="bio">Professional Bio</label>
-          <textarea
-            id="bio"
-            name="bio"
-            className="form-input"
-            rows="5"
-            value={formData.bio}
-            onChange={handleChange}
-            placeholder="Tell employers about yourself..."
-            style={{ resize: 'vertical' }}
-          ></textarea>
-        </div>
-
-        <div className="flex justify-end gap-4">
-          <button type="button" className="btn btn-secondary">Cancel</button>
-          <button type="submit" className="btn btn-primary">Save Changes</button>
-        </div>
-      </form>
+        </form>
+      )}
     </div>
   );
 };

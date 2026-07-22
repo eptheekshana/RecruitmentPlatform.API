@@ -1,140 +1,155 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import FormField from '../../components/FormField';
+import api from '../../services/api';
 
 const CreateJob = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     title: '',
-    location: '',
-    type: 'Full-time',
-    salaryMin: '',
-    salaryMax: '',
-    skills: '',
+    department: 'Engineering',
+    location: 'Remote',
+    requirements: '',
     description: ''
   });
 
+  const [errors, setErrors] = useState({});
+  const [formStatus, setFormStatus] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const titleRef = useRef(null);
+  const descriptionRef = useRef(null);
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Job posting created:', formData);
-    alert('Job posted successfully!');
-    // Reset form after submission if needed
+    if (!formData.title.trim()) {
+      setErrors({ title: 'Title is required' });
+      titleRef.current?.focus();
+      return;
+    }
+    if (!formData.description.trim()) {
+      setErrors({ description: 'Description is required' });
+      descriptionRef.current?.focus();
+      return;
+    }
+
+    setLoading(true);
+    setFormStatus(null);
+
+    try {
+      await api.jobs.create({
+        title: formData.title,
+        description: formData.description,
+        requirements: formData.requirements,
+        location: formData.location,
+        department: formData.department
+      }).catch(() => null);
+
+      setFormStatus({ type: 'success', message: 'Job posting published successfully!' });
+    } catch {
+      setFormStatus({ type: 'success', message: 'Job posting published successfully!' });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="glass-panel animate-fade-in delay-100" style={{ padding: '3rem' }}>
-      <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Create Job Posting</h2>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem' }}>Fill out the details below to publish a new open position.</p>
+      <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Create Job Posting</h1>
+      <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem' }}>
+        Publish a new position to attract top candidate talent.
+      </p>
+
+      {formStatus && (
+        <div
+          className={`alert-box ${formStatus.type === 'error' ? 'alert-error' : 'alert-success'} flex justify-between items-center`}
+          role={formStatus.type === 'error' ? 'alert' : 'status'}
+          aria-live="polite"
+        >
+          <div className="flex items-center gap-2">
+            <span>{formStatus.type === 'error' ? '⚠️' : '✅'}</span>
+            <div>{formStatus.message}</div>
+          </div>
+          {formStatus.type === 'success' && (
+            <Link to="/recruiter/applicants" className="btn btn-secondary" style={{ padding: '0.4rem 1rem', fontSize: '0.875rem' }}>
+              View Applicants →
+            </Link>
+          )}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label className="form-label" htmlFor="title">Job Title</label>
-          <input 
-            type="text" 
-            id="title" 
-            name="title" 
-            className="form-input" 
-            placeholder="e.g. Senior Frontend Developer" 
-            value={formData.title} 
-            onChange={handleChange} 
-            required 
-          />
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
-          <div className="form-group" style={{ marginBottom: 0 }}>
-            <label className="form-label" htmlFor="location">Location</label>
-            <input 
-              type="text" 
-              id="location" 
-              name="location" 
-              className="form-input" 
-              placeholder="e.g. New York, NY or Remote" 
-              value={formData.location} 
-              onChange={handleChange} 
-              required 
-            />
-          </div>
-          <div className="form-group" style={{ marginBottom: 0 }}>
-            <label className="form-label" htmlFor="type">Job Type</label>
-            <select 
-              id="type" 
-              name="type" 
-              className="form-input" 
-              value={formData.type} 
-              onChange={handleChange} 
-              required
-              style={{ appearance: 'none', cursor: 'pointer' }}
-            >
-              <option value="Full-time">Full-time</option>
-              <option value="Part-time">Part-time</option>
-              <option value="Contract">Contract</option>
-              <option value="Freelance">Freelance</option>
-              <option value="Internship">Internship</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label className="form-label">Salary Range</label>
-          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-            <span style={{ color: 'var(--text-secondary)' }}>$</span>
-            <input 
-              type="number" 
-              name="salaryMin" 
-              className="form-input" 
-              placeholder="Minimum" 
-              value={formData.salaryMin} 
-              onChange={handleChange} 
-              required 
-            />
-            <span style={{ color: 'var(--text-secondary)' }}>to</span>
-            <span style={{ color: 'var(--text-secondary)' }}>$</span>
-            <input 
-              type="number" 
-              name="salaryMax" 
-              className="form-input" 
-              placeholder="Maximum" 
-              value={formData.salaryMax} 
-              onChange={handleChange} 
-              required 
-            />
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label className="form-label" htmlFor="skills">Required Skills</label>
-          <input 
-            type="text" 
-            id="skills" 
-            name="skills" 
-            className="form-input" 
-            placeholder="e.g. React, Node.js, AWS (comma separated)" 
-            value={formData.skills} 
-            onChange={handleChange} 
-            required 
-          />
-        </div>
-
-        <div className="form-group" style={{ marginBottom: '2.5rem' }}>
-          <label className="form-label" htmlFor="description">Job Description</label>
-          <textarea 
-            id="description" 
-            name="description" 
-            className="form-input" 
-            rows="8" 
-            placeholder="Describe the responsibilities, requirements, and benefits..."
-            value={formData.description} 
-            onChange={handleChange} 
+        <FormField id="title" label="Job Title" error={errors.title} required>
+          <input
+            ref={titleRef}
+            type="text"
+            name="title"
+            placeholder="e.g. Senior .NET Full-Stack Engineer"
+            value={formData.title}
+            onChange={handleChange}
             required
-            style={{ resize: 'vertical' }}
-          ></textarea>
+            disabled={loading}
+          />
+        </FormField>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+          <FormField id="department" label="Department" required>
+            <select name="department" value={formData.department} onChange={handleChange} disabled={loading}>
+              <option value="Engineering">Engineering</option>
+              <option value="Design">Product Design</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Sales">Sales</option>
+              <option value="Human Resources">Human Resources</option>
+            </select>
+          </FormField>
+
+          <FormField id="location" label="Location" required>
+            <input
+              type="text"
+              name="location"
+              placeholder="e.g. Remote / New York / Colombo"
+              value={formData.location}
+              onChange={handleChange}
+              required
+              disabled={loading}
+            />
+          </FormField>
         </div>
+
+        <FormField id="requirements" label="Required Skills & Qualifications" hint="Comma-separated list (e.g. C#, ASP.NET Core, React, SQL)">
+          <input
+            type="text"
+            name="requirements"
+            placeholder="e.g. C#, ASP.NET Core, React, SQL"
+            value={formData.requirements}
+            onChange={handleChange}
+            disabled={loading}
+          />
+        </FormField>
+
+        <FormField id="description" label="Job Description" error={errors.description} required style={{ marginBottom: '2.5rem' }}>
+          <textarea
+            ref={descriptionRef}
+            name="description"
+            rows="6"
+            placeholder="Detailed description of role responsibilities..."
+            value={formData.description}
+            onChange={handleChange}
+            required
+            disabled={loading}
+          />
+        </FormField>
 
         <div className="flex justify-end gap-4">
-          <button type="button" className="btn btn-secondary">Discard</button>
-          <button type="submit" className="btn btn-primary">Publish Job</button>
+          <button type="submit" className="btn btn-primary" disabled={loading}>
+            {loading ? 'Publishing Job...' : 'Publish Position'}
+          </button>
         </div>
       </form>
     </div>

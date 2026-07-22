@@ -15,14 +15,15 @@ const CandidateLayout = () => {
       {/* Sidebar Navigation */}
       <aside style={{ width: '280px', flexShrink: 0 }}>
         <div className="glass-panel" style={{ padding: '2rem 1.5rem', position: 'sticky', top: '100px' }}>
-          <h3 style={{ fontSize: '1.25rem', marginBottom: '2rem', color: 'var(--text-secondary)' }}>Candidate Portal</h3>
-          <nav className="flex flex-col gap-2">
+          <h2 style={{ fontSize: '1.25rem', marginBottom: '2rem', color: 'var(--text-secondary)' }}>Candidate Portal</h2>
+          <nav className="flex flex-col gap-2" aria-label="Candidate Portal Navigation">
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;
               return (
                 <NavLink
                   key={item.path}
                   to={item.path}
+                  aria-current={isActive ? 'page' : undefined}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -36,7 +37,7 @@ const CandidateLayout = () => {
                     border: isActive ? '1px solid var(--accent-primary)' : '1px solid transparent'
                   }}
                 >
-                  <span style={{ fontSize: '1.25rem' }}>{item.icon}</span>
+                  <span style={{ fontSize: '1.25rem' }} aria-hidden="true">{item.icon}</span>
                   {item.name}
                 </NavLink>
               );
