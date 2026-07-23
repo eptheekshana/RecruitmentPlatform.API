@@ -50,7 +50,7 @@ public class AuthController : ControllerBase
             LastName = dto.LastName,
             Email = dto.Email,
             Role = role,
-            OrganizationId = dto.OrganizationId
+            OrganizationId = (dto.OrganizationId == null || dto.OrganizationId <= 0) ? null : dto.OrganizationId
         };
 
         user.PasswordHash = _passwordService.HashPassword(user, dto.Password);
