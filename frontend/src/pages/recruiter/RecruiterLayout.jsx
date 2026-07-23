@@ -33,8 +33,9 @@ const RecruiterLayout = () => {
 
   return (
     <div className="container flex gap-6" style={{ paddingBottom: '3rem' }}>
-      {/* Left Sidebar: LinkedIn Recruiter Profile Box */}
+      {/* Left Sidebar: Classic LinkedIn Recruiter Side Menu Bar */}
       <aside style={{ width: '225px', flexShrink: 0 }}>
+        {/* Profile Card Box */}
         <div className="linkedin-profile-card">
           <div className="linkedin-cover-banner" style={{ background: 'linear-gradient(135deg, #004182 0%, #0a66c2 100%)' }} />
           <div className="linkedin-avatar-container">
@@ -44,7 +45,7 @@ const RecruiterLayout = () => {
           </div>
           <div className="linkedin-profile-info">
             <div className="linkedin-profile-name">{user?.firstName} {user?.lastName}</div>
-            <div className="linkedin-profile-headline">Talent Acquisition Specialist</div>
+            <div className="linkedin-profile-headline">Talent Acquisition Recruiter</div>
           </div>
           <div className="linkedin-profile-stats">
             <div className="linkedin-stat-row">
@@ -56,12 +57,18 @@ const RecruiterLayout = () => {
               <span className="linkedin-stat-number">64</span>
             </div>
           </div>
+          <div style={{ padding: '0.6rem 1rem', fontSize: '0.8rem', fontWeight: 600, color: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+            </svg>
+            <span>Saved candidate items</span>
+          </div>
         </div>
 
-        {/* Navigation Links */}
+        {/* Side Menu Navigation Card */}
         <div className="linkedin-card" style={{ padding: '0.75rem 0' }}>
-          <div style={{ padding: '0 1rem 0.5rem 1rem', fontSize: '0.8rem', fontWeight: 600, color: 'rgba(0,0,0,0.6)', textTransform: 'uppercase' }}>
-            Recruiter Portal
+          <div style={{ padding: '0 1rem 0.5rem 1rem', fontSize: '0.75rem', fontWeight: 600, color: 'rgba(0,0,0,0.6)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            Recruiter Navigation
           </div>
           <nav className="flex flex-col">
             {navItems.map((item) => {
@@ -76,7 +83,7 @@ const RecruiterLayout = () => {
                     alignItems: 'center',
                     gap: '0.75rem',
                     padding: '0.65rem 1rem',
-                    fontSize: '0.875rem',
+                    fontSize: '0.85rem',
                     color: isActive ? '#0a66c2' : 'rgba(0,0,0,0.7)',
                     fontWeight: isActive ? 600 : 500,
                     background: isActive ? '#e8f0fe' : 'transparent',

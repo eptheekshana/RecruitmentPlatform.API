@@ -33,7 +33,7 @@ const HiringManagerLayout = () => {
 
   return (
     <div className="container flex gap-6" style={{ paddingBottom: '3rem' }}>
-      {/* Left Sidebar */}
+      {/* Left Sidebar: Classic LinkedIn Side Menu Bar */}
       <aside style={{ width: '225px', flexShrink: 0 }}>
         <div className="linkedin-profile-card">
           <div className="linkedin-cover-banner" style={{ background: 'linear-gradient(135deg, #057642 0%, #0a66c2 100%)' }} />
@@ -44,7 +44,7 @@ const HiringManagerLayout = () => {
           </div>
           <div className="linkedin-profile-info">
             <div className="linkedin-profile-name">{user?.firstName} {user?.lastName}</div>
-            <div className="linkedin-profile-headline">Hiring Manager</div>
+            <div className="linkedin-profile-headline">Hiring Team Lead</div>
           </div>
           <div className="linkedin-profile-stats">
             <div className="linkedin-stat-row">
@@ -56,11 +56,17 @@ const HiringManagerLayout = () => {
               <span className="linkedin-stat-number">28</span>
             </div>
           </div>
+          <div style={{ padding: '0.6rem 1rem', fontSize: '0.8rem', fontWeight: 600, color: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+            </svg>
+            <span>Saved candidate scorecards</span>
+          </div>
         </div>
 
         <div className="linkedin-card" style={{ padding: '0.75rem 0' }}>
-          <div style={{ padding: '0 1rem 0.5rem 1rem', fontSize: '0.8rem', fontWeight: 600, color: 'rgba(0,0,0,0.6)', textTransform: 'uppercase' }}>
-            Manager Portal
+          <div style={{ padding: '0 1rem 0.5rem 1rem', fontSize: '0.75rem', fontWeight: 600, color: 'rgba(0,0,0,0.6)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            Manager Navigation
           </div>
           <nav className="flex flex-col">
             {navItems.map((item) => {
@@ -75,7 +81,7 @@ const HiringManagerLayout = () => {
                     alignItems: 'center',
                     gap: '0.75rem',
                     padding: '0.65rem 1rem',
-                    fontSize: '0.875rem',
+                    fontSize: '0.85rem',
                     color: isActive ? '#0a66c2' : 'rgba(0,0,0,0.7)',
                     fontWeight: isActive ? 600 : 500,
                     background: isActive ? '#e8f0fe' : 'transparent',

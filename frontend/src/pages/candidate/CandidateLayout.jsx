@@ -43,11 +43,11 @@ const CandidateLayout = () => {
 
   return (
     <div className="container flex gap-6" style={{ paddingBottom: '3rem' }}>
-      {/* Left Sidebar: Classic LinkedIn Profile Card & Nav */}
+      {/* Left Sidebar: Classic LinkedIn Side Menu Bar */}
       <aside style={{ width: '225px', flexShrink: 0 }}>
-        {/* User Mini Profile Box */}
+        {/* Profile Card Widget */}
         <div className="linkedin-profile-card">
-          <div className="linkedin-cover-banner" />
+          <div className="linkedin-cover-banner" style={{ background: 'linear-gradient(135deg, #a0b4b7 0%, #004182 100%)' }} />
           <div className="linkedin-avatar-container">
             <div className="linkedin-avatar-circle">
               {user?.firstName ? user.firstName[0].toUpperCase() : 'C'}
@@ -55,24 +55,37 @@ const CandidateLayout = () => {
           </div>
           <div className="linkedin-profile-info">
             <div className="linkedin-profile-name">{user?.firstName} {user?.lastName}</div>
-            <div className="linkedin-profile-headline">Job Candidate & Applicant</div>
+            <div className="linkedin-profile-headline">Software Candidate & Applicant</div>
           </div>
           <div className="linkedin-profile-stats">
             <div className="linkedin-stat-row">
-              <span>Profile views</span>
+              <span>Profile viewers</span>
               <span className="linkedin-stat-number">142</span>
             </div>
             <div className="linkedin-stat-row">
-              <span>Applications</span>
-              <span className="linkedin-stat-number">12</span>
+              <span>Connections</span>
+              <span className="linkedin-stat-number">500+</span>
             </div>
+          </div>
+          <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #eeeeee', fontSize: '0.75rem' }}>
+            <span style={{ color: 'rgba(0,0,0,0.6)' }}>Access exclusive tools & insights</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)', marginTop: '2px' }}>
+              <span style={{ background: '#f8c77e', color: '#915907', width: '12px', height: '12px', borderRadius: '2px', display: 'inline-block' }} />
+              <span>Try Career Premium for $0</span>
+            </div>
+          </div>
+          <div style={{ padding: '0.6rem 1rem', fontSize: '0.8rem', fontWeight: 600, color: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+            </svg>
+            <span>My items</span>
           </div>
         </div>
 
-        {/* Navigation Sidebar */}
+        {/* Side Menu Navigation List Card */}
         <div className="linkedin-card" style={{ padding: '0.75rem 0' }}>
-          <div style={{ padding: '0 1rem 0.5rem 1rem', fontSize: '0.8rem', fontWeight: 600, color: 'rgba(0,0,0,0.6)', textTransform: 'uppercase' }}>
-            Candidate Portal
+          <div style={{ padding: '0 1rem 0.5rem 1rem', fontSize: '0.75rem', fontWeight: 600, color: 'rgba(0,0,0,0.6)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            Candidate Navigation
           </div>
           <nav className="flex flex-col">
             {navItems.map((item) => {
@@ -87,7 +100,7 @@ const CandidateLayout = () => {
                     alignItems: 'center',
                     gap: '0.75rem',
                     padding: '0.65rem 1rem',
-                    fontSize: '0.875rem',
+                    fontSize: '0.85rem',
                     color: isActive ? '#0a66c2' : 'rgba(0,0,0,0.7)',
                     fontWeight: isActive ? 600 : 500,
                     background: isActive ? '#e8f0fe' : 'transparent',
@@ -104,16 +117,16 @@ const CandidateLayout = () => {
         </div>
       </aside>
 
-      {/* Main Feed Content Area */}
+      {/* Main Content Area */}
       <div style={{ flex: 1, minWidth: 0 }}>
         <Outlet />
       </div>
 
-      {/* Right Sidebar: LinkedIn News & Insights Widget */}
-      <aside style={{ width: '280px', flexShrink: 0, display: 'none', minWidth: '280px' }} className="linkedin-right-widget">
-        <div className="linkedin-card">
+      {/* Right Sidebar: LinkedIn News & Trends */}
+      <aside style={{ width: '280px', flexShrink: 0 }} className="linkedin-right-widget">
+        <div className="linkedin-card" style={{ margin: 0 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-            <h3 style={{ fontSize: '0.95rem', fontWeight: 600 }}>LinkedIn News & Trends</h3>
+            <h3 style={{ fontSize: '0.925rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>LinkedIn News</h3>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.6)" strokeWidth="2">
               <circle cx="12" cy="12" r="10" />
               <line x1="12" y1="16" x2="12" y2="12" />
@@ -122,16 +135,16 @@ const CandidateLayout = () => {
           </div>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
             <li style={{ marginBottom: '0.75rem' }}>
-              <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>Top tech skills in demand 2026</div>
-              <div style={{ fontSize: '0.75rem', color: 'rgba(0,0,0,0.6)' }}>2d ago • 14,290 readers</div>
+              <div style={{ fontSize: '0.825rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>Tech hiring surges in 2026</div>
+              <div style={{ fontSize: '0.725rem', color: 'rgba(0,0,0,0.5)' }}>1d ago • 18,420 readers</div>
             </li>
             <li style={{ marginBottom: '0.75rem' }}>
-              <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>AI interview prep strategies</div>
-              <div style={{ fontSize: '0.75rem', color: 'rgba(0,0,0,0.6)' }}>1d ago • 8,920 readers</div>
+              <div style={{ fontSize: '0.825rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>Top skills software recruiters seek</div>
+              <div style={{ fontSize: '0.725rem', color: 'rgba(0,0,0,0.5)' }}>2d ago • 9,150 readers</div>
             </li>
             <li>
-              <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>Remote engineering roles up 18%</div>
-              <div style={{ fontSize: '0.75rem', color: 'rgba(0,0,0,0.6)' }}>3d ago • 22,410 readers</div>
+              <div style={{ fontSize: '0.825rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>Remote engineering roles up 22%</div>
+              <div style={{ fontSize: '0.725rem', color: 'rgba(0,0,0,0.5)' }}>3d ago • 25,800 readers</div>
             </li>
           </ul>
         </div>
