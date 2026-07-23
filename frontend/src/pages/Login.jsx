@@ -106,11 +106,46 @@ const Login = () => {
   };
 
   return (
-    <div className="container flex flex-col items-center justify-center" style={{ minHeight: 'calc(100vh - 120px)', padding: '2rem 1rem' }}>
-      <div className="linkedin-card" style={{ width: '100%', maxWidth: '380px', padding: '2rem 2.25rem' }}>
-        <div style={{ marginBottom: '1.5rem' }}>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Sign in</h1>
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-sub)' }}>Stay updated on your professional world</p>
+    <div 
+      className="container flex flex-col items-center justify-center fade-in" 
+      style={{ 
+        minHeight: 'calc(100vh - 120px)', 
+        padding: '2rem 1rem', 
+        position: 'relative' 
+      }}
+    >
+      {/* Background Radial Glow */}
+      <div style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '500px',
+        height: '500px',
+        background: 'radial-gradient(circle, rgba(37, 99, 235, 0.06) 0%, transparent 70%)',
+        pointerEvents: 'none',
+        zIndex: 0
+      }} />
+
+      <div 
+        className="linkedin-card" 
+        style={{ 
+          width: '100%', 
+          maxWidth: '400px', 
+          padding: '2.5rem 2.25rem', 
+          borderRadius: '16px',
+          boxShadow: 'var(--shadow-lg)',
+          zIndex: 1,
+          margin: 0
+        }}
+      >
+        <div style={{ marginBottom: '1.75rem', textAlign: 'center' }}>
+          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.35rem', letterSpacing: '-0.025em' }}>
+            Sign in
+          </h1>
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-sub)' }}>
+            Stay updated on your professional world
+          </p>
         </div>
 
         {formStatus && (
@@ -118,16 +153,16 @@ const Login = () => {
             className={`alert-box ${formStatus.type === 'error' ? 'alert-error' : 'alert-success'}`}
             role={formStatus.type === 'error' ? 'alert' : 'status'}
             aria-live="polite"
-            style={{ padding: '0.65rem 0.85rem', fontSize: '0.85rem' }}
+            style={{ padding: '0.65rem 0.85rem', fontSize: '0.85rem', marginBottom: '1.25rem' }}
           >
             <div>{formStatus.message}</div>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} noValidate>
+        <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <FormField
             id="email"
-            label="Email"
+            label="Email Address"
             error={touched.email ? errors.email : ''}
             required
           >
@@ -135,7 +170,7 @@ const Login = () => {
               ref={emailInputRef}
               type="email"
               name="email"
-              placeholder=""
+              placeholder="name@company.com"
               value={formData.email}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -145,10 +180,10 @@ const Login = () => {
             />
           </FormField>
 
-          <div className="form-group" style={{ marginBottom: '1.5rem' }}>
-            <div className="flex justify-between items-center mb-1">
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
               <label htmlFor="password" className="form-label" style={{ marginBottom: 0 }}>
-                Password <span style={{ color: '#c5221f' }}>*</span>
+                Password <span style={{ color: '#ef4444' }}>*</span>
               </label>
             </div>
             <input
@@ -156,7 +191,7 @@ const Login = () => {
               ref={passwordInputRef}
               type="password"
               name="password"
-              placeholder=""
+              placeholder="••••••••"
               value={formData.password}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -165,7 +200,7 @@ const Login = () => {
               className={`form-input ${touched.password && errors.password ? 'form-input-error' : ''}`}
             />
             {touched.password && errors.password && (
-              <p className="form-error-message" role="alert" style={{ fontSize: '0.8rem' }}>
+              <p className="form-error-message" role="alert" style={{ fontSize: '0.8rem', marginTop: '4px' }}>
                 ⚠️ {errors.password}
               </p>
             )}
@@ -175,15 +210,15 @@ const Login = () => {
             type="submit"
             className="btn-linkedin-primary"
             disabled={loading}
-            style={{ width: '100%', padding: '0.65rem', fontSize: '1rem' }}
+            style={{ width: '100%', padding: '0.65rem 1.5rem', fontSize: '0.95rem', borderRadius: '30px', marginTop: '0.5rem' }}
           >
             {loading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
 
-        <div className="text-center mt-6" style={{ fontSize: '0.875rem', color: 'var(--text-sub)' }}>
+        <div className="text-center mt-6" style={{ fontSize: '0.875rem', color: 'var(--text-sub)', borderTop: '1px solid var(--border-subtle)', paddingTop: '1.25rem', marginTop: '1.5rem' }}>
           New to ApexRecruit?{' '}
-          <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 600 }}>
+          <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 700 }}>
             Join now
           </Link>
         </div>

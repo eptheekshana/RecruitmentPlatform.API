@@ -191,15 +191,18 @@ const Navbar = () => {
   return (
     <header
       style={{
-        background: 'var(--bg-card)',
-        borderBottom: '1px solid var(--border)',
+        background: 'var(--glass-bg)',
+        borderBottom: '1px solid var(--glass-border)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
         position: 'sticky',
         top: 0,
         zIndex: 100,
-        height: '53px',
+        height: '56px',
         display: 'flex',
         alignItems: 'center',
-        transition: 'background-color 0.3s ease, border-color 0.3s ease'
+        boxShadow: 'var(--glass-shadow)',
+        transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease'
       }}
     >
       <div className="container flex justify-between items-center" style={{ width: '100%', height: '100%' }}>
