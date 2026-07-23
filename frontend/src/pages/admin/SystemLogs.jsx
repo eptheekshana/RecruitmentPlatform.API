@@ -9,7 +9,7 @@ const SystemLogs = () => {
 
   useEffect(() => {
     fetchLogs();
-  }, [searchQuery]); // refetch when query updates
+  }, [searchQuery]);
 
   const fetchLogs = async () => {
     if (!token) return;
@@ -32,84 +32,67 @@ const SystemLogs = () => {
     }
   };
 
-  const getActionBadgeStyle = (action) => {
+  const getActionBadgeClass = (action) => {
     const act = action.toLowerCase();
-    if (act.includes('delete') || act.includes('remove') || act.includes('revoke')) {
-      return { background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)' };
-    }
-    if (act.includes('update') || act.includes('change') || act.includes('edit')) {
-      return { background: 'rgba(147, 51, 234, 0.1)', color: '#9333ea', border: '1px solid rgba(147, 51, 234, 0.2)' };
-    }
-    if (act.includes('evaluate') || act.includes('approve') || act.includes('match')) {
-      return { background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.2)' };
-    }
-    return { background: 'rgba(37, 99, 235, 0.1)', color: 'var(--accent-primary)', border: '1px solid rgba(37, 99, 235, 0.2)' };
+    if (act.includes('delete') || act.includes('remove') || act.includes('revoke')) return 'rejected';
+    if (act.includes('evaluate') || act.includes('approve') || act.includes('match')) return 'shortlisted';
+    return 'applied';
   };
 
   return (
-    <div className="animate-fade-in delay-100">
-      
+    <div>
       {/* Title */}
-      <div className="glass-panel" style={{ padding: '2rem', marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>Security Audit Activity Stream</h1>
-        <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>Immutable tracking logs of administrative updates, match alterations, and recruitment actions</p>
+      <div className="linkedin-card" style={{ padding: '1.25rem 1.5rem', marginBottom: '1rem' }}>
+        <h1 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)', marginBottom: '0.2rem' }}>Security Audit Activity Stream</h1>
+        <p style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.85rem', marginBottom: '1rem' }}>Tracking logs of administrative updates and recruitment security events.</p>
         
-        <div style={{ position: 'relative' }}>
-          <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }}>🔍</span>
+        <div>
           <input
             type="text"
             className="form-input"
-            placeholder="Search activity stream by action keyword, details description, or user email details..."
+            placeholder="Search audit activity by action, details description, or email..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            style={{ paddingLeft: '3rem' }}
           />
         </div>
       </div>
 
       {loading ? (
-        <div className="glass-panel text-center" style={{ padding: '3rem' }}>
-          <p style={{ color: 'var(--text-secondary)' }}>Loading security activity stream...</p>
+        <div className="linkedin-card text-center" style={{ padding: '3rem' }}>
+          <p style={{ color: 'rgba(0,0,0,0.6)' }}>Loading security audit logs...</p>
         </div>
       ) : (
-        <div className="glass-panel" style={{ padding: '1.5rem', overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '600px' }}>
+        <div className="linkedin-card" style={{ padding: '1rem', overflowX: 'auto' }}>
+          <table className="linkedin-table">
             <thead>
-              <tr style={{ borderBottom: '1px solid var(--glass-border)', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                <th style={{ padding: '1.0rem', width: '20%' }}>Timestamp</th>
-                <th style={{ padding: '1.0rem', width: '20%' }}>Action Event</th>
-                <th style={{ padding: '1.0rem', width: '40%' }}>Details Description</th>
-                <th style={{ padding: '1.0rem', width: '20%' }}>Initiated By</th>
+              <tr>
+                <th style={{ width: '20%' }}>Timestamp</th>
+                <th style={{ width: '18%' }}>Action Event</th>
+                <th style={{ width: '42%' }}>Details Description</th>
+                <th style={{ width: '20%' }}>Initiated By</th>
               </tr>
             </thead>
             <tbody>
               {logs.length > 0 ? (
                 logs.map(log => (
-                  <tr key={log.auditLogId} style={{ borderBottom: '1px solid var(--glass-border)', fontSize: '0.95rem' }}>
-                    <td style={{ padding: '1.0rem', color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
+                  <tr key={log.auditLogId}>
+                    <td style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.825rem' }}>
                       {new Date(log.timestamp).toLocaleString()}
                     </td>
-                    <td style={{ padding: '1.0rem', whiteSpace: 'nowrap' }}>
-                      <span style={{
-                        fontSize: '0.75rem',
-                        padding: '3px 8px',
-                        borderRadius: '6px',
-                        fontWeight: 700,
-                        whiteSpace: 'nowrap',
-                        ...getActionBadgeStyle(log.action)
-                      }}>
+                    <td>
+                      <span className={`status-badge ${getActionBadgeClass(log.action)}`}>
                         {log.action}
                       </span>
                     </td>
-                    <td style={{ padding: '1.0rem', color: 'var(--text-primary)', wordBreak: 'break-word' }}>{log.details}</td>
-                    <td style={{ padding: '1.0rem', color: 'var(--text-secondary)', fontWeight: 500, wordBreak: 'break-all' }}>
+                    <td style={{ color: 'rgba(0,0,0,0.9)' }}>{log.details}</td>
+                    <td style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.825rem' }}>
                       {log.userEmail}
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4" style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
+                  <td colSpan="4" style={{ padding: '2rem', textAlign: 'center', color: 'rgba(0,0,0,0.6)' }}>
                     No audit log records match your filter criteria.
                   </td>
                 </tr>
@@ -118,7 +101,6 @@ const SystemLogs = () => {
           </table>
         </div>
       )}
-
     </div>
   );
 };

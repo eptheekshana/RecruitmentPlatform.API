@@ -64,7 +64,7 @@ const UserManagement = () => {
   };
 
   const handleDeleteUser = async (userId, userEmail) => {
-    if (!window.confirm(`Are you absolutely sure you want to delete the user account for ${userEmail}? This will remove all their data.`)) {
+    if (!window.confirm(`Are you sure you want to delete account ${userEmail}?`)) {
       return;
     }
     if (!token) return;
@@ -92,12 +92,11 @@ const UserManagement = () => {
   );
 
   return (
-    <div style={{ position: 'relative' }} className="animate-fade-in delay-100">
-
+    <div>
       {toast && (
         <div
           className={`alert-box ${toast.type === 'error' ? 'alert-error' : 'alert-success'}`}
-          style={{ position: 'fixed', top: '20px', right: '20px', zIndex: 110, maxWidth: '350px' }}
+          style={{ position: 'fixed', top: '20px', right: '20px', zIndex: 110, maxWidth: '350px', padding: '0.65rem 0.85rem', fontSize: '0.85rem' }}
         >
           <span>{toast.type === 'error' ? '⚠️' : '✅'}</span>
           <div>{toast.message}</div>
@@ -106,37 +105,35 @@ const UserManagement = () => {
       )}
 
       {/* Main Header */}
-      <div className="glass-panel" style={{ padding: '2rem', marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>User Directory & Accounts Manager</h1>
-        <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>Authorize platform roles, review organization links, and revoke accounts</p>
+      <div className="linkedin-card" style={{ padding: '1.25rem 1.5rem', marginBottom: '1rem' }}>
+        <h1 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)', marginBottom: '0.2rem' }}>User Directory & Permissions</h1>
+        <p style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.85rem', marginBottom: '1rem' }}>Manage user account roles, permissions, and platform access.</p>
 
-        <div style={{ position: 'relative' }}>
-          <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }}>🔍</span>
+        <div>
           <input
             type="text"
             className="form-input"
-            placeholder="Search users by name or email address..."
+            placeholder="Search users by name or email..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ paddingLeft: '3rem' }}
           />
         </div>
       </div>
 
       {loading ? (
-        <div className="glass-panel text-center" style={{ padding: '3rem' }}>
-          <p style={{ color: 'var(--text-secondary)' }}>Loading user database records...</p>
+        <div className="linkedin-card text-center" style={{ padding: '3rem' }}>
+          <p style={{ color: 'rgba(0,0,0,0.6)' }}>Loading user accounts...</p>
         </div>
       ) : (
-        <div className="glass-panel" style={{ padding: '1.5rem', overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '750px' }}>
+        <div className="linkedin-card" style={{ padding: '1rem', overflowX: 'auto' }}>
+          <table className="linkedin-table">
             <thead>
-              <tr style={{ borderBottom: '1px solid var(--glass-border)', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                <th style={{ padding: '1rem', width: '20%' }}>User Name</th>
-                <th style={{ padding: '1rem', width: '32%' }}>Email Address</th>
-                <th style={{ padding: '1rem', width: '13%' }}>System Role</th>
-                <th style={{ padding: '1rem', width: '20%' }}>Org Linkage</th>
-                <th style={{ padding: '1rem', width: '15%', textAlign: 'right' }}>Actions</th>
+              <tr>
+                <th style={{ width: '22%' }}>User Name</th>
+                <th style={{ width: '32%' }}>Email Address</th>
+                <th style={{ width: '16%' }}>System Role</th>
+                <th style={{ width: '15%' }}>Organization</th>
+                <th style={{ width: '15%', textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -144,19 +141,19 @@ const UserManagement = () => {
                 filtered.map(u => {
                   const isSelf = u.userId === currentUser?.userId;
                   return (
-                    <tr key={u.userId} style={{ borderBottom: '1px solid var(--glass-border)', fontSize: '0.95rem' }}>
-                      <td style={{ padding: '1rem', fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {u.firstName} {u.lastName} {isSelf && <span style={{ color: '#10b981', fontSize: '0.75rem' }}>(You)</span>}
+                    <tr key={u.userId}>
+                      <td style={{ fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>
+                        {u.firstName} {u.lastName} {isSelf && <span style={{ color: '#057642', fontSize: '0.75rem' }}>(You)</span>}
                       </td>
-                      <td style={{ padding: '1rem', color: 'var(--text-secondary)', wordBreak: 'break-all' }}>{u.email}</td>
-                      <td style={{ padding: '1rem', whiteSpace: 'nowrap' }}>
+                      <td style={{ color: 'rgba(0,0,0,0.6)' }}>{u.email}</td>
+                      <td>
                         {updatingUserId === u.userId ? (
-                          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                          <div style={{ display: 'flex', gap: '0.35rem', alignItems: 'center' }}>
                             <select
-                              className="form-input"
+                              className="form-select"
                               value={selectedRole}
                               onChange={(e) => setSelectedRole(e.target.value)}
-                              style={{ padding: '0.25rem 0.5rem', fontSize: '0.85rem', width: 'auto', minWidth: '120px' }}
+                              style={{ padding: '0.2rem 0.4rem', fontSize: '0.8rem', width: 'auto' }}
                             >
                               <option value="Candidate">Candidate</option>
                               <option value="Recruiter">Recruiter</option>
@@ -164,59 +161,49 @@ const UserManagement = () => {
                               <option value="Admin">Administrator</option>
                             </select>
                             <button
-                              className="btn btn-primary"
+                              className="btn-linkedin-primary"
                               onClick={() => handleUpdateRole(u.userId, selectedRole)}
-                              style={{ padding: '0.3rem 0.6rem', fontSize: '0.8rem' }}
+                              style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }}
                             >
                               Save
                             </button>
                             <button
-                              className="btn btn-secondary"
+                              className="btn-linkedin-outline"
                               onClick={() => setUpdatingUserId(null)}
-                              style={{ padding: '0.3rem 0.6rem', fontSize: '0.8rem' }}
+                              style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }}
                             >
                               Cancel
                             </button>
                           </div>
                         ) : (
-                          <span style={{
-                            fontSize: '0.75rem',
-                            padding: '3px 8px',
-                            borderRadius: '10px',
-                            fontWeight: 700,
-                            background: u.role === 'Candidate' ? 'rgba(37, 99, 235, 0.1)' :
-                              u.role === 'HiringManager' ? 'rgba(16, 185, 129, 0.1)' :
-                                u.role === 'Admin' ? 'rgba(239, 68, 68, 0.1)' :
-                                  'rgba(147, 51, 234, 0.1)',
-                            color: u.role === 'Candidate' ? 'var(--accent-primary)' :
-                              u.role === 'HiringManager' ? '#10b981' :
-                                u.role === 'Admin' ? '#ef4444' :
-                                  '#9333ea',
-                            border: `1px solid ${u.role === 'Candidate' ? 'rgba(37, 99, 235, 0.2)' :
-                                u.role === 'HiringManager' ? 'rgba(16, 185, 129, 0.2)' :
-                                  u.role === 'Admin' ? 'rgba(239, 68, 68, 0.2)' :
-                                    'rgba(147, 51, 234, 0.2)'
-                              }`
-                          }}>
+                          <span className={`status-badge ${u.role === 'Candidate' ? 'applied' : u.role === 'HiringManager' ? 'shortlisted' : 'underreview'}`}>
                             {u.role}
                           </span>
                         )}
                       </td>
-                      <td style={{ padding: '1rem', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{u.organizationName}</td>
-                      <td style={{ padding: '1rem', textAlign: 'right', whiteSpace: 'nowrap' }}>
-                        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+                      <td style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.85rem' }}>{u.organizationName}</td>
+                      <td style={{ textAlign: 'right' }}>
+                        <div style={{ display: 'flex', gap: '0.35rem', justifyContent: 'flex-end' }}>
                           <button
-                            className="btn btn-secondary"
+                            className="btn-linkedin-outline"
                             onClick={() => { setUpdatingUserId(u.userId); setSelectedRole(u.role); }}
-                            style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', whiteSpace: 'nowrap' }}
+                            style={{ padding: '0.25rem 0.65rem', fontSize: '0.775rem' }}
                             disabled={isSelf}
                           >
-                            Change Role
+                            Edit
                           </button>
                           <button
-                            className="btn btn-secondary"
                             onClick={() => handleDeleteUser(u.userId, u.email)}
-                            style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', borderColor: 'rgba(239,68,68,0.3)', color: '#ef4444', whiteSpace: 'nowrap' }}
+                            style={{
+                              background: 'transparent',
+                              border: '1px solid #f5c2c0',
+                              color: '#c5221f',
+                              borderRadius: '16px',
+                              padding: '0.25rem 0.65rem',
+                              cursor: 'pointer',
+                              fontSize: '0.775rem',
+                              fontWeight: 600
+                            }}
                             disabled={isSelf}
                           >
                             Delete
@@ -228,8 +215,8 @@ const UserManagement = () => {
                 })
               ) : (
                 <tr>
-                  <td colSpan="5" style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
-                    No users match your search term.
+                  <td colSpan="5" style={{ padding: '2rem', textAlign: 'center', color: 'rgba(0,0,0,0.6)' }}>
+                    No user accounts match your search.
                   </td>
                 </tr>
               )}
@@ -237,7 +224,6 @@ const UserManagement = () => {
           </table>
         </div>
       )}
-
     </div>
   );
 };
