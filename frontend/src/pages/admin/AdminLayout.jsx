@@ -52,25 +52,9 @@ const AdminLayout = () => {
               {user?.firstName ? user.firstName[0].toUpperCase() : 'A'}
             </div>
           </div>
-          <div className="linkedin-profile-info">
+          <div className="linkedin-profile-info" style={{ borderBottom: 'none' }}>
             <div className="linkedin-profile-name">{user?.firstName} {user?.lastName}</div>
             <div className="linkedin-profile-headline">Platform Administrator</div>
-          </div>
-          <div className="linkedin-profile-stats">
-            <div className="linkedin-stat-row">
-              <span>Security Audits</span>
-              <span className="linkedin-stat-number" style={{ color: '#10b981' }}>Active</span>
-            </div>
-            <div className="linkedin-stat-row">
-              <span>System Health</span>
-              <span className="linkedin-stat-number" style={{ color: '#10b981' }}>99.9%</span>
-            </div>
-          </div>
-          <div style={{ padding: '0.6rem 1rem', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-sub)', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-            </svg>
-            <span>Saved audit logs</span>
           </div>
         </div>
 

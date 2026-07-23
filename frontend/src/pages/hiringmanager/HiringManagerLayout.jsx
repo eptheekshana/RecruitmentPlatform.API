@@ -42,25 +42,9 @@ const HiringManagerLayout = () => {
               {user?.firstName ? user.firstName[0].toUpperCase() : 'H'}
             </div>
           </div>
-          <div className="linkedin-profile-info">
+          <div className="linkedin-profile-info" style={{ borderBottom: 'none' }}>
             <div className="linkedin-profile-name">{user?.firstName} {user?.lastName}</div>
             <div className="linkedin-profile-headline">Hiring Team Lead</div>
-          </div>
-          <div className="linkedin-profile-stats">
-            <div className="linkedin-stat-row">
-              <span>Shortlisted</span>
-              <span className="linkedin-stat-number">15</span>
-            </div>
-            <div className="linkedin-stat-row">
-              <span>Evaluated</span>
-              <span className="linkedin-stat-number">28</span>
-            </div>
-          </div>
-          <div style={{ padding: '0.6rem 1rem', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-sub)', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-            </svg>
-            <span>Saved candidate scorecards</span>
           </div>
         </div>
 

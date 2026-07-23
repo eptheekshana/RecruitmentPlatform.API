@@ -34,6 +34,160 @@ const Navbar = () => {
     }
   };
 
+  const getNavItems = () => {
+    if (!user) {
+      return [
+        {
+          name: 'Home',
+          path: '/',
+          icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill={location.pathname === '/' ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+          )
+        }
+      ];
+    }
+
+    const items = [
+      {
+        name: 'Home',
+        path: '/',
+        icon: (
+          <svg width="20" height="20" viewBox="0 0 24 24" fill={location.pathname === '/' ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+          </svg>
+        )
+      }
+    ];
+
+    if (user.role === 'Candidate') {
+      items.push(
+        {
+          name: 'Jobs',
+          path: '/candidate/jobs',
+          icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+            </svg>
+          )
+        },
+        {
+          name: 'Profile',
+          path: '/candidate/profile',
+          icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+          )
+        },
+        {
+          name: 'Documents',
+          path: '/candidate/cv-upload',
+          icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+            </svg>
+          )
+        }
+      );
+    } else if (user.role === 'Recruiter') {
+      items.push(
+        {
+          name: 'Applicants',
+          path: '/recruiter/applicants',
+          icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          )
+        },
+        {
+          name: 'Post a Job',
+          path: '/recruiter/create-job',
+          icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z" />
+            </svg>
+          )
+        }
+      );
+    } else if (user.role === 'HiringManager') {
+      items.push(
+        {
+          name: 'Shortlist',
+          path: '/hiring-manager/shortlist',
+          icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="8" r="7" />
+              <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+            </svg>
+          )
+        },
+        {
+          name: 'Evaluations',
+          path: '/hiring-manager/evaluations',
+          icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+            </svg>
+          )
+        }
+      );
+    } else if (user.role === 'Admin') {
+      items.push(
+        {
+          name: 'Analytics',
+          path: '/admin/analytics',
+          icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="18" y1="20" x2="18" y2="10" />
+              <line x1="12" y1="20" x2="12" y2="4" />
+              <line x1="6" y1="20" x2="6" y2="14" />
+            </svg>
+          )
+        },
+        {
+          name: 'Users',
+          path: '/admin/users',
+          icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          )
+        },
+        {
+          name: 'Logs',
+          path: '/admin/logs',
+          icon: (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7s0 6 8 10z" />
+            </svg>
+          )
+        }
+      );
+    }
+
+    return items;
+  };
+
   return (
     <header
       style={{
@@ -89,128 +243,35 @@ const Navbar = () => {
           </form>
         </div>
 
-        {/* Center/Right Navigation Icons (Classic LinkedIn Horizontal Nav Bar) */}
+        {/* Center/Right Navigation Icons (Dynamic Role-based Horizontal Nav Bar) */}
         <nav className="flex items-center" style={{ height: '100%' }}>
-          {/* Home Tab */}
-          <Link
-            to="/"
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '0 0.85rem',
-              height: '100%',
-              color: location.pathname === '/' ? 'var(--text-main)' : 'var(--text-sub)',
-              borderBottom: location.pathname === '/' ? '2px solid var(--primary)' : '2px solid transparent',
-              textDecoration: 'none',
-              fontSize: '0.725rem',
-              fontWeight: 500
-            }}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill={location.pathname === '/' ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-              <polyline points="9 22 9 12 15 12 15 22" />
-            </svg>
-            <span>Home</span>
-          </Link>
-
-          {/* My Network Tab */}
-          <Link
-            to={getPortalLink()}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '0 0.85rem',
-              height: '100%',
-              color: (location.pathname.includes('users') || location.pathname.includes('applicants')) ? 'var(--text-main)' : 'var(--text-sub)',
-              borderBottom: (location.pathname.includes('users') || location.pathname.includes('applicants')) ? '2px solid var(--primary)' : '2px solid transparent',
-              textDecoration: 'none',
-              fontSize: '0.725rem',
-              fontWeight: 500
-            }}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
-            <span>My Network</span>
-          </Link>
-
-          {/* Jobs Tab */}
-          <Link
-            to={user?.role === 'Candidate' ? '/candidate/jobs' : user?.role === 'Recruiter' ? '/recruiter/create-job' : '/candidate/jobs'}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '0 0.85rem',
-              height: '100%',
-              color: (location.pathname.includes('jobs') || location.pathname.includes('create-job')) ? 'var(--text-main)' : 'var(--text-sub)',
-              borderBottom: (location.pathname.includes('jobs') || location.pathname.includes('create-job')) ? '2px solid var(--primary)' : '2px solid transparent',
-              textDecoration: 'none',
-              fontSize: '0.725rem',
-              fontWeight: 500
-            }}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
-              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-            </svg>
-            <span>Jobs</span>
-          </Link>
-
-          {/* Messaging Tab */}
-          <Link
-            to={user?.role === 'HiringManager' ? '/hiring-manager/evaluations' : getPortalLink()}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '0 0.85rem',
-              height: '100%',
-              color: location.pathname.includes('evaluations') ? 'var(--text-main)' : 'var(--text-sub)',
-              borderBottom: location.pathname.includes('evaluations') ? '2px solid var(--primary)' : '2px solid transparent',
-              textDecoration: 'none',
-              fontSize: '0.725rem',
-              fontWeight: 500
-            }}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-            </svg>
-            <span>Messaging</span>
-          </Link>
-
-          {/* Notifications Tab */}
-          <Link
-            to={user?.role === 'Admin' ? '/admin/logs' : getPortalLink()}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '0 0.85rem',
-              height: '100%',
-              color: location.pathname.includes('logs') ? 'var(--text-main)' : 'var(--text-sub)',
-              borderBottom: location.pathname.includes('logs') ? '2px solid var(--primary)' : '2px solid transparent',
-              textDecoration: 'none',
-              fontSize: '0.725rem',
-              fontWeight: 500
-            }}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-              <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-            </svg>
-            <span>Notifications</span>
-          </Link>
+          {getNavItems().map((item) => {
+            const isActive = item.path === '/' 
+              ? location.pathname === '/' 
+              : location.pathname.startsWith(item.path);
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '0 0.85rem',
+                  height: '100%',
+                  color: isActive ? 'var(--text-main)' : 'var(--text-sub)',
+                  borderBottom: isActive ? '2px solid var(--primary)' : '2px solid transparent',
+                  textDecoration: 'none',
+                  fontSize: '0.725rem',
+                  fontWeight: 500
+                }}
+              >
+                {item.icon}
+                <span>{item.name}</span>
+              </Link>
+            );
+          })}
 
           {/* Theme Toggle Button */}
           <button

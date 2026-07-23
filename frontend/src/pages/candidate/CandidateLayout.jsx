@@ -53,32 +53,9 @@ const CandidateLayout = () => {
               {user?.firstName ? user.firstName[0].toUpperCase() : 'C'}
             </div>
           </div>
-          <div className="linkedin-profile-info">
+          <div className="linkedin-profile-info" style={{ borderBottom: 'none' }}>
             <div className="linkedin-profile-name">{user?.firstName} {user?.lastName}</div>
             <div className="linkedin-profile-headline">Software Candidate & Applicant</div>
-          </div>
-          <div className="linkedin-profile-stats">
-            <div className="linkedin-stat-row">
-              <span>Profile viewers</span>
-              <span className="linkedin-stat-number">142</span>
-            </div>
-            <div className="linkedin-stat-row">
-              <span>Connections</span>
-              <span className="linkedin-stat-number">500+</span>
-            </div>
-          </div>
-          <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border-subtle)', fontSize: '0.75rem' }}>
-            <span style={{ color: 'var(--text-sub)' }}>Access exclusive tools & insights</span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 600, color: 'var(--text-main)', marginTop: '2px' }}>
-              <span style={{ background: '#f8c77e', color: '#915907', width: '12px', height: '12px', borderRadius: '2px', display: 'inline-block' }} />
-              <span>Try Career Premium for $0</span>
-            </div>
-          </div>
-          <div style={{ padding: '0.6rem 1rem', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-sub)', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-            </svg>
-            <span>My items</span>
           </div>
         </div>
 
