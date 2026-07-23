@@ -3,10 +3,10 @@ import api from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 
 const mockApplicants = [
-  { applicationId: 1, candidateName: 'Alice Smith', candidateEmail: 'alice.smith@example.com', jobTitle: 'Senior Frontend Developer', status: 'Applied', aiScore: 92, appliedDate: '2026-07-19', coverLetter: 'Experienced frontend dev with React & TS.' },
-  { applicationId: 2, candidateName: 'Bob Johnson', candidateEmail: 'bob.j@example.com', jobTitle: 'UX/UI Designer', status: 'Shortlisted', aiScore: 85, appliedDate: '2026-07-18', coverLetter: 'UI/UX designer proficient in Figma.' },
-  { applicationId: 3, candidateName: 'Charlie Davis', candidateEmail: 'charlie.d@example.com', jobTitle: 'Backend Engineer', status: 'Interviewing', aiScore: 96, appliedDate: '2026-07-15', coverLetter: 'Backend specialist with C# & SQL.' },
-  { applicationId: 4, candidateName: 'Diana Prince', candidateEmail: 'diana.p@example.com', jobTitle: 'Product Manager', status: 'Rejected', aiScore: 65, appliedDate: '2026-07-10', coverLetter: 'Product manager with Agile experience.' },
+  { applicationId: 1, candidateName: 'Bimsara Pramod', candidateEmail: 'bimsarah@example.com', jobTitle: 'Senior Frontend Developer', status: 'Applied', aiScore: 92, appliedDate: '2026-07-19', coverLetter: 'Experienced frontend dev with React & TS.' },
+  { applicationId: 2, candidateName: 'Kaveesh Akalanka', candidateEmail: 'kaveesh@example.com', jobTitle: 'UX/UI Designer', status: 'Shortlisted', aiScore: 85, appliedDate: '2026-07-18', coverLetter: 'UI/UX designer proficient in Figma.' },
+  { applicationId: 3, candidateName: 'Hiruna Perera', candidateEmail: 'hiruna@example.com', jobTitle: 'Backend Engineer', status: 'Interviewing', aiScore: 96, appliedDate: '2026-07-15', coverLetter: 'Backend specialist with C# & SQL.' },
+  { applicationId: 4, candidateName: 'Shanuka Gamage', candidateEmail: 'shanukagamage@example.com', jobTitle: 'Product Manager', status: 'Rejected', aiScore: 65, appliedDate: '2026-07-10', coverLetter: 'Product manager with Agile experience.' },
 ];
 
 const ViewApplicants = () => {
@@ -193,7 +193,7 @@ const ViewApplicants = () => {
                       {app.status}
                     </span>
                   </div>
-                  
+
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.775rem', borderTop: '1px solid var(--border-subtle)', paddingTop: '0.5rem', marginTop: '0.5rem' }}>
                     <span style={{ color: 'var(--text-sub)' }}>{new Date(app.appliedDate).toLocaleDateString()}</span>
                     <span style={{ color: '#10b981', fontWeight: 700 }}>AI Match: {app.aiScore}%</span>
@@ -234,8 +234,8 @@ const ViewApplicants = () => {
                   </span>
                 </div>
               </div>
-              <button 
-                onClick={() => { setSelectedApplicant(null); setScheduledResult(null); }} 
+              <button
+                onClick={() => { setSelectedApplicant(null); setScheduledResult(null); }}
                 style={{ background: 'none', border: 'none', color: 'var(--text-sub)', fontSize: '1.5rem', cursor: 'pointer', outline: 'none' }}
                 aria-label="Close Candidate Details"
               >
@@ -305,12 +305,12 @@ const ViewApplicants = () => {
 
             {/* Interview scheduling modal */}
             {showInterviewModal && (
-              <form 
-                onSubmit={handleScheduleInterview} 
-                style={{ 
-                  background: 'var(--border-subtle)', 
-                  padding: '1rem', 
-                  borderRadius: '6px', 
+              <form
+                onSubmit={handleScheduleInterview}
+                style={{
+                  background: 'var(--border-subtle)',
+                  padding: '1rem',
+                  borderRadius: '6px',
                   border: '1px solid var(--border)',
                   display: 'flex',
                   flexDirection: 'column',
@@ -335,9 +335,9 @@ const ViewApplicants = () => {
 
                 <div>
                   <label className="form-label" style={{ fontSize: '0.75rem' }}>Type of Evaluation</label>
-                  <select 
-                    className="form-select" 
-                    value={interviewType} 
+                  <select
+                    className="form-select"
+                    value={interviewType}
                     onChange={(e) => setInterviewType(e.target.value)}
                     style={{ fontSize: '0.8rem' }}
                   >
@@ -359,10 +359,10 @@ const ViewApplicants = () => {
                   />
                 </div>
 
-                <button 
-                  type="submit" 
-                  className="btn-linkedin-primary" 
-                  disabled={scheduling} 
+                <button
+                  type="submit"
+                  className="btn-linkedin-primary"
+                  disabled={scheduling}
                   style={{ width: '100%', fontSize: '0.8rem', padding: '0.45rem' }}
                 >
                   {scheduling ? 'Scheduling Invites...' : 'Confirm & Send Details'}
@@ -372,13 +372,13 @@ const ViewApplicants = () => {
 
             {/* Scheduled Results Banners */}
             {scheduledResult && (
-              <div 
-                style={{ 
-                  background: 'rgba(16, 185, 129, 0.1)', 
-                  border: '1.5px solid #10b981', 
-                  padding: '0.85rem', 
-                  borderRadius: '6px', 
-                  fontSize: '0.825rem' 
+              <div
+                style={{
+                  background: 'rgba(16, 185, 129, 0.1)',
+                  border: '1.5px solid #10b981',
+                  padding: '0.85rem',
+                  borderRadius: '6px',
+                  fontSize: '0.825rem'
                 }}
               >
                 <p style={{ color: '#10b981', fontWeight: 700, margin: '0 0 0.5rem 0' }}>
@@ -396,9 +396,9 @@ const ViewApplicants = () => {
             )}
           </div>
           {/* Overlay backdrop */}
-          <div 
-            onClick={() => setSelectedApplicant(null)} 
-            style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.4)', zIndex: 90 }} 
+          <div
+            onClick={() => setSelectedApplicant(null)}
+            style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(0,0,0,0.4)', zIndex: 90 }}
           />
         </>
       )}

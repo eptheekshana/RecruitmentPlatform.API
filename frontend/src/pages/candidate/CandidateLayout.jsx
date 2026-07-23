@@ -43,28 +43,42 @@ const CandidateLayout = () => {
 
   return (
     <div className="container flex gap-6" style={{ paddingBottom: '3rem' }}>
-      {/* Left Sidebar: Classic LinkedIn Side Menu Bar */}
-      <aside style={{ width: '225px', flexShrink: 0 }}>
-        {/* Profile Card Widget */}
-        <div className="linkedin-profile-card">
-          <div className="linkedin-cover-banner" style={{ background: 'var(--accent-gradient)' }} />
-          <div className="linkedin-avatar-container">
-            <div className="linkedin-avatar-circle">
+      {/* Left Sidebar Layout */}
+      <aside style={{ width: '230px', flexShrink: 0 }}>
+        <div className="linkedin-card" style={{ padding: '1.25rem 0', display: 'flex', flexDirection: 'column', gap: '1rem', margin: 0 }}>
+          
+          {/* User Profile Header */}
+          <div style={{ padding: '0 1.25rem 1rem 1.25rem', borderBottom: '1px solid var(--border-subtle)', display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+            <div style={{
+              width: '42px',
+              height: '42px',
+              borderRadius: '50%',
+              background: 'var(--primary)',
+              color: '#fff',
+              fontWeight: 800,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.05rem',
+              flexShrink: 0
+            }}>
               {user?.firstName ? user.firstName[0].toUpperCase() : 'C'}
             </div>
+            <div style={{ overflow: 'hidden' }}>
+              <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-main)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                {user?.firstName} {user?.lastName}
+              </div>
+              <div style={{ fontSize: '0.725rem', color: 'var(--text-sub)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                Software Applicant
+              </div>
+            </div>
           </div>
-          <div className="linkedin-profile-info" style={{ borderBottom: 'none' }}>
-            <div className="linkedin-profile-name">{user?.firstName} {user?.lastName}</div>
-            <div className="linkedin-profile-headline">Software Candidate & Applicant</div>
-          </div>
-        </div>
 
-        {/* Side Menu Navigation List Card */}
-        <div className="linkedin-card" style={{ padding: '0.75rem 0' }}>
-          <div style={{ padding: '0 1rem 0.5rem 1rem', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-sub)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            Candidate Navigation
+          {/* Navigation Links */}
+          <div style={{ padding: '0 1rem 0.25rem 1.25rem', fontSize: '0.725rem', fontWeight: 700, color: 'var(--text-disabled)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            Menu Navigation
           </div>
-          <nav className="flex flex-col">
+          <nav className="flex flex-col" style={{ gap: '2px' }}>
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;
               return (
@@ -76,12 +90,12 @@ const CandidateLayout = () => {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.75rem',
-                    padding: '0.65rem 1rem',
+                    padding: '0.6rem 1.25rem',
                     fontSize: '0.85rem',
                     color: isActive ? 'var(--primary)' : 'var(--text-sub)',
-                    fontWeight: isActive ? 600 : 500,
+                    fontWeight: isActive ? 700 : 500,
                     background: isActive ? 'var(--primary-light)' : 'transparent',
-                    borderLeft: isActive ? '3px solid var(--primary)' : '3px solid transparent',
+                    borderLeft: isActive ? '3.5px solid var(--primary)' : '3.5px solid transparent',
                     textDecoration: 'none'
                   }}
                 >
@@ -98,34 +112,6 @@ const CandidateLayout = () => {
       <div style={{ flex: 1, minWidth: 0 }}>
         <Outlet />
       </div>
-
-      {/* Right Sidebar: Industry News & Trends */}
-      <aside style={{ width: '280px', flexShrink: 0 }} className="linkedin-right-widget">
-        <div className="linkedin-card" style={{ margin: 0 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-            <h3 style={{ fontSize: '0.925rem', fontWeight: 600, color: 'var(--text-main)' }}>ApexRecruit News</h3>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-sub)" strokeWidth="2">
-              <circle cx="12" cy="12" r="10" />
-              <line x1="12" y1="16" x2="12" y2="12" />
-              <line x1="12" y1="8" x2="12.01" y2="8" />
-            </svg>
-          </div>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-            <li style={{ marginBottom: '0.75rem' }}>
-              <div style={{ fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-main)' }}>Tech hiring surges in 2026</div>
-              <div style={{ fontSize: '0.725rem', color: 'var(--text-disabled)' }}>1d ago • 18,420 readers</div>
-            </li>
-            <li style={{ marginBottom: '0.75rem' }}>
-              <div style={{ fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-main)' }}>Top skills software recruiters seek</div>
-              <div style={{ fontSize: '0.725rem', color: 'var(--text-disabled)' }}>2d ago • 9,150 readers</div>
-            </li>
-            <li>
-              <div style={{ fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-main)' }}>Remote engineering roles up 22%</div>
-              <div style={{ fontSize: '0.725rem', color: 'var(--text-disabled)' }}>3d ago • 25,800 readers</div>
-            </li>
-          </ul>
-        </div>
-      </aside>
     </div>
   );
 };

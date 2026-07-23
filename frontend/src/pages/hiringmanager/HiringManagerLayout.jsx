@@ -33,26 +33,42 @@ const HiringManagerLayout = () => {
 
   return (
     <div className="container flex gap-6" style={{ paddingBottom: '3rem' }}>
-      {/* Left Sidebar: Classic LinkedIn Side Menu Bar */}
-      <aside style={{ width: '225px', flexShrink: 0 }}>
-        <div className="linkedin-profile-card">
-          <div className="linkedin-cover-banner" style={{ background: 'var(--accent-gradient)' }} />
-          <div className="linkedin-avatar-container">
-            <div className="linkedin-avatar-circle" style={{ background: 'var(--primary-hover)' }}>
+      {/* Left Sidebar Layout */}
+      <aside style={{ width: '230px', flexShrink: 0 }}>
+        <div className="linkedin-card" style={{ padding: '1.25rem 0', display: 'flex', flexDirection: 'column', gap: '1rem', margin: 0 }}>
+          
+          {/* User Profile Header */}
+          <div style={{ padding: '0 1.25rem 1rem 1.25rem', borderBottom: '1px solid var(--border-subtle)', display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+            <div style={{
+              width: '42px',
+              height: '42px',
+              borderRadius: '50%',
+              background: 'var(--primary)',
+              color: '#fff',
+              fontWeight: 800,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.05rem',
+              flexShrink: 0
+            }}>
               {user?.firstName ? user.firstName[0].toUpperCase() : 'H'}
             </div>
+            <div style={{ overflow: 'hidden' }}>
+              <div style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-main)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                {user?.firstName} {user?.lastName}
+              </div>
+              <div style={{ fontSize: '0.725rem', color: 'var(--text-sub)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                Hiring Team Lead
+              </div>
+            </div>
           </div>
-          <div className="linkedin-profile-info" style={{ borderBottom: 'none' }}>
-            <div className="linkedin-profile-name">{user?.firstName} {user?.lastName}</div>
-            <div className="linkedin-profile-headline">Hiring Team Lead</div>
-          </div>
-        </div>
 
-        <div className="linkedin-card" style={{ padding: '0.75rem 0' }}>
-          <div style={{ padding: '0 1rem 0.5rem 1rem', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-sub)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            Manager Navigation
+          {/* Navigation Links */}
+          <div style={{ padding: '0 1rem 0.25rem 1.25rem', fontSize: '0.725rem', fontWeight: 700, color: 'var(--text-disabled)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            Manager Menu
           </div>
-          <nav className="flex flex-col">
+          <nav className="flex flex-col" style={{ gap: '2px' }}>
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;
               return (
@@ -64,12 +80,12 @@ const HiringManagerLayout = () => {
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.75rem',
-                    padding: '0.65rem 1rem',
+                    padding: '0.6rem 1.25rem',
                     fontSize: '0.85rem',
                     color: isActive ? 'var(--primary)' : 'var(--text-sub)',
-                    fontWeight: isActive ? 600 : 500,
+                    fontWeight: isActive ? 700 : 500,
                     background: isActive ? 'var(--primary-light)' : 'transparent',
-                    borderLeft: isActive ? '3px solid var(--primary)' : '3px solid transparent',
+                    borderLeft: isActive ? '3.5px solid var(--primary)' : '3.5px solid transparent',
                     textDecoration: 'none'
                   }}
                 >
