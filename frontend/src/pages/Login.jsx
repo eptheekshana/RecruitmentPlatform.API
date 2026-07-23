@@ -109,8 +109,8 @@ const Login = () => {
     <div className="container flex flex-col items-center justify-center" style={{ minHeight: 'calc(100vh - 120px)', padding: '2rem 1rem' }}>
       <div className="linkedin-card" style={{ width: '100%', maxWidth: '380px', padding: '2rem 2.25rem' }}>
         <div style={{ marginBottom: '1.5rem' }}>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)', marginBottom: '0.25rem' }}>Sign in</h1>
-          <p style={{ fontSize: '0.875rem', color: 'rgba(0,0,0,0.6)' }}>Stay updated on your professional world</p>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Sign in</h1>
+          <p style={{ fontSize: '0.875rem', color: 'var(--text-sub)' }}>Stay updated on your professional world</p>
         </div>
 
         {formStatus && (
@@ -181,9 +181,9 @@ const Login = () => {
           </button>
         </form>
 
-        <div className="text-center mt-6" style={{ fontSize: '0.875rem', color: 'rgba(0,0,0,0.6)' }}>
-          New to RecruitHub?{' '}
-          <Link to="/register" style={{ color: '#0a66c2', fontWeight: 600 }}>
+        <div className="text-center mt-6" style={{ fontSize: '0.875rem', color: 'var(--text-sub)' }}>
+          New to ApexRecruit?{' '}
+          <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 600 }}>
             Join now
           </Link>
         </div>

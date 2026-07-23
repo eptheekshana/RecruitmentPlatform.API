@@ -1,31 +1,64 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --linkedin-blue: #0a66c2;
-  --linkedin-blue-hover: #004182;
-  --linkedin-blue-light: #e8f0fe;
-  --linkedin-bg: #f3f2ef;
-  --linkedin-card-bg: #ffffff;
-  --linkedin-border: #e0e0e0;
-  --linkedin-border-subtle: #eeeeee;
-  --linkedin-text-main: rgba(0, 0, 0, 0.9);
-  --linkedin-text-sub: rgba(0, 0, 0, 0.6);
-  --linkedin-text-disabled: rgba(0, 0, 0, 0.35);
+  /* Clean professional corporate tech colors */
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-light: #eff6ff;
+  --bg-app: #f8fafc;
+  --bg-card: #ffffff;
+  --border: #e2e8f0;
+  --border-subtle: #f1f5f9;
+  --text-main: #0f172a;
+  --text-sub: #475569;
+  --text-disabled: #94a3b8;
+  --accent-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+  /* Legacy aliases so we don't break existing styling in views */
+  --linkedin-blue: var(--primary);
+  --linkedin-blue-hover: var(--primary-hover);
+  --linkedin-blue-light: var(--primary-light);
+  --linkedin-bg: var(--bg-app);
+  --linkedin-card-bg: var(--bg-card);
+  --linkedin-border: var(--border);
+  --linkedin-border-subtle: var(--border-subtle);
+  --linkedin-text-main: var(--text-main);
+  --linkedin-text-sub: var(--text-sub);
+  --linkedin-text-disabled: var(--text-disabled);
+
+  --bg-primary: var(--bg-app);
+  --bg-secondary: var(--bg-card);
+  --text-primary: var(--text-main);
+  --text-secondary: var(--text-sub);
+  --accent-primary: var(--primary);
+  --accent-secondary: var(--primary-hover);
+  --glass-bg: var(--bg-card);
+  --glass-border: var(--border);
+  --glass-shadow: var(--shadow-sm);
   
-  --bg-primary: #f3f2ef;
-  --bg-secondary: #ffffff;
-  --text-primary: rgba(0, 0, 0, 0.9);
-  --text-secondary: rgba(0, 0, 0, 0.6);
-  --accent-primary: #0a66c2;
-  --accent-secondary: #004182;
-  --accent-gradient: linear-gradient(135deg, #0a66c2 0%, #004182 100%);
-  --glass-bg: #ffffff;
-  --glass-border: #e0e0e0;
-  --glass-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.05);
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-display: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --transition-smooth: all 0.2s ease-in-out;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+[data-theme='dark'] {
+  --primary: #3b82f6;
+  --primary-hover: #60a5fa;
+  --primary-light: rgba(59, 130, 246, 0.15);
+  --bg-app: #0b0f19;
+  --bg-card: #151d30;
+  --border: #232d45;
+  --border-subtle: #1a2236;
+  --text-main: #f8fafc;
+  --text-sub: #94a3b8;
+  --text-disabled: #64748b;
+  --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.18);
+}
+
 
 * {
   box-sizing: border-box;

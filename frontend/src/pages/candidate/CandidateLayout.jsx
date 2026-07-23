@@ -47,7 +47,7 @@ const CandidateLayout = () => {
       <aside style={{ width: '225px', flexShrink: 0 }}>
         {/* Profile Card Widget */}
         <div className="linkedin-profile-card">
-          <div className="linkedin-cover-banner" style={{ background: 'linear-gradient(135deg, #a0b4b7 0%, #004182 100%)' }} />
+          <div className="linkedin-cover-banner" style={{ background: 'var(--accent-gradient)' }} />
           <div className="linkedin-avatar-container">
             <div className="linkedin-avatar-circle">
               {user?.firstName ? user.firstName[0].toUpperCase() : 'C'}
@@ -67,14 +67,14 @@ const CandidateLayout = () => {
               <span className="linkedin-stat-number">500+</span>
             </div>
           </div>
-          <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid #eeeeee', fontSize: '0.75rem' }}>
-            <span style={{ color: 'rgba(0,0,0,0.6)' }}>Access exclusive tools & insights</span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)', marginTop: '2px' }}>
+          <div style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border-subtle)', fontSize: '0.75rem' }}>
+            <span style={{ color: 'var(--text-sub)' }}>Access exclusive tools & insights</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 600, color: 'var(--text-main)', marginTop: '2px' }}>
               <span style={{ background: '#f8c77e', color: '#915907', width: '12px', height: '12px', borderRadius: '2px', display: 'inline-block' }} />
               <span>Try Career Premium for $0</span>
             </div>
           </div>
-          <div style={{ padding: '0.6rem 1rem', fontSize: '0.8rem', fontWeight: 600, color: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}>
+          <div style={{ padding: '0.6rem 1rem', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-sub)', display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer' }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
               <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
             </svg>
@@ -84,7 +84,7 @@ const CandidateLayout = () => {
 
         {/* Side Menu Navigation List Card */}
         <div className="linkedin-card" style={{ padding: '0.75rem 0' }}>
-          <div style={{ padding: '0 1rem 0.5rem 1rem', fontSize: '0.75rem', fontWeight: 600, color: 'rgba(0,0,0,0.6)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+          <div style={{ padding: '0 1rem 0.5rem 1rem', fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-sub)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
             Candidate Navigation
           </div>
           <nav className="flex flex-col">
@@ -101,10 +101,10 @@ const CandidateLayout = () => {
                     gap: '0.75rem',
                     padding: '0.65rem 1rem',
                     fontSize: '0.85rem',
-                    color: isActive ? '#0a66c2' : 'rgba(0,0,0,0.7)',
+                    color: isActive ? 'var(--primary)' : 'var(--text-sub)',
                     fontWeight: isActive ? 600 : 500,
-                    background: isActive ? '#e8f0fe' : 'transparent',
-                    borderLeft: isActive ? '3px solid #0a66c2' : '3px solid transparent',
+                    background: isActive ? 'var(--primary-light)' : 'transparent',
+                    borderLeft: isActive ? '3px solid var(--primary)' : '3px solid transparent',
                     textDecoration: 'none'
                   }}
                 >
@@ -122,12 +122,12 @@ const CandidateLayout = () => {
         <Outlet />
       </div>
 
-      {/* Right Sidebar: LinkedIn News & Trends */}
+      {/* Right Sidebar: Industry News & Trends */}
       <aside style={{ width: '280px', flexShrink: 0 }} className="linkedin-right-widget">
         <div className="linkedin-card" style={{ margin: 0 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-            <h3 style={{ fontSize: '0.925rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>LinkedIn News</h3>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.6)" strokeWidth="2">
+            <h3 style={{ fontSize: '0.925rem', fontWeight: 600, color: 'var(--text-main)' }}>ApexRecruit News</h3>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-sub)" strokeWidth="2">
               <circle cx="12" cy="12" r="10" />
               <line x1="12" y1="16" x2="12" y2="12" />
               <line x1="12" y1="8" x2="12.01" y2="8" />
@@ -135,16 +135,16 @@ const CandidateLayout = () => {
           </div>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
             <li style={{ marginBottom: '0.75rem' }}>
-              <div style={{ fontSize: '0.825rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>Tech hiring surges in 2026</div>
-              <div style={{ fontSize: '0.725rem', color: 'rgba(0,0,0,0.5)' }}>1d ago • 18,420 readers</div>
+              <div style={{ fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-main)' }}>Tech hiring surges in 2026</div>
+              <div style={{ fontSize: '0.725rem', color: 'var(--text-disabled)' }}>1d ago • 18,420 readers</div>
             </li>
             <li style={{ marginBottom: '0.75rem' }}>
-              <div style={{ fontSize: '0.825rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>Top skills software recruiters seek</div>
-              <div style={{ fontSize: '0.725rem', color: 'rgba(0,0,0,0.5)' }}>2d ago • 9,150 readers</div>
+              <div style={{ fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-main)' }}>Top skills software recruiters seek</div>
+              <div style={{ fontSize: '0.725rem', color: 'var(--text-disabled)' }}>2d ago • 9,150 readers</div>
             </li>
             <li>
-              <div style={{ fontSize: '0.825rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>Remote engineering roles up 22%</div>
-              <div style={{ fontSize: '0.725rem', color: 'rgba(0,0,0,0.5)' }}>3d ago • 25,800 readers</div>
+              <div style={{ fontSize: '0.825rem', fontWeight: 600, color: 'var(--text-main)' }}>Remote engineering roles up 22%</div>
+              <div style={{ fontSize: '0.725rem', color: 'var(--text-disabled)' }}>3d ago • 25,800 readers</div>
             </li>
           </ul>
         </div>

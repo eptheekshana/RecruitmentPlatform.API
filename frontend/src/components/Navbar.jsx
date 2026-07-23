@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
   const [showUserMenu, setShowUserMenu] = useState(false);
 
@@ -35,43 +37,44 @@ const Navbar = () => {
   return (
     <header
       style={{
-        background: '#ffffff',
-        borderBottom: '1px solid #e0e0e0',
+        background: 'var(--bg-card)',
+        borderBottom: '1px solid var(--border)',
         position: 'sticky',
         top: 0,
         zIndex: 100,
         height: '53px',
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
+        transition: 'background-color 0.3s ease, border-color 0.3s ease'
       }}
     >
       <div className="container flex justify-between items-center" style={{ width: '100%', height: '100%' }}>
-        {/* Left: Brand Logo & LinkedIn Search Box */}
-        <div className="flex items-center gap-2">
-          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', textDecoration: 'none' }} aria-label="LinkedIn Home">
-            <div
-              style={{
-                width: '34px',
-                height: '34px',
-                borderRadius: '4px',
-                background: '#0a66c2',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: '800',
-                fontSize: '1.25rem',
-                color: '#ffffff',
-                fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-              }}
-              aria-hidden="true"
-            >
-              in
-            </div>
+        {/* Left: Brand Logo & Search Box */}
+        <div className="flex items-center gap-3">
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }} aria-label="ApexRecruit Home">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 2L3 10L16 18L29 10L16 2Z" fill="url(#logo-grad-1)" />
+              <path d="M3 22L16 30L29 22" stroke="url(#logo-grad-2)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M7 16L16 21.5L25 16" stroke="url(#logo-grad-1)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+              <defs>
+                <linearGradient id="logo-grad-1" x1="3" y1="2" x2="29" y2="18" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#3b82f6" />
+                  <stop offset="1" stopColor="#4f46e5" />
+                </linearGradient>
+                <linearGradient id="logo-grad-2" x1="3" y1="22" x2="29" y2="30" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#60a5fa" />
+                  <stop offset="1" stopColor="#3b82f6" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <span style={{ fontSize: '1.15rem', fontWeight: '800', color: 'var(--text-main)', letterSpacing: '-0.025em', display: 'flex', alignItems: 'center' }}>
+              Apex<span style={{ color: 'var(--primary)' }}>Recruit</span>
+            </span>
           </Link>
 
-          {/* LinkedIn Search Bar */}
+          {/* Search Bar */}
           <form onSubmit={handleSearchSubmit} className="linkedin-search-box">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.6)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--text-sub)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="8" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
@@ -98,8 +101,8 @@ const Navbar = () => {
               justifyContent: 'center',
               padding: '0 0.85rem',
               height: '100%',
-              color: location.pathname === '/' ? '#000000e6' : 'rgba(0,0,0,0.6)',
-              borderBottom: location.pathname === '/' ? '2px solid #000000e6' : '2px solid transparent',
+              color: location.pathname === '/' ? 'var(--text-main)' : 'var(--text-sub)',
+              borderBottom: location.pathname === '/' ? '2px solid var(--primary)' : '2px solid transparent',
               textDecoration: 'none',
               fontSize: '0.725rem',
               fontWeight: 500
@@ -122,8 +125,8 @@ const Navbar = () => {
               justifyContent: 'center',
               padding: '0 0.85rem',
               height: '100%',
-              color: location.pathname.includes('users') || location.pathname.includes('applicants') ? '#000000e6' : 'rgba(0,0,0,0.6)',
-              borderBottom: (location.pathname.includes('users') || location.pathname.includes('applicants')) ? '2px solid #000000e6' : '2px solid transparent',
+              color: (location.pathname.includes('users') || location.pathname.includes('applicants')) ? 'var(--text-main)' : 'var(--text-sub)',
+              borderBottom: (location.pathname.includes('users') || location.pathname.includes('applicants')) ? '2px solid var(--primary)' : '2px solid transparent',
               textDecoration: 'none',
               fontSize: '0.725rem',
               fontWeight: 500
@@ -148,8 +151,8 @@ const Navbar = () => {
               justifyContent: 'center',
               padding: '0 0.85rem',
               height: '100%',
-              color: (location.pathname.includes('jobs') || location.pathname.includes('create-job')) ? '#000000e6' : 'rgba(0,0,0,0.6)',
-              borderBottom: (location.pathname.includes('jobs') || location.pathname.includes('create-job')) ? '2px solid #000000e6' : '2px solid transparent',
+              color: (location.pathname.includes('jobs') || location.pathname.includes('create-job')) ? 'var(--text-main)' : 'var(--text-sub)',
+              borderBottom: (location.pathname.includes('jobs') || location.pathname.includes('create-job')) ? '2px solid var(--primary)' : '2px solid transparent',
               textDecoration: 'none',
               fontSize: '0.725rem',
               fontWeight: 500
@@ -172,8 +175,8 @@ const Navbar = () => {
               justifyContent: 'center',
               padding: '0 0.85rem',
               height: '100%',
-              color: location.pathname.includes('evaluations') ? '#000000e6' : 'rgba(0,0,0,0.6)',
-              borderBottom: location.pathname.includes('evaluations') ? '2px solid #000000e6' : '2px solid transparent',
+              color: location.pathname.includes('evaluations') ? 'var(--text-main)' : 'var(--text-sub)',
+              borderBottom: location.pathname.includes('evaluations') ? '2px solid var(--primary)' : '2px solid transparent',
               textDecoration: 'none',
               fontSize: '0.725rem',
               fontWeight: 500
@@ -195,8 +198,8 @@ const Navbar = () => {
               justifyContent: 'center',
               padding: '0 0.85rem',
               height: '100%',
-              color: location.pathname.includes('logs') ? '#000000e6' : 'rgba(0,0,0,0.6)',
-              borderBottom: location.pathname.includes('logs') ? '2px solid #000000e6' : '2px solid transparent',
+              color: location.pathname.includes('logs') ? 'var(--text-main)' : 'var(--text-sub)',
+              borderBottom: location.pathname.includes('logs') ? '2px solid var(--primary)' : '2px solid transparent',
               textDecoration: 'none',
               fontSize: '0.725rem',
               fontWeight: 500
@@ -209,9 +212,51 @@ const Navbar = () => {
             <span>Notifications</span>
           </Link>
 
+          {/* Theme Toggle Button */}
+          <button
+            onClick={toggleTheme}
+            type="button"
+            style={{
+              background: 'transparent',
+              border: 'none',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '0 0.85rem',
+              height: '100%',
+              color: 'var(--text-sub)',
+              cursor: 'pointer',
+              outline: 'none',
+              transition: 'color 0.2s ease'
+            }}
+            aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+          >
+            {theme === 'light' ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="5" />
+                <line x1="12" y1="1" x2="12" y2="3" />
+                <line x1="12" y1="21" x2="12" y2="23" />
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                <line x1="1" y1="12" x2="3" y2="12" />
+                <line x1="21" y1="12" x2="23" y2="12" />
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+              </svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
+            )}
+            <span style={{ fontSize: '0.725rem', marginTop: '2px' }}>
+              {theme === 'light' ? 'Dark' : 'Light'}
+            </span>
+          </button>
+
           {/* User "Me" Dropdown or Auth buttons */}
           {user ? (
-            <div style={{ position: 'relative', height: '100%', borderLeft: '1px solid #eeeeee', marginLeft: '0.5rem' }}>
+            <div style={{ position: 'relative', height: '100%', borderLeft: '1px solid var(--border-subtle)', marginLeft: '0.5rem' }}>
               <button
                 onClick={() => setShowUserMenu(!showUserMenu)}
                 style={{
@@ -223,7 +268,7 @@ const Navbar = () => {
                   justifyContent: 'center',
                   padding: '0 0.85rem',
                   height: '100%',
-                  color: 'rgba(0,0,0,0.6)',
+                  color: 'var(--text-sub)',
                   cursor: 'pointer'
                 }}
                 aria-expanded={showUserMenu}
@@ -233,7 +278,7 @@ const Navbar = () => {
                     width: '24px',
                     height: '24px',
                     borderRadius: '50%',
-                    background: '#0a66c2',
+                    background: 'var(--primary)',
                     color: '#ffffff',
                     fontSize: '0.75rem',
                     fontWeight: 700,
@@ -259,21 +304,22 @@ const Navbar = () => {
                     right: 0,
                     top: '53px',
                     width: '260px',
-                    background: '#ffffff',
-                    border: '1px solid #e0e0e0',
+                    background: 'var(--bg-card)',
+                    border: '1px solid var(--border)',
                     borderRadius: '8px 0 8px 8px',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                    boxShadow: 'var(--shadow-md)',
                     padding: '1rem',
-                    zIndex: 200
+                    zIndex: 200,
+                    transition: 'background-color 0.3s ease, border-color 0.3s ease'
                   }}
                 >
-                  <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '0.75rem', paddingBottom: '0.75rem', borderBottom: '1px solid #eeeeee' }}>
+                  <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '0.75rem', paddingBottom: '0.75rem', borderBottom: '1px solid var(--border-subtle)' }}>
                     <div
                       style={{
                         width: '44px',
                         height: '44px',
                         borderRadius: '50%',
-                        background: '#0a66c2',
+                        background: 'var(--primary)',
                         color: '#ffffff',
                         fontWeight: 700,
                         fontSize: '1.2rem',
@@ -285,7 +331,7 @@ const Navbar = () => {
                       {user.firstName ? user.firstName[0].toUpperCase() : 'U'}
                     </div>
                     <div>
-                      <div style={{ fontWeight: 600, fontSize: '0.95rem', color: 'rgba(0,0,0,0.9)' }}>
+                      <div style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--text-main)' }}>
                         {user.firstName} {user.lastName}
                       </div>
                       <div style={{ fontSize: '0.8rem', color: 'rgba(0,0,0,0.6)' }}>
@@ -298,8 +344,8 @@ const Navbar = () => {
                           fontSize: '0.7rem',
                           padding: '2px 8px',
                           borderRadius: '10px',
-                          background: '#e8f0fe',
-                          color: '#0a66c2',
+                          background: 'var(--primary-light)',
+                          color: 'var(--primary)',
                           fontWeight: 600
                         }}
                       >

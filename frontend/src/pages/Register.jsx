@@ -112,7 +112,7 @@ const Register = () => {
         role
       });
 
-      setFormStatus({ type: 'success', message: `Welcome to RecruitHub! Redirecting to ${role} portal...` });
+      setFormStatus({ type: 'success', message: `Welcome to ApexRecruit! Redirecting to ${role} portal...` });
 
       setTimeout(() => {
         if (role === 'Candidate') {
@@ -134,7 +134,7 @@ const Register = () => {
     <div className="container flex flex-col items-center justify-center" style={{ minHeight: 'calc(100vh - 120px)', padding: '2rem 1rem' }}>
       <div className="linkedin-card" style={{ width: '100%', maxWidth: '420px', padding: '2rem 2.25rem' }}>
         <div style={{ marginBottom: '1.5rem' }}>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)', marginBottom: '0.25rem' }}>Make the most of your professional life</h1>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.25rem' }}>Make the most of your professional life</h1>
         </div>
 
         {formStatus && (
@@ -215,17 +215,17 @@ const Register = () => {
             </label>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.875rem' }}>
-                <input type="radio" name="role" value="candidate" checked={formData.role === 'candidate'} onChange={handleChange} disabled={loading} style={{ accentColor: '#0a66c2' }} />
+                <input type="radio" name="role" value="candidate" checked={formData.role === 'candidate'} onChange={handleChange} disabled={loading} style={{ accentColor: 'var(--primary)' }} />
                 <span>Job Candidate / Applicant</span>
               </label>
 
               <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.875rem' }}>
-                <input type="radio" name="role" value="employer" checked={formData.role === 'employer'} onChange={handleChange} disabled={loading} style={{ accentColor: '#0a66c2' }} />
+                <input type="radio" name="role" value="employer" checked={formData.role === 'employer'} onChange={handleChange} disabled={loading} style={{ accentColor: 'var(--primary)' }} />
                 <span>Talent Recruiter</span>
               </label>
 
               <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.875rem' }}>
-                <input type="radio" name="role" value="hiringmanager" checked={formData.role === 'hiringmanager'} onChange={handleChange} disabled={loading} style={{ accentColor: '#0a66c2' }} />
+                <input type="radio" name="role" value="hiringmanager" checked={formData.role === 'hiringmanager'} onChange={handleChange} disabled={loading} style={{ accentColor: 'var(--primary)' }} />
                 <span>Hiring Manager</span>
               </label>
             </div>
@@ -241,9 +241,9 @@ const Register = () => {
           </button>
         </form>
 
-        <div className="text-center mt-6" style={{ fontSize: '0.875rem', color: 'rgba(0,0,0,0.6)' }}>
-          Already on RecruitHub?{' '}
-          <Link to="/login" style={{ color: '#0a66c2', fontWeight: 600 }}>
+        <div className="text-center mt-6" style={{ fontSize: '0.875rem', color: 'var(--text-sub)' }}>
+          Already on ApexRecruit?{' '}
+          <Link to="/login" style={{ color: 'var(--primary)', fontWeight: 600 }}>
             Sign in
           </Link>
         </div>

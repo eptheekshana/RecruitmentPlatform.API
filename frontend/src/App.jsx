@@ -20,15 +20,18 @@ import SystemAnalytics from './pages/admin/SystemAnalytics';
 import UserManagement from './pages/admin/UserManagement';
 import SystemLogs from './pages/admin/SystemLogs';
 import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <SkipLink />
-        <div className="min-h-screen flex flex-col" style={{ background: '#f3f2ef' }}>
-          <Navbar />
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <SkipLink />
+          <div className="min-h-screen flex flex-col" style={{ background: 'var(--bg-app)', color: 'var(--text-main)', transition: 'background-color 0.3s ease, color 0.3s ease' }}>
+            <Navbar />
+
           <main id="main-content" tabIndex="-1" style={{ flex: 1, padding: '1.5rem 0', outline: 'none' }}>
             <Routes>
               <Route path="/" element={<Home />} />
@@ -73,6 +76,7 @@ function App() {
         </div>
       </Router>
     </AuthProvider>
+  </ThemeProvider>
   );
 }
 

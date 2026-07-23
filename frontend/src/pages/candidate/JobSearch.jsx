@@ -93,16 +93,16 @@ const JobSearch = () => {
           alignItems: 'center',
           flexWrap: 'wrap',
           gap: '1rem',
-          borderLeft: '4px solid #0a66c2'
+          borderLeft: '4px solid var(--primary)'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <div style={{ fontSize: '1.5rem', color: '#0a66c2' }}>📄</div>
+          <div style={{ fontSize: '1.5rem', color: 'var(--primary)' }}>📄</div>
           <div>
-            <span style={{ fontWeight: 600, color: 'rgba(0,0,0,0.9)', fontSize: '0.95rem' }}>
+            <span style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '0.95rem' }}>
               {submittedCV ? `Active Resume: ${submittedCV.name}` : 'No resume attached'}
             </span>
-            <span style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.8rem', display: 'block' }}>
+            <span style={{ color: 'var(--text-sub)', fontSize: '0.8rem', display: 'block' }}>
               {submittedCV ? 'Applications automatically attach your uploaded resume.' : 'Upload your resume to increase visibility with recruiters.'}
             </span>
           </div>
@@ -114,7 +114,7 @@ const JobSearch = () => {
 
       {/* Search Header Card */}
       <div className="linkedin-card" style={{ padding: '1.25rem 1.5rem' }}>
-        <h1 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)', marginBottom: '1rem' }}>Search Jobs & Opportunities</h1>
+        <h1 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '1rem' }}>Search Jobs & Opportunities</h1>
 
         {statusMsg && (
           <div className={`alert-box ${statusMsg.type === 'error' ? 'alert-error' : 'alert-success'}`} style={{ marginBottom: '1rem', padding: '0.65rem 0.85rem', fontSize: '0.85rem' }}>
@@ -135,13 +135,13 @@ const JobSearch = () => {
       </div>
 
       <div style={{ margin: '1rem 0 0.75rem 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2 style={{ fontSize: '1rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>{filteredJobs.length} Job Postings</h2>
-        <span style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.825rem', fontWeight: 500 }}>Active Applications: {myApplications.length}</span>
+        <h2 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-main)' }}>{filteredJobs.length} Job Postings</h2>
+        <span style={{ color: 'var(--text-sub)', fontSize: '0.825rem', fontWeight: 500 }}>Active Applications: {myApplications.length}</span>
       </div>
 
       {loading ? (
         <div className="linkedin-card text-center" style={{ padding: '3rem' }}>
-          <p style={{ color: 'rgba(0,0,0,0.6)' }}>Loading job opportunities...</p>
+          <p style={{ color: 'var(--text-sub)' }}>Loading job opportunities...</p>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
@@ -159,8 +159,8 @@ const JobSearch = () => {
                           width: '44px',
                           height: '44px',
                           borderRadius: '4px',
-                          background: '#0a66c2',
-                          color: '#ffffff',
+                          background: 'var(--primary-light)',
+                          color: 'var(--primary)',
                           fontWeight: 700,
                           fontSize: '1.15rem',
                           display: 'flex',
@@ -172,9 +172,9 @@ const JobSearch = () => {
                         {job.title[0]}
                       </div>
                       <div>
-                        <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#0a66c2', marginBottom: '0.2rem' }}>{job.title}</h3>
-                        <p style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.825rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                          <span style={{ fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>{job.department || 'Engineering'}</span>
+                        <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--primary)', marginBottom: '0.2rem' }}>{job.title}</h3>
+                        <p style={{ color: 'var(--text-sub)', fontSize: '0.825rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                          <span style={{ fontWeight: 600, color: 'var(--text-main)' }}>{job.department || 'Engineering'}</span>
                           <span>•</span>
                           <span>{job.location || 'Remote'}</span>
                           {job.postedDate && (
@@ -205,7 +205,7 @@ const JobSearch = () => {
                     </div>
                   </div>
 
-                  <p style={{ color: 'rgba(0,0,0,0.8)', fontSize: '0.9rem', marginTop: '0.75rem', lineHeight: 1.5 }}>
+                  <p style={{ color: 'var(--text-main)', fontSize: '0.9rem', marginTop: '0.75rem', lineHeight: 1.5 }}>
                     {job.description}
                   </p>
 
@@ -220,7 +220,7 @@ const JobSearch = () => {
                   )}
 
                   {!isApplied && (
-                    <div style={{ marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid #eeeeee' }}>
+                    <div style={{ marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid var(--border-subtle)' }}>
                       <input
                         type="text"
                         className="form-input"
@@ -238,7 +238,7 @@ const JobSearch = () => {
             <div className="linkedin-card text-center" style={{ padding: '3rem' }}>
               <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>💼</div>
               <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>No matching job postings</h3>
-              <p style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.875rem' }}>Try refining your search terms or keywords.</p>
+              <p style={{ color: 'var(--text-sub)', fontSize: '0.875rem' }}>Try refining your search terms or keywords.</p>
             </div>
           )}
         </div>

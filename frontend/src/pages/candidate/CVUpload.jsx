@@ -235,11 +235,11 @@ const CVUpload = () => {
         role="button"
         aria-label="Upload resume drop zone"
         style={{
-          border: dragActive ? '2px dashed #0a66c2' : '2px dashed #e0e0e0',
+          border: dragActive ? '2px dashed var(--primary)' : '2px dashed var(--border)',
           borderRadius: '8px',
           padding: '2.5rem 1.5rem',
           textAlign: 'center',
-          background: dragActive ? '#e8f0fe' : '#fafafa',
+          background: dragActive ? 'var(--primary-light)' : 'var(--border-subtle)',
           transition: 'var(--transition-smooth)',
           position: 'relative',
           outline: 'none',
@@ -257,13 +257,13 @@ const CVUpload = () => {
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
         />
 
-        <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem', color: '#0a66c2' }}>
+        <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem', color: 'var(--primary)' }}>
           📤
         </div>
-        <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.25rem', color: 'rgba(0,0,0,0.9)' }}>
+        <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.25rem', color: 'var(--text-main)' }}>
           {dragActive ? 'Drop your file here...' : 'Drag & drop your resume here'}
         </h2>
-        <p style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.825rem', marginBottom: '1.25rem' }}>Supports PDF, DOC, DOCX up to 5MB</p>
+        <p style={{ color: 'var(--text-sub)', fontSize: '0.825rem', marginBottom: '1.25rem' }}>Supports PDF, DOC, DOCX up to 5MB</p>
 
         <button
           type="button"
@@ -281,22 +281,22 @@ const CVUpload = () => {
         <div
           style={{
             marginTop: '1.25rem',
-            background: '#fafafa',
+            background: 'var(--border-subtle)',
             padding: '1.25rem',
             borderRadius: '6px',
-            border: '1px solid #e0e0e0',
+            border: '1px solid var(--border)',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: uploading ? '0.75rem' : '1rem' }}>
-            <div style={{ fontSize: '2rem', color: '#0a66c2' }}>📑</div>
+            <div style={{ fontSize: '2rem', color: 'var(--primary)' }}>📑</div>
             <div style={{ flex: 1 }}>
               <div className="flex justify-between" style={{ marginBottom: '0.2rem' }}>
-                <span style={{ fontWeight: 600, fontSize: '0.9rem', color: 'rgba(0,0,0,0.9)' }}>{file.name}</span>
-                <span style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.8rem' }}>
+                <span style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text-main)' }}>{file.name}</span>
+                <span style={{ color: 'var(--text-sub)', fontSize: '0.8rem' }}>
                   {(file.size / 1024 / 1024).toFixed(2)} MB
                 </span>
               </div>
-              <span style={{ color: '#0a66c2', fontSize: '0.8rem', fontWeight: 600 }}>
+              <span style={{ color: 'var(--primary)', fontSize: '0.8rem', fontWeight: 600 }}>
                 {uploading ? `Uploading... ${progress}%` : 'File ready for submission'}
               </span>
             </div>
@@ -313,12 +313,12 @@ const CVUpload = () => {
           </div>
 
           {uploading && (
-            <div style={{ marginBottom: '1rem', height: '6px', background: '#e0e0e0', borderRadius: '3px', overflow: 'hidden' }}>
-              <div style={{ width: `${progress}%`, height: '100%', background: '#0a66c2', transition: 'width 0.2s ease' }} />
+            <div style={{ marginBottom: '1rem', height: '6px', background: 'var(--border)', borderRadius: '3px', overflow: 'hidden' }}>
+              <div style={{ width: `${progress}%`, height: '100%', background: 'var(--primary)', transition: 'width 0.2s ease' }} />
             </div>
           )}
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', paddingTop: '0.75rem', borderTop: '1px solid #eeeeee' }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', paddingTop: '0.75rem', borderTop: '1px solid var(--border-subtle)' }}>
             <button
               type="button"
               className="btn-linkedin-outline"
