@@ -4,10 +4,10 @@ import api from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 
 const mockJobs = [
-  { jobId: 1, title: 'Senior Frontend Developer', department: 'Engineering', location: 'Remote', requirements: 'React, TypeScript, CSS', description: 'Build responsive web apps using React and TypeScript.', postedDate: '2026-07-01' },
-  { jobId: 2, title: 'UX/UI Designer', department: 'Product Design', location: 'New York, NY', requirements: 'Figma, UI Design, Prototyping', description: 'Create user interfaces and design mockups for our web platform.', postedDate: '2026-07-05' },
-  { jobId: 3, title: 'Backend Engineer', department: 'Engineering', location: 'San Francisco, CA', requirements: 'C#, ASP.NET Core, PostgreSQL', description: 'Develop REST APIs and data services in C#.', postedDate: '2026-07-10' },
-  { jobId: 4, title: 'Product Manager', department: 'Product', location: 'Remote', requirements: 'Agile, Strategy, Leadership', description: 'Lead product strategy and work closely with engineering teams.', postedDate: '2026-07-15' },
+  { jobId: 1, title: 'Senior Frontend Developer', department: 'Engineering', location: 'Remote', requirements: 'React, TypeScript, CSS', description: 'Build responsive web apps using React and TypeScript for cloud-scale enterprise users.', postedDate: '2026-07-01' },
+  { jobId: 2, title: 'UX/UI Designer', department: 'Product Design', location: 'New York, NY', requirements: 'Figma, UI Design, Prototyping', description: 'Create user interfaces and design mockups for our LinkedIn-aligned talent acquisition portal.', postedDate: '2026-07-05' },
+  { jobId: 3, title: 'Backend Engineer', department: 'Engineering', location: 'San Francisco, CA', requirements: 'C#, ASP.NET Core, PostgreSQL', description: 'Develop REST APIs and data services in C# with microservice backend architecture.', postedDate: '2026-07-10' },
+  { jobId: 4, title: 'Product Manager', department: 'Product', location: 'Remote', requirements: 'Agile, Strategy, Leadership', description: 'Lead product strategy and work closely with engineering and recruitment teams.', postedDate: '2026-07-15' },
 ];
 
 const JobSearch = () => {
@@ -63,7 +63,7 @@ const JobSearch = () => {
         setStatusMsg({ type: 'success', text: `Successfully applied! AI Match Score: ${res.aiScore || 90}%` });
         setMyApplications(prev => [...prev, { jobId, status: 'Applied', aiScore: res.aiScore || 90 }]);
       } else {
-        setStatusMsg({ type: 'success', text: 'Successfully applied for position!' });
+        setStatusMsg({ type: 'success', text: 'Application submitted successfully!' });
         setMyApplications(prev => [...prev, { jobId, status: 'Applied', aiScore: 92 }]);
       }
     } catch (err) {
@@ -83,134 +83,151 @@ const JobSearch = () => {
   );
 
   return (
-    <div className="animate-fade-in delay-100">
-      {/* CV Banner connecting Job Search to CV Upload */}
+    <div>
+      {/* Resume Banner */}
       <div
+        className="linkedin-card"
         style={{
-          marginBottom: '1.5rem',
-          padding: '1rem 1.5rem',
-          borderRadius: '12px',
-          background: submittedCV ? 'rgba(16, 185, 129, 0.08)' : 'rgba(99, 102, 241, 0.08)',
-          border: submittedCV ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(99, 102, 241, 0.3)',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           flexWrap: 'wrap',
           gap: '1rem',
+          borderLeft: '4px solid #0a66c2'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <span style={{ fontSize: '1.5rem' }}>📄</span>
+          <div style={{ fontSize: '1.5rem', color: '#0a66c2' }}>📄</div>
           <div>
-            <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
-              {submittedCV ? `Active Resume: ${submittedCV.name}` : 'No resume uploaded yet!'}
+            <span style={{ fontWeight: 600, color: 'rgba(0,0,0,0.9)', fontSize: '0.95rem' }}>
+              {submittedCV ? `Active Resume: ${submittedCV.name}` : 'No resume attached'}
             </span>
-            <span style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', display: 'block' }}>
-              {submittedCV ? 'Applications will include your uploaded resume.' : 'Upload your resume to stand out to hiring managers.'}
+            <span style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.8rem', display: 'block' }}>
+              {submittedCV ? 'Applications automatically attach your uploaded resume.' : 'Upload your resume to increase visibility with recruiters.'}
             </span>
           </div>
         </div>
-        <Link to="/candidate/cv-upload" className="btn btn-secondary" style={{ fontSize: '0.875rem', padding: '0.4rem 1rem' }}>
-          {submittedCV ? 'Manage Resume' : 'Upload Resume →'}
+        <Link to="/candidate/cv-upload" className="btn-linkedin-outline" style={{ fontSize: '0.8rem', padding: '0.3rem 0.85rem' }}>
+          {submittedCV ? 'Manage Resume' : 'Upload Resume'}
         </Link>
       </div>
 
-      <div className="glass-panel" style={{ padding: '2rem', marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '1.75rem', marginBottom: '1.5rem' }}>Find & Apply for Opportunities</h1>
+      {/* Search Header Card */}
+      <div className="linkedin-card" style={{ padding: '1.25rem 1.5rem' }}>
+        <h1 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)', marginBottom: '1rem' }}>Search Jobs & Opportunities</h1>
 
         {statusMsg && (
-          <div className={`alert-box ${statusMsg.type === 'error' ? 'alert-error' : 'alert-success'}`} style={{ marginBottom: '1.5rem' }}>
+          <div className={`alert-box ${statusMsg.type === 'error' ? 'alert-error' : 'alert-success'}`} style={{ marginBottom: '1rem', padding: '0.65rem 0.85rem', fontSize: '0.85rem' }}>
             <span>{statusMsg.type === 'error' ? '⚠️' : '✅'}</span>
             <div>{statusMsg.text}</div>
           </div>
         )}
 
         <div style={{ position: 'relative' }}>
-          <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', fontSize: '1.25rem' }}>🔍</span>
           <input
             type="text"
             className="form-input"
             placeholder="Search by job title, department, skills, or location..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ paddingLeft: '3rem' }}
           />
         </div>
       </div>
 
-      <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2 style={{ fontSize: '1.25rem' }}>{filteredJobs.length} Active Positions</h2>
-        <span style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Your Applications: {myApplications.length}</span>
+      <div style={{ margin: '1rem 0 0.75rem 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2 style={{ fontSize: '1rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>{filteredJobs.length} Job Postings</h2>
+        <span style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.825rem', fontWeight: 500 }}>Active Applications: {myApplications.length}</span>
       </div>
 
       {loading ? (
-        <div className="glass-panel text-center" style={{ padding: '3rem' }}>
-          <p style={{ color: 'var(--text-secondary)' }}>Loading job postings...</p>
+        <div className="linkedin-card text-center" style={{ padding: '3rem' }}>
+          <p style={{ color: 'rgba(0,0,0,0.6)' }}>Loading job opportunities...</p>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
           {filteredJobs.length > 0 ? (
             filteredJobs.map((job) => {
               const isApplied = appliedJobIds.has(job.jobId);
               const appRecord = myApplications.find(a => a.jobId === job.jobId);
 
               return (
-                <article key={job.jobId} className="glass-panel" style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                  <div className="flex justify-between" style={{ flexWrap: 'wrap', gap: '1rem' }}>
-                    <div>
-                      <h3 style={{ fontSize: '1.35rem', color: 'var(--text-primary)', marginBottom: '0.35rem' }}>{job.title}</h3>
-                      <p style={{ color: 'var(--text-secondary)', display: 'flex', gap: '1.25rem', alignItems: 'center', fontSize: '0.9rem' }}>
-                        <span style={{ color: '#38bdf8', fontWeight: 600 }}>🏢 {job.department || 'Tech'}</span>
-                        <span>📍 {job.location || 'Remote'}</span>
-                        {job.postedDate && <span>📅 {new Date(job.postedDate).toLocaleDateString()}</span>}
-                      </p>
+                <article key={job.jobId} className="linkedin-card" style={{ margin: 0, padding: '1.25rem' }}>
+                  <div className="flex justify-between" style={{ flexWrap: 'wrap', gap: '0.75rem' }}>
+                    <div className="flex gap-3 items-start">
+                      <div
+                        style={{
+                          width: '44px',
+                          height: '44px',
+                          borderRadius: '4px',
+                          background: '#0a66c2',
+                          color: '#ffffff',
+                          fontWeight: 700,
+                          fontSize: '1.15rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0
+                        }}
+                      >
+                        {job.title[0]}
+                      </div>
+                      <div>
+                        <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: '#0a66c2', marginBottom: '0.2rem' }}>{job.title}</h3>
+                        <p style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.825rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                          <span style={{ fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>{job.department || 'Engineering'}</span>
+                          <span>•</span>
+                          <span>{job.location || 'Remote'}</span>
+                          {job.postedDate && (
+                            <>
+                              <span>•</span>
+                              <span>{new Date(job.postedDate).toLocaleDateString()}</span>
+                            </>
+                          )}
+                        </p>
+                      </div>
                     </div>
 
                     <div>
                       {isApplied ? (
-                        <div style={{ textAlign: 'right' }}>
-                          <span style={{
-                            padding: '0.4rem 1rem',
-                            borderRadius: '99px',
-                            background: 'rgba(56, 189, 248, 0.15)',
-                            color: '#38bdf8',
-                            border: '1px solid rgba(56, 189, 248, 0.3)',
-                            fontWeight: 600,
-                            fontSize: '0.85rem'
-                          }}>
-                            ✓ {appRecord?.status || 'Applied'} (AI Match: {appRecord?.aiScore || 90}%)
-                          </span>
-                        </div>
+                        <span className="status-badge applied">
+                          ✓ Applied (AI Match: {appRecord?.aiScore || 90}%)
+                        </span>
                       ) : (
                         <button
-                          className="btn btn-primary"
+                          className="btn-linkedin-primary"
                           onClick={() => handleApply(job.jobId)}
                           disabled={applyingJobId === job.jobId}
-                          style={{ padding: '0.6rem 1.5rem', fontSize: '0.9rem' }}
+                          style={{ fontSize: '0.85rem', padding: '0.35rem 1.15rem' }}
                         >
-                          {applyingJobId === job.jobId ? 'Submitting...' : 'Apply Now'}
+                          {applyingJobId === job.jobId ? 'Submitting...' : 'Easy Apply'}
                         </button>
                       )}
                     </div>
                   </div>
 
-                  <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6 }}>{job.description}</p>
+                  <p style={{ color: 'rgba(0,0,0,0.8)', fontSize: '0.9rem', marginTop: '0.75rem', lineHeight: 1.5 }}>
+                    {job.description}
+                  </p>
 
                   {job.requirements && (
-                    <div style={{ background: 'rgba(255,255,255,0.02)', padding: '0.75rem 1rem', borderRadius: '8px', borderLeft: '3px solid var(--accent-primary)', fontSize: '0.875rem' }}>
-                      <strong>Requirements:</strong> {job.requirements}
+                    <div style={{ marginTop: '0.75rem' }} className="flex gap-2">
+                      {job.requirements.split(',').map((req, idx) => (
+                        <span key={idx} className="linkedin-pill">
+                          {req.trim()}
+                        </span>
+                      ))}
                     </div>
                   )}
 
                   {!isApplied && (
-                    <div style={{ marginTop: '0.5rem' }}>
+                    <div style={{ marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid #eeeeee' }}>
                       <input
                         type="text"
                         className="form-input"
-                        placeholder="Optional Cover Letter note..."
+                        placeholder="Add a quick note to your application..."
                         value={coverLetters[job.jobId] || ''}
                         onChange={(e) => setCoverLetters({ ...coverLetters, [job.jobId]: e.target.value })}
-                        style={{ fontSize: '0.85rem', padding: '0.5rem 0.75rem' }}
+                        style={{ fontSize: '0.825rem', padding: '0.4rem 0.75rem' }}
                       />
                     </div>
                   )}
@@ -218,10 +235,10 @@ const JobSearch = () => {
               );
             })
           ) : (
-            <div className="glass-panel text-center" style={{ padding: '4rem 2rem' }}>
-              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>💼</div>
-              <h3>No jobs found</h3>
-              <p style={{ color: 'var(--text-secondary)' }}>Check back soon for new openings!</p>
+            <div className="linkedin-card text-center" style={{ padding: '3rem' }}>
+              <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>💼</div>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>No matching job postings</h3>
+              <p style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.875rem' }}>Try refining your search terms or keywords.</p>
             </div>
           )}
         </div>

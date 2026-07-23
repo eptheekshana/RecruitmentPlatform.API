@@ -5,107 +5,132 @@ const featuredJobs = [
   {
     id: 1,
     title: 'Senior Frontend Developer',
-    company: 'TechNova',
-    location: 'Remote',
+    company: 'TechNova Solutions',
+    location: 'Remote (US/Canada)',
     type: 'Full-time',
-    salary: '$120k - $150k',
-    tags: ['React', 'TypeScript', 'Tailwind']
+    salary: '$120k - $150k • Equity',
+    tags: ['React', 'TypeScript', 'CSS/HTML']
   },
   {
     id: 2,
     title: 'Product Designer',
-    company: 'Creative Solutions',
-    location: 'New York, NY',
+    company: 'Creative Edge',
+    location: 'New York, NY (Hybrid)',
     type: 'Full-time',
-    salary: '$90k - $120k',
-    tags: ['Figma', 'UI/UX', 'Wireframing']
+    salary: '$95k - $125k',
+    tags: ['Figma', 'UI/UX', 'Design Systems']
   },
   {
     id: 3,
-    title: 'Backend Engineer',
-    company: 'DataFlow Inc',
+    title: 'Backend Engineer (.NET / C#)',
+    company: 'Enterprise DataFlow',
     location: 'San Francisco, CA',
-    type: 'Contract',
-    salary: '$80/hr - $100/hr',
-    tags: ['Node.js', 'PostgreSQL', 'AWS']
+    type: 'Full-time',
+    salary: '$130k - $160k',
+    tags: ['C#', '.NET Core', 'SQL Server']
   }
 ];
 
 const Home = () => {
   return (
-    <div style={{ overflowX: 'hidden' }}>
-      {/* Hero Section */}
-      <div className="container flex flex-col items-center justify-center text-center animate-fade-in" style={{ minHeight: 'calc(100vh - 150px)', paddingBottom: '4rem' }}>
-        <div style={{ maxWidth: '800px', marginTop: '4rem' }}>
-          <h1 style={{ fontSize: '4rem', marginBottom: '1.5rem', letterSpacing: '-0.02em' }}>
-            Discover the ultimate <br />
-            <span className="text-gradient">Recruitment Platform</span>
-          </h1>
-          <p className="delay-100 animate-fade-in" style={{ fontSize: '1.25rem', color: 'var(--text-secondary)', marginBottom: '2.5rem', maxWidth: '600px', margin: '0 auto 2.5rem' }}>
-            Connect with top talent and discover life-changing career opportunities. The intelligent way to build your team and grow your career.
-          </p>
-          <div className="flex justify-center gap-4 delay-200 animate-fade-in">
-            <Link to="/register" className="btn btn-primary" style={{ padding: '1rem 2rem', fontSize: '1.125rem' }}>Get Started</Link>
-            <Link to="/login" className="btn btn-secondary" style={{ padding: '1rem 2rem', fontSize: '1.125rem' }}>Sign In</Link>
+    <div style={{ paddingBottom: '4rem' }}>
+      <div className="container" style={{ maxWidth: '1128px' }}>
+        {/* LinkedIn Classic Hero Welcome Banner */}
+        <div
+          className="linkedin-card"
+          style={{
+            padding: '3rem 2.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '2rem',
+            marginBottom: '1.5rem',
+            background: 'linear-gradient(135deg, #ffffff 0%, #f4f6f8 100%)'
+          }}
+        >
+          <div style={{ maxWidth: '640px' }}>
+            <h1 style={{ fontSize: '2.5rem', color: 'rgba(0,0,0,0.9)', fontWeight: 300, lineHeight: 1.2, marginBottom: '1rem' }}>
+              Welcome to your <span style={{ color: '#0a66c2', fontWeight: 600 }}>professional recruitment</span> network
+            </h1>
+            <p style={{ fontSize: '1.1rem', color: 'rgba(0,0,0,0.6)', marginBottom: '1.75rem', lineHeight: 1.5 }}>
+              Connect with top companies, manage candidate pipelines, and discover your next major career opportunity.
+            </p>
+            <div className="flex gap-3">
+              <Link to="/register" className="btn-linkedin-primary" style={{ padding: '0.65rem 1.75rem', fontSize: '1rem' }}>
+                Join Now
+              </Link>
+              <Link to="/login" className="btn-linkedin-outline" style={{ padding: '0.65rem 1.75rem', fontSize: '1rem' }}>
+                Sign In
+              </Link>
+            </div>
           </div>
-          
-          <div className="mt-8 delay-300 animate-fade-in glass-panel" style={{ marginTop: '4rem', display: 'flex', justifyContent: 'space-around', padding: '2rem' }}>
-            <div>
-              <h3 style={{ fontSize: '2rem', color: 'var(--text-primary)' }}>10k+</h3>
-              <p style={{ color: 'var(--text-secondary)' }}>Active Jobs</p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', width: '280px', flexShrink: 0 }}>
+            <div className="linkedin-card" style={{ margin: 0, padding: '1rem', textAlign: 'center' }}>
+              <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#0a66c2' }}>10,000+</div>
+              <div style={{ fontSize: '0.825rem', color: 'rgba(0,0,0,0.6)', fontWeight: 500 }}>Active Job Postings</div>
             </div>
-            <div>
-              <h3 style={{ fontSize: '2rem', color: 'var(--text-primary)' }}>50k+</h3>
-              <p style={{ color: 'var(--text-secondary)' }}>Candidates</p>
-            </div>
-            <div>
-              <h3 style={{ fontSize: '2rem', color: 'var(--text-primary)' }}>98%</h3>
-              <p style={{ color: 'var(--text-secondary)' }}>Success Rate</p>
+            <div className="linkedin-card" style={{ margin: 0, padding: '1rem', textAlign: 'center' }}>
+              <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#004182' }}>50,000+</div>
+              <div style={{ fontSize: '0.825rem', color: 'rgba(0,0,0,0.6)', fontWeight: 500 }}>Verified Professionals</div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Featured Jobs Section */}
-      <div style={{ padding: '6rem 0', background: 'rgba(15, 23, 42, 0.02)' }}>
-        <div className="container">
-          <div className="text-center" style={{ marginBottom: '4rem' }}>
-            <h2 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Featured Opportunities</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '1.125rem' }}>Explore some of the most sought-after roles currently available.</p>
+        {/* Featured Opportunities Section */}
+        <div style={{ marginBottom: '1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <h2 style={{ fontSize: '1.35rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>Recommended Jobs For You</h2>
+            <Link to="/login" style={{ fontSize: '0.875rem', color: '#0a66c2', fontWeight: 600 }}>See all jobs →</Link>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '2rem', marginBottom: '4rem' }}>
-            {featuredJobs.map(job => (
-              <div key={job.id} className="glass-panel" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem', transition: 'var(--transition-smooth)' }}
-                   onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.borderColor = 'rgba(37, 99, 235, 0.3)'; e.currentTarget.style.boxShadow = '0 12px 40px rgba(37,99,235,0.1)'; }}
-                   onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--glass-border)'; e.currentTarget.style.boxShadow = 'var(--glass-shadow)'; }}
-              >
-                <div>
-                  <h3 style={{ fontSize: '1.25rem', marginBottom: '0.25rem' }}>{job.title}</h3>
-                  <p style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>{job.company}</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1rem' }}>
+            {featuredJobs.map((job) => (
+              <div key={job.id} className="linkedin-card" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', margin: 0 }}>
+                <div className="flex gap-3 items-start">
+                  <div
+                    style={{
+                      width: '48px',
+                      height: '48px',
+                      borderRadius: '4px',
+                      background: '#0a66c2',
+                      color: '#ffffff',
+                      fontWeight: 700,
+                      fontSize: '1.25rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0
+                    }}
+                  >
+                    {job.company[0]}
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#0a66c2', cursor: 'pointer' }}>{job.title}</h3>
+                    <div style={{ fontSize: '0.875rem', fontWeight: 500, color: 'rgba(0,0,0,0.9)' }}>{job.company}</div>
+                    <div style={{ fontSize: '0.8rem', color: 'rgba(0,0,0,0.6)' }}>{job.location} • {job.type}</div>
+                  </div>
                 </div>
-                
-                <div style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  <div className="flex items-center gap-2"><span>📍</span> {job.location}</div>
-                  <div className="flex items-center gap-2"><span>💼</span> {job.type}</div>
-                  <div className="flex items-center gap-2"><span>💰</span> {job.salary}</div>
+
+                <div style={{ fontSize: '0.85rem', color: '#137333', fontWeight: 600 }}>
+                  {job.salary}
                 </div>
-                
-                <div className="flex" style={{ gap: '0.5rem', flexWrap: 'wrap', marginTop: 'auto', paddingTop: '1rem' }}>
-                  {job.tags.map(tag => (
-                    <span key={tag} style={{ padding: '0.25rem 0.75rem', background: 'rgba(15, 23, 42, 0.05)', borderRadius: '99px', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+
+                <div className="flex gap-2" style={{ flexWrap: 'wrap' }}>
+                  {job.tags.map((tag) => (
+                    <span key={tag} className="linkedin-pill">
                       {tag}
                     </span>
                   ))}
                 </div>
+
+                <div style={{ marginTop: 'auto', paddingTop: '0.5rem', borderTop: '1px solid #eeeeee' }}>
+                  <Link to="/candidate/jobs" className="btn-linkedin-outline" style={{ width: '100%', padding: '0.35rem', fontSize: '0.85rem' }}>
+                    Easy Apply
+                  </Link>
+                </div>
               </div>
             ))}
-          </div>
-
-          <div className="text-center">
-            <Link to="/candidate/jobs" className="btn btn-secondary" style={{ padding: '0.75rem 2rem' }}>
-              View All Open Positions
-            </Link>
           </div>
         </div>
       </div>

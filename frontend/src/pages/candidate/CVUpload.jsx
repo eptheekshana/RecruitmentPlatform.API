@@ -82,7 +82,6 @@ const CVUpload = () => {
     setUploading(true);
     setProgress(0);
 
-    // Simulate progress animation while executing submission
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 90) {
@@ -91,13 +90,12 @@ const CVUpload = () => {
         }
         return prev + 15;
       });
-    }, 150);
+    }, 120);
 
     try {
-      // Call API helper if backend is active, or fallback
       await api.candidate.uploadCV(file).catch(() => {});
     } catch {
-      // Continue locally even if backend is offline
+      // Continue locally
     }
 
     setTimeout(() => {
@@ -122,7 +120,7 @@ const CVUpload = () => {
       setSuccessMessage(`"${file.name}" has been successfully uploaded and attached to your profile!`);
       setFile(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
-    }, 1200);
+    }, 1000);
   };
 
   const handleDropzoneKeyDown = (e) => {
@@ -148,84 +146,76 @@ const CVUpload = () => {
   };
 
   return (
-    <div className="glass-panel animate-fade-in delay-100" style={{ padding: '3rem' }}>
-      <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>CV & Resume Upload</h1>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem' }}>
-        Upload and submit your latest resume to apply for jobs with one click.
+    <div className="linkedin-card" style={{ padding: '1.75rem 2rem' }}>
+      <h1 style={{ fontSize: '1.35rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)', marginBottom: '0.25rem' }}>Manage Resume & CV</h1>
+      <p style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.875rem', marginBottom: '1.5rem' }}>
+        Upload your latest resume to stand out and submit applications instantly.
       </p>
 
       {successMessage && (
-        <div className="alert-box alert-success mb-6" role="status" aria-live="polite" style={{ marginBottom: '1.5rem' }}>
+        <div className="alert-box alert-success" style={{ marginBottom: '1.25rem', padding: '0.65rem 0.85rem', fontSize: '0.85rem' }}>
           <span>✅</span>
           <div>{successMessage}</div>
         </div>
       )}
 
       {error && (
-        <div className="alert-box alert-error mb-6" role="alert" aria-live="assertive" style={{ marginBottom: '1.5rem' }}>
+        <div className="alert-box alert-error" style={{ marginBottom: '1.25rem', padding: '0.65rem 0.85rem', fontSize: '0.85rem' }}>
           <span>⚠️</span>
           <div>{error}</div>
         </div>
       )}
 
-      {/* Active Submitted CV Card if exists */}
+      {/* Active Submitted CV Card */}
       {submittedFile && !file && (
         <div
           style={{
-            marginBottom: '2rem',
-            padding: '1.5rem',
-            borderRadius: '16px',
-            background: 'rgba(16, 185, 129, 0.08)',
-            border: '1px solid rgba(16, 185, 129, 0.3)',
+            marginBottom: '1.5rem',
+            padding: '1.25rem',
+            borderRadius: '6px',
+            background: '#e6f4ea',
+            border: '1px solid #a8dab5',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             gap: '1rem',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div style={{ fontSize: '2.5rem' }}>📄</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+            <div style={{ fontSize: '2rem', color: '#057642' }}>📄</div>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <h3 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--text-primary)' }}>{submittedFile.name}</h3>
-                <span
-                  style={{
-                    background: '#10b981',
-                    color: '#fff',
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
-                    padding: '0.15rem 0.5rem',
-                    borderRadius: '999px',
-                  }}
-                >
+                <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>{submittedFile.name}</h3>
+                <span className="status-badge shortlisted">
                   Active CV
                 </span>
               </div>
-              <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.25rem' }}>
-                Uploaded on {submittedFile.uploadedAt} • {(submittedFile.size / 1024 / 1024).toFixed(2)} MB
+              <p style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.8rem', marginTop: '0.2rem' }}>
+                Uploaded {submittedFile.uploadedAt} • {(submittedFile.size / 1024 / 1024).toFixed(2)} MB
               </p>
             </div>
           </div>
-          <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
             <button
               type="button"
-              className="btn btn-secondary"
+              className="btn-linkedin-outline"
               onClick={() => fileInputRef.current?.click()}
-              style={{ fontSize: '0.875rem', padding: '0.5rem 1rem' }}
+              style={{ fontSize: '0.8rem', padding: '0.3rem 0.85rem' }}
             >
-              Replace CV
+              Replace
             </button>
             <button
               type="button"
               onClick={handleRemoveSubmittedCV}
               style={{
                 background: 'transparent',
-                border: '1px solid rgba(239, 68, 68, 0.4)',
-                color: '#ef4444',
-                borderRadius: '8px',
-                padding: '0.5rem 1rem',
+                border: '1px solid #f5c2c0',
+                color: '#c5221f',
+                borderRadius: '16px',
+                padding: '0.3rem 0.85rem',
                 cursor: 'pointer',
-                fontSize: '0.875rem',
+                fontSize: '0.8rem',
+                fontWeight: 600
               }}
             >
               Remove
@@ -243,13 +233,13 @@ const CVUpload = () => {
         onKeyDown={handleDropzoneKeyDown}
         tabIndex={0}
         role="button"
-        aria-label="Upload resume drop zone. Press Enter or Space to select a file from your computer."
+        aria-label="Upload resume drop zone"
         style={{
-          border: dragActive ? '2px dashed var(--accent-primary)' : '2px dashed var(--glass-border)',
-          borderRadius: '16px',
-          padding: '3.5rem 2rem',
+          border: dragActive ? '2px dashed #0a66c2' : '2px dashed #e0e0e0',
+          borderRadius: '8px',
+          padding: '2.5rem 1.5rem',
           textAlign: 'center',
-          background: dragActive ? 'rgba(37, 99, 235, 0.05)' : 'rgba(15, 23, 42, 0.05)',
+          background: dragActive ? '#e8f0fe' : '#fafafa',
           transition: 'var(--transition-smooth)',
           position: 'relative',
           outline: 'none',
@@ -267,51 +257,47 @@ const CVUpload = () => {
           style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
         />
 
-        <div style={{ fontSize: '3rem', marginBottom: '1rem' }} aria-hidden="true">
+        <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem', color: '#0a66c2' }}>
           📤
         </div>
-        <h2 style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>
+        <h2 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.25rem', color: 'rgba(0,0,0,0.9)' }}>
           {dragActive ? 'Drop your file here...' : 'Drag & drop your resume here'}
         </h2>
-        <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>Supports PDF, DOC, DOCX up to 5MB</p>
+        <p style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.825rem', marginBottom: '1.25rem' }}>Supports PDF, DOC, DOCX up to 5MB</p>
 
         <button
           type="button"
-          className="btn btn-secondary"
+          className="btn-linkedin-outline"
           onClick={() => fileInputRef.current?.click()}
-          style={{ pointerEvents: 'none' }}
+          style={{ pointerEvents: 'none', fontSize: '0.85rem' }}
           tabIndex={-1}
         >
-          Browse Files
+          Browse File
         </button>
       </div>
 
-      {/* File Selected Preview & Submit Area */}
+      {/* Selected File Preview */}
       {file && (
         <div
-          role="region"
-          aria-label="Selected file preview"
           style={{
-            marginTop: '2rem',
-            background: 'rgba(255, 255, 255, 0.05)',
-            padding: '1.5rem',
-            borderRadius: '16px',
-            border: '1px solid var(--glass-border)',
+            marginTop: '1.25rem',
+            background: '#fafafa',
+            padding: '1.25rem',
+            borderRadius: '6px',
+            border: '1px solid #e0e0e0',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: uploading ? '1rem' : '1.5rem' }}>
-            <div style={{ fontSize: '2.5rem' }} aria-hidden="true">
-              📑
-            </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: uploading ? '0.75rem' : '1rem' }}>
+            <div style={{ fontSize: '2rem', color: '#0a66c2' }}>📑</div>
             <div style={{ flex: 1 }}>
-              <div className="flex justify-between" style={{ marginBottom: '0.25rem' }}>
-                <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{file.name}</span>
-                <span style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>
+              <div className="flex justify-between" style={{ marginBottom: '0.2rem' }}>
+                <span style={{ fontWeight: 600, fontSize: '0.9rem', color: 'rgba(0,0,0,0.9)' }}>{file.name}</span>
+                <span style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.8rem' }}>
                   {(file.size / 1024 / 1024).toFixed(2)} MB
                 </span>
               </div>
-              <span style={{ color: 'var(--accent-primary)', fontSize: '0.875rem', fontWeight: 500 }}>
-                {uploading ? `Uploading... ${progress}%` : 'File selected and ready to submit'}
+              <span style={{ color: '#0a66c2', fontSize: '0.8rem', fontWeight: 600 }}>
+                {uploading ? `Uploading... ${progress}%` : 'File ready for submission'}
               </span>
             </div>
 
@@ -319,16 +305,7 @@ const CVUpload = () => {
               <button
                 type="button"
                 onClick={handleRemoveSelectedFile}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: '#ef4444',
-                  cursor: 'pointer',
-                  padding: '0.5rem',
-                  fontSize: '1.25rem',
-                }}
-                title="Remove selected file"
-                aria-label={`Remove file ${file.name}`}
+                style={{ background: 'transparent', border: 'none', color: '#c5221f', cursor: 'pointer', fontSize: '1.25rem' }}
               >
                 ×
               </button>
@@ -336,73 +313,33 @@ const CVUpload = () => {
           </div>
 
           {uploading && (
-            <div style={{ marginBottom: '1.5rem' }}>
-              <div
-                role="progressbar"
-                aria-valuenow={progress}
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-label="Uploading file progress"
-                style={{
-                  width: '100%',
-                  height: '8px',
-                  background: 'rgba(15, 23, 42, 0.1)',
-                  borderRadius: '4px',
-                  overflow: 'hidden',
-                }}
-              >
-                <div
-                  style={{
-                    width: `${progress}%`,
-                    height: '100%',
-                    background: 'var(--accent-gradient)',
-                    transition: 'width 0.2s ease',
-                  }}
-                ></div>
-              </div>
+            <div style={{ marginBottom: '1rem', height: '6px', background: '#e0e0e0', borderRadius: '3px', overflow: 'hidden' }}>
+              <div style={{ width: `${progress}%`, height: '100%', background: '#0a66c2', transition: 'width 0.2s ease' }} />
             </div>
           )}
 
-          {/* Dedicated Submit CV Button */}
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', paddingTop: '0.75rem', borderTop: '1px solid #eeeeee' }}>
             <button
               type="button"
-              className="btn btn-secondary"
+              className="btn-linkedin-outline"
               onClick={handleRemoveSelectedFile}
               disabled={uploading}
+              style={{ fontSize: '0.85rem' }}
             >
               Cancel
             </button>
             <button
               type="button"
-              className="btn btn-primary flex items-center gap-2"
+              className="btn-linkedin-primary"
               onClick={handleSubmitCV}
               disabled={uploading}
-              style={{ padding: '0.75rem 2rem', fontSize: '1rem', fontWeight: 600 }}
+              style={{ fontSize: '0.85rem' }}
             >
-              {uploading ? (
-                <>
-                  <span className="spinner" style={{ width: '1rem', height: '1rem', border: '2px solid transparent', borderTopColor: '#fff', borderRadius: '50%', display: 'inline-block', animation: 'spin 1s linear infinite' }}></span>
-                  Uploading CV...
-                </>
-              ) : (
-                'Submit CV'
-              )}
+              {uploading ? 'Uploading...' : 'Submit CV'}
             </button>
           </div>
         </div>
       )}
-
-      {/* Tips section */}
-      <div style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid var(--glass-border)' }}>
-        <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Tips for a great resume</h2>
-        <ul style={{ color: 'var(--text-secondary)', paddingLeft: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <li>Keep it concise and relevant to the roles you're applying for.</li>
-          <li>Highlight your achievements with quantifiable metrics.</li>
-          <li>Ensure your contact information is up to date.</li>
-          <li>Use standard fonts and clear headings for readability.</li>
-        </ul>
-      </div>
     </div>
   );
 };

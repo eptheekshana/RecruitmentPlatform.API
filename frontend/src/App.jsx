@@ -27,10 +27,9 @@ function App() {
     <AuthProvider>
       <Router>
         <SkipLink />
-        <div className="bg-glow"></div>
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col" style={{ background: '#f3f2ef' }}>
           <Navbar />
-          <main id="main-content" tabIndex="-1" style={{ flex: 1, padding: '2rem 0', outline: 'none' }}>
+          <main id="main-content" tabIndex="-1" style={{ flex: 1, padding: '1.5rem 0', outline: 'none' }}>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />

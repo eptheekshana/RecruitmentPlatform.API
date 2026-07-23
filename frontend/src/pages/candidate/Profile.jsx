@@ -8,7 +8,7 @@ const Profile = () => {
   const [formData, setFormData] = useState({
     skills: 'React, Node.js, C#, SQL',
     experienceLevel: 'Senior',
-    bio: 'Passionate developer building scalable web applications.',
+    bio: 'Passionate software engineer building scalable web applications.',
     resumeUrl: ''
   });
 
@@ -60,39 +60,39 @@ const Profile = () => {
   };
 
   return (
-    <div className="glass-panel animate-fade-in delay-100" style={{ padding: '3rem' }}>
-      <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Candidate Profile</h1>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem' }}>
-        Manage your profile details, skills, and experience level for AI recruitment matching.
+    <div className="linkedin-card" style={{ padding: '1.75rem 2rem' }}>
+      <h1 style={{ fontSize: '1.35rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)', marginBottom: '0.25rem' }}>Edit Profile & Experience</h1>
+      <p style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.875rem', marginBottom: '1.5rem' }}>
+        Keep your background, skills, and summary up to date for candidate recommendations.
       </p>
 
       {formStatus && (
-        <div className={`alert-box ${formStatus.type === 'error' ? 'alert-error' : 'alert-success'}`}>
+        <div className={`alert-box ${formStatus.type === 'error' ? 'alert-error' : 'alert-success'}`} style={{ padding: '0.65rem 0.85rem', fontSize: '0.85rem' }}>
           <span>{formStatus.type === 'error' ? '⚠️' : '✅'}</span>
           <div>{formStatus.message}</div>
         </div>
       )}
 
       {loading ? (
-        <p style={{ color: 'var(--text-secondary)' }}>Loading profile details...</p>
+        <p style={{ color: 'rgba(0,0,0,0.6)' }}>Loading profile details...</p>
       ) : (
         <form onSubmit={handleSubmit}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <FormField id="firstName" label="First Name">
-              <input type="text" value={user?.firstName || 'Sadewma'} disabled style={{ opacity: 0.7 }} />
+              <input type="text" className="form-input" value={user?.firstName || 'Sadewma'} disabled style={{ background: '#f8fafc' }} />
             </FormField>
             <FormField id="lastName" label="Last Name">
-              <input type="text" value={user?.lastName || 'Marasinghe'} disabled style={{ opacity: 0.7 }} />
+              <input type="text" className="form-input" value={user?.lastName || 'Marasinghe'} disabled style={{ background: '#f8fafc' }} />
             </FormField>
           </div>
 
           <FormField id="email" label="Email Address">
-            <input type="email" value={user?.email || 'sadewma@gmail.com'} disabled style={{ opacity: 0.7 }} />
+            <input type="email" className="form-input" value={user?.email || 'sadewma@gmail.com'} disabled style={{ background: '#f8fafc' }} />
           </FormField>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <FormField id="experienceLevel" label="Experience Level">
-              <select name="experienceLevel" value={formData.experienceLevel} onChange={handleChange}>
+              <select className="form-select" name="experienceLevel" value={formData.experienceLevel} onChange={handleChange}>
                 <option value="Entry">Entry Level</option>
                 <option value="Mid">Mid Level (2-4 years)</option>
                 <option value="Senior">Senior Level (5+ years)</option>
@@ -100,9 +100,10 @@ const Profile = () => {
               </select>
             </FormField>
 
-            <FormField id="resumeUrl" label="Resume Document URL">
+            <FormField id="resumeUrl" label="Resume Document Link">
               <input
                 type="text"
+                className="form-input"
                 name="resumeUrl"
                 placeholder="https://example.com/resumes/my_resume.pdf"
                 value={formData.resumeUrl}
@@ -111,9 +112,10 @@ const Profile = () => {
             </FormField>
           </div>
 
-          <FormField id="skills" label="Key Skills" hint="Comma-separated list (e.g. C#, ASP.NET Core, React, SQL)">
+          <FormField id="skills" label="Featured Skills" hint="Comma-separated list (e.g. C#, ASP.NET Core, React, SQL)">
             <input
               type="text"
+              className="form-input"
               name="skills"
               placeholder="e.g. C#, ASP.NET Core, React, SQLite"
               value={formData.skills}
@@ -121,20 +123,20 @@ const Profile = () => {
             />
           </FormField>
 
-          <FormField id="bio" label="Professional Bio" style={{ marginBottom: '2.5rem' }}>
+          <FormField id="bio" label="About / Summary" style={{ marginBottom: '1.5rem' }}>
             <textarea
+              className="form-textarea"
               name="bio"
               rows="5"
               placeholder="Summary of your professional background and goals..."
               value={formData.bio}
               onChange={handleChange}
-              style={{ resize: 'vertical' }}
             />
           </FormField>
 
-          <div className="flex justify-end gap-4">
-            <button type="submit" className="btn btn-primary" disabled={saving}>
-              {saving ? 'Saving...' : 'Save Profile Changes'}
+          <div className="flex justify-end gap-3">
+            <button type="submit" className="btn-linkedin-primary" disabled={saving} style={{ fontSize: '0.9rem', padding: '0.5rem 1.5rem' }}>
+              {saving ? 'Saving...' : 'Save Profile'}
             </button>
           </div>
         </form>

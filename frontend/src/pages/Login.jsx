@@ -24,7 +24,7 @@ const Login = () => {
       if (!value.trim()) {
         error = 'Email address is required.';
       } else if (!emailRegex.test(value.trim())) {
-        error = 'Please enter a valid email address (e.g. name@example.com).';
+        error = 'Please enter a valid email address.';
       }
     } else if (name === 'password') {
       if (!value) {
@@ -69,7 +69,7 @@ const Login = () => {
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length > 0) {
-      setFormStatus({ type: 'error', message: 'Please correct the errors in the form before submitting.' });
+      setFormStatus({ type: 'error', message: 'Please fix form validation issues.' });
       if (validationErrors.email) {
         emailInputRef.current?.focus();
       } else if (validationErrors.password) {
@@ -83,7 +83,7 @@ const Login = () => {
 
     try {
       const user = await login(formData.email, formData.password);
-      setFormStatus({ type: 'success', message: `Welcome back, ${user.firstName}! Redirecting to ${user.role} portal...` });
+      setFormStatus({ type: 'success', message: `Welcome back, ${user.firstName}!` });
 
       setTimeout(() => {
         if (user.role === 'Candidate') {
@@ -97,20 +97,20 @@ const Login = () => {
         } else {
           navigate('/');
         }
-      }, 600);
+      }, 500);
     } catch (err) {
-      setFormStatus({ type: 'error', message: err.message || 'Login failed. Please check your credentials.' });
+      setFormStatus({ type: 'error', message: err.message || 'Sign in failed. Check your email & password.' });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="container flex items-center justify-center animate-fade-in" style={{ minHeight: 'calc(100vh - 100px)' }}>
-      <div className="glass-panel" style={{ width: '100%', maxWidth: '450px', padding: '3rem' }}>
-        <div className="text-center mb-8">
-          <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Welcome Back</h1>
-          <p style={{ color: 'var(--text-secondary)' }}>Sign in to continue to RecruitHub</p>
+    <div className="container flex flex-col items-center justify-center" style={{ minHeight: 'calc(100vh - 120px)', padding: '2rem 1rem' }}>
+      <div className="linkedin-card" style={{ width: '100%', maxWidth: '380px', padding: '2rem 2.25rem' }}>
+        <div style={{ marginBottom: '1.5rem' }}>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)', marginBottom: '0.25rem' }}>Sign in</h1>
+          <p style={{ fontSize: '0.875rem', color: 'rgba(0,0,0,0.6)' }}>Stay updated on your professional world</p>
         </div>
 
         {formStatus && (
@@ -118,16 +118,16 @@ const Login = () => {
             className={`alert-box ${formStatus.type === 'error' ? 'alert-error' : 'alert-success'}`}
             role={formStatus.type === 'error' ? 'alert' : 'status'}
             aria-live="polite"
+            style={{ padding: '0.65rem 0.85rem', fontSize: '0.85rem' }}
           >
-            <span>{formStatus.type === 'error' ? '⚠️' : '✅'}</span>
             <div>{formStatus.message}</div>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} noValidate aria-labelledby="login-heading">
+        <form onSubmit={handleSubmit} noValidate>
           <FormField
             id="email"
-            label="Email Address"
+            label="Email"
             error={touched.email ? errors.email : ''}
             required
           >
@@ -135,34 +135,28 @@ const Login = () => {
               ref={emailInputRef}
               type="email"
               name="email"
-              placeholder="you@example.com"
+              placeholder=""
               value={formData.email}
               onChange={handleChange}
               onBlur={handleBlur}
               autoComplete="email"
               disabled={loading}
+              className={`form-input ${touched.email && errors.email ? 'form-input-error' : ''}`}
             />
           </FormField>
 
-          <div className="form-group" style={{ marginBottom: '2rem' }}>
+          <div className="form-group" style={{ marginBottom: '1.5rem' }}>
             <div className="flex justify-between items-center mb-1">
               <label htmlFor="password" className="form-label" style={{ marginBottom: 0 }}>
-                Password <span style={{ color: '#ef4444' }} aria-hidden="true">*</span>
+                Password <span style={{ color: '#c5221f' }}>*</span>
               </label>
-              <a
-                href="#"
-                onClick={(e) => e.preventDefault()}
-                style={{ fontSize: '0.875rem', color: 'var(--accent-primary)', fontWeight: 500 }}
-              >
-                Forgot password?
-              </a>
             </div>
             <input
               id="password"
               ref={passwordInputRef}
               type="password"
               name="password"
-              placeholder="••••••••"
+              placeholder=""
               value={formData.password}
               onChange={handleChange}
               onBlur={handleBlur}
@@ -171,28 +165,28 @@ const Login = () => {
               className={`form-input ${touched.password && errors.password ? 'form-input-error' : ''}`}
             />
             {touched.password && errors.password && (
-              <p className="form-error-message" role="alert">
-                <span aria-hidden="true">⚠️</span> {errors.password}
+              <p className="form-error-message" role="alert" style={{ fontSize: '0.8rem' }}>
+                ⚠️ {errors.password}
               </p>
             )}
           </div>
 
           <button
             type="submit"
-            className="btn btn-primary"
+            className="btn-linkedin-primary"
             disabled={loading}
-            style={{ width: '100%', padding: '1rem', fontSize: '1.125rem' }}
+            style={{ width: '100%', padding: '0.65rem', fontSize: '1rem' }}
           >
-            {loading ? 'Signing In...' : 'Sign In'}
+            {loading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
 
-        <p className="text-center mt-8" style={{ color: 'var(--text-secondary)' }}>
-          Don't have an account?{' '}
-          <Link to="/register" style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>
-            Sign up
+        <div className="text-center mt-6" style={{ fontSize: '0.875rem', color: 'rgba(0,0,0,0.6)' }}>
+          New to RecruitHub?{' '}
+          <Link to="/register" style={{ color: '#0a66c2', fontWeight: 600 }}>
+            Join now
           </Link>
-        </p>
+        </div>
       </div>
     </div>
   );

@@ -1,11 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import FormField from '../../components/FormField';
 import api from '../../services/api';
 
 const CreateJob = () => {
-  const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     title: '',
     department: 'Engineering',
@@ -68,10 +66,10 @@ const CreateJob = () => {
   };
 
   return (
-    <div className="glass-panel animate-fade-in delay-100" style={{ padding: '3rem' }}>
-      <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Create Job Posting</h1>
-      <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem' }}>
-        Publish a new position to attract top candidate talent.
+    <div className="linkedin-card" style={{ padding: '1.75rem 2rem' }}>
+      <h1 style={{ fontSize: '1.35rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)', marginBottom: '0.25rem' }}>Post a New Position</h1>
+      <p style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.875rem', marginBottom: '1.5rem' }}>
+        Reach millions of qualified professionals across your network.
       </p>
 
       {formStatus && (
@@ -79,13 +77,14 @@ const CreateJob = () => {
           className={`alert-box ${formStatus.type === 'error' ? 'alert-error' : 'alert-success'} flex justify-between items-center`}
           role={formStatus.type === 'error' ? 'alert' : 'status'}
           aria-live="polite"
+          style={{ padding: '0.65rem 0.85rem', fontSize: '0.85rem' }}
         >
           <div className="flex items-center gap-2">
             <span>{formStatus.type === 'error' ? '⚠️' : '✅'}</span>
             <div>{formStatus.message}</div>
           </div>
           {formStatus.type === 'success' && (
-            <Link to="/recruiter/applicants" className="btn btn-secondary" style={{ padding: '0.4rem 1rem', fontSize: '0.875rem' }}>
+            <Link to="/recruiter/applicants" className="btn-linkedin-outline" style={{ padding: '0.25rem 0.75rem', fontSize: '0.8rem' }}>
               View Applicants →
             </Link>
           )}
@@ -97,6 +96,7 @@ const CreateJob = () => {
           <input
             ref={titleRef}
             type="text"
+            className="form-input"
             name="title"
             placeholder="e.g. Senior .NET Full-Stack Engineer"
             value={formData.title}
@@ -106,9 +106,9 @@ const CreateJob = () => {
           />
         </FormField>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <FormField id="department" label="Department" required>
-            <select name="department" value={formData.department} onChange={handleChange} disabled={loading}>
+            <select className="form-select" name="department" value={formData.department} onChange={handleChange} disabled={loading}>
               <option value="Engineering">Engineering</option>
               <option value="Design">Product Design</option>
               <option value="Marketing">Marketing</option>
@@ -120,8 +120,9 @@ const CreateJob = () => {
           <FormField id="location" label="Location" required>
             <input
               type="text"
+              className="form-input"
               name="location"
-              placeholder="e.g. Remote / New York / Colombo"
+              placeholder="e.g. Remote / New York / San Francisco"
               value={formData.location}
               onChange={handleChange}
               required
@@ -133,6 +134,7 @@ const CreateJob = () => {
         <FormField id="requirements" label="Required Skills & Qualifications" hint="Comma-separated list (e.g. C#, ASP.NET Core, React, SQL)">
           <input
             type="text"
+            className="form-input"
             name="requirements"
             placeholder="e.g. C#, ASP.NET Core, React, SQL"
             value={formData.requirements}
@@ -141,9 +143,10 @@ const CreateJob = () => {
           />
         </FormField>
 
-        <FormField id="description" label="Job Description" error={errors.description} required style={{ marginBottom: '2.5rem' }}>
+        <FormField id="description" label="Job Description" error={errors.description} required style={{ marginBottom: '1.5rem' }}>
           <textarea
             ref={descriptionRef}
+            className="form-textarea"
             name="description"
             rows="6"
             placeholder="Detailed description of role responsibilities..."
@@ -154,9 +157,9 @@ const CreateJob = () => {
           />
         </FormField>
 
-        <div className="flex justify-end gap-4">
-          <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? 'Publishing Job...' : 'Publish Position'}
+        <div className="flex justify-end gap-3">
+          <button type="submit" className="btn-linkedin-primary" disabled={loading} style={{ fontSize: '0.9rem', padding: '0.5rem 1.5rem' }}>
+            {loading ? 'Publishing Job...' : 'Post Job'}
           </button>
         </div>
       </form>

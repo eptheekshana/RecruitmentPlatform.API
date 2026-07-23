@@ -1,25 +1,17 @@
 import React from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
 const RecruiterLayout = () => {
   const location = useLocation();
+  const { user } = useAuth();
 
   const navItems = [
-    {
-      name: 'Post a Job',
-      path: '/recruiter/create-job',
-      icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-          <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z" />
-        </svg>
-      )
-    },
     {
       name: 'View Applicants',
       path: '/recruiter/applicants',
       icon: (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
           <circle cx="9" cy="7" r="4" />
           <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -27,15 +19,51 @@ const RecruiterLayout = () => {
         </svg>
       )
     },
+    {
+      name: 'Post a New Job',
+      path: '/recruiter/create-job',
+      icon: (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+          <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z" />
+        </svg>
+      )
+    },
   ];
 
   return (
-    <div className="container flex gap-8 animate-fade-in" style={{ paddingBottom: '4rem' }}>
-      {/* Sidebar Navigation */}
-      <aside style={{ width: '240px', flexShrink: 0 }}>
-        <div className="glass-panel" style={{ padding: '2.5rem 2rem', position: 'sticky', top: '100px' }}>
-          <h2 style={{ fontSize: '1.25rem', marginBottom: '2rem', color: 'var(--text-secondary)' }}>Recruiter Portal</h2>
-          <nav className="flex flex-col gap-2" aria-label="Recruiter Portal Navigation">
+    <div className="container flex gap-6" style={{ paddingBottom: '3rem' }}>
+      {/* Left Sidebar: LinkedIn Recruiter Profile Box */}
+      <aside style={{ width: '225px', flexShrink: 0 }}>
+        <div className="linkedin-profile-card">
+          <div className="linkedin-cover-banner" style={{ background: 'linear-gradient(135deg, #004182 0%, #0a66c2 100%)' }} />
+          <div className="linkedin-avatar-container">
+            <div className="linkedin-avatar-circle" style={{ background: '#004182' }}>
+              {user?.firstName ? user.firstName[0].toUpperCase() : 'R'}
+            </div>
+          </div>
+          <div className="linkedin-profile-info">
+            <div className="linkedin-profile-name">{user?.firstName} {user?.lastName}</div>
+            <div className="linkedin-profile-headline">Talent Acquisition Specialist</div>
+          </div>
+          <div className="linkedin-profile-stats">
+            <div className="linkedin-stat-row">
+              <span>Active Job Posts</span>
+              <span className="linkedin-stat-number">8</span>
+            </div>
+            <div className="linkedin-stat-row">
+              <span>Total Applicants</span>
+              <span className="linkedin-stat-number">64</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation Links */}
+        <div className="linkedin-card" style={{ padding: '0.75rem 0' }}>
+          <div style={{ padding: '0 1rem 0.5rem 1rem', fontSize: '0.8rem', fontWeight: 600, color: 'rgba(0,0,0,0.6)', textTransform: 'uppercase' }}>
+            Recruiter Portal
+          </div>
+          <nav className="flex flex-col">
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;
               return (
@@ -46,17 +74,17 @@ const RecruiterLayout = () => {
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.85rem',
-                    padding: '1.05rem 1.25rem',
-                    borderRadius: '12px',
-                    transition: 'var(--transition-smooth)',
-                    background: isActive ? 'rgba(37, 99, 235, 0.1)' : 'transparent',
-                    color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
+                    gap: '0.75rem',
+                    padding: '0.65rem 1rem',
+                    fontSize: '0.875rem',
+                    color: isActive ? '#0a66c2' : 'rgba(0,0,0,0.7)',
                     fontWeight: isActive ? 600 : 500,
-                    border: isActive ? '1px solid var(--accent-primary)' : '1px solid transparent'
+                    background: isActive ? '#e8f0fe' : 'transparent',
+                    borderLeft: isActive ? '3px solid #0a66c2' : '3px solid transparent',
+                    textDecoration: 'none'
                   }}
                 >
-                  <span style={{ display: 'flex', alignItems: 'center', color: isActive ? 'var(--accent-primary)' : 'var(--text-secondary)' }} aria-hidden="true">{item.icon}</span>
+                  <span style={{ display: 'flex', alignItems: 'center' }}>{item.icon}</span>
                   {item.name}
                 </NavLink>
               );
@@ -65,7 +93,7 @@ const RecruiterLayout = () => {
         </div>
       </aside>
 
-      {/* Main Content Area */}
+      {/* Main Feed Content Area */}
       <div style={{ flex: 1, minWidth: 0 }}>
         <Outlet />
       </div>
