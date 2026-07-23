@@ -497,7 +497,7 @@ a:hover {
   color: var(--linkedin-text-sub);
   text-transform: uppercase;
   border-bottom: 1.5px solid var(--linkedin-border);
-  background-color: #fafafa;
+  background-color: var(--border-subtle);
 }
 
 .linkedin-table td {
@@ -509,5 +509,49 @@ a:hover {
 }
 
 .linkedin-table tr:hover td {
-  background-color: #f8fafc;
+  background-color: var(--primary-light);
 }
+
+/* Custom modern scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-app);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-disabled);
+}
+
+/* Base fade-in transitions */
+.linkedin-card, .linkedin-profile-card, table, form, input, select, textarea, button {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+/* Interactive Card hover effects */
+.linkedin-card:hover, .linkedin-profile-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-light);
+}
+
+/* Custom focus ring styling for accessibilities */
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px var(--primary-light) !important;
+  outline: none;
+}
+
+/* Entry Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}

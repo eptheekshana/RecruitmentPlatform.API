@@ -92,7 +92,7 @@ const UserManagement = () => {
   );
 
   return (
-    <div>
+    <div className="fade-in">
       {toast && (
         <div
           className={`alert-box ${toast.type === 'error' ? 'alert-error' : 'alert-success'}`}
@@ -105,35 +105,46 @@ const UserManagement = () => {
       )}
 
       {/* Main Header */}
-      <div className="linkedin-card" style={{ padding: '1.25rem 1.5rem', marginBottom: '1rem' }}>
-        <h1 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)', marginBottom: '0.2rem' }}>User Directory & Permissions</h1>
-        <p style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.85rem', marginBottom: '1rem' }}>Manage user account roles, permissions, and platform access.</p>
+      <div className="linkedin-card" style={{ padding: '1.25rem 1.5rem', marginBottom: '1.25rem' }}>
+        <h1 style={{ fontSize: '1.35rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.2rem' }}>
+          User Directory & Permissions
+        </h1>
+        <p style={{ color: 'var(--text-sub)', fontSize: '0.85rem', marginBottom: '1rem' }}>
+          Manage user account roles, permissions, and platform access control lists.
+        </p>
 
-        <div>
+        <div style={{ position: 'relative' }}>
+          <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-sub)', display: 'flex', alignItems: 'center' }}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </span>
           <input
             type="text"
             className="form-input"
             placeholder="Search users by name or email..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ paddingLeft: '2.5rem', borderRadius: '20px' }}
           />
         </div>
       </div>
 
       {loading ? (
         <div className="linkedin-card text-center" style={{ padding: '3rem' }}>
-          <p style={{ color: 'rgba(0,0,0,0.6)' }}>Loading user accounts...</p>
+          <p style={{ color: 'var(--text-sub)' }}>Loading user accounts...</p>
         </div>
       ) : (
-        <div className="linkedin-card" style={{ padding: '1rem', overflowX: 'auto' }}>
-          <table className="linkedin-table">
+        <div className="linkedin-card" style={{ padding: '1rem', overflowX: 'auto', margin: 0 }}>
+          <table className="linkedin-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr>
-                <th style={{ width: '22%' }}>User Name</th>
-                <th style={{ width: '32%' }}>Email Address</th>
-                <th style={{ width: '16%' }}>System Role</th>
-                <th style={{ width: '15%' }}>Organization</th>
-                <th style={{ width: '15%', textAlign: 'right' }}>Actions</th>
+                <th style={{ width: '22%', color: 'var(--text-sub)', padding: '0.75rem 1rem' }}>User Name</th>
+                <th style={{ width: '32%', color: 'var(--text-sub)', padding: '0.75rem 1rem' }}>Email Address</th>
+                <th style={{ width: '16%', color: 'var(--text-sub)', padding: '0.75rem 1rem' }}>System Role</th>
+                <th style={{ width: '15%', color: 'var(--text-sub)', padding: '0.75rem 1rem' }}>Organization</th>
+                <th style={{ width: '15%', textAlign: 'right', color: 'var(--text-sub)', padding: '0.75rem 1rem' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -142,18 +153,18 @@ const UserManagement = () => {
                   const isSelf = u.userId === currentUser?.userId;
                   return (
                     <tr key={u.userId}>
-                      <td style={{ fontWeight: 600, color: 'rgba(0,0,0,0.9)' }}>
-                        {u.firstName} {u.lastName} {isSelf && <span style={{ color: '#057642', fontSize: '0.75rem' }}>(You)</span>}
+                      <td style={{ fontWeight: 600, color: 'var(--text-main)', padding: '0.85rem 1rem' }}>
+                        {u.firstName} {u.lastName} {isSelf && <span style={{ color: '#10b981', fontSize: '0.75rem', marginLeft: '4px' }}>(You)</span>}
                       </td>
-                      <td style={{ color: 'rgba(0,0,0,0.6)' }}>{u.email}</td>
-                      <td>
+                      <td style={{ color: 'var(--text-sub)', padding: '0.85rem 1rem' }}>{u.email}</td>
+                      <td style={{ padding: '0.85rem 1rem' }}>
                         {updatingUserId === u.userId ? (
                           <div style={{ display: 'flex', gap: '0.35rem', alignItems: 'center' }}>
                             <select
-                              className="form-select"
-                              value={selectedRole}
-                              onChange={(e) => setSelectedRole(e.target.value)}
-                              style={{ padding: '0.2rem 0.4rem', fontSize: '0.8rem', width: 'auto' }}
+                                className="form-select"
+                                value={selectedRole}
+                                onChange={(e) => setSelectedRole(e.target.value)}
+                                style={{ padding: '0.2rem 0.4rem', fontSize: '0.8rem', width: 'auto', margin: 0 }}
                             >
                               <option value="Candidate">Candidate</option>
                               <option value="Recruiter">Recruiter</option>
@@ -163,14 +174,14 @@ const UserManagement = () => {
                             <button
                               className="btn-linkedin-primary"
                               onClick={() => handleUpdateRole(u.userId, selectedRole)}
-                              style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }}
+                              style={{ padding: '0.25rem 0.55rem', fontSize: '0.75rem' }}
                             >
                               Save
                             </button>
                             <button
                               className="btn-linkedin-outline"
                               onClick={() => setUpdatingUserId(null)}
-                              style={{ padding: '0.2rem 0.5rem', fontSize: '0.75rem' }}
+                              style={{ padding: '0.25rem 0.55rem', fontSize: '0.75rem' }}
                             >
                               Cancel
                             </button>
@@ -181,8 +192,8 @@ const UserManagement = () => {
                           </span>
                         )}
                       </td>
-                      <td style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.85rem' }}>{u.organizationName}</td>
-                      <td style={{ textAlign: 'right' }}>
+                      <td style={{ color: 'var(--text-sub)', fontSize: '0.85rem', padding: '0.85rem 1rem' }}>{u.organizationName}</td>
+                      <td style={{ textAlign: 'right', padding: '0.85rem 1rem' }}>
                         <div style={{ display: 'flex', gap: '0.35rem', justifyContent: 'flex-end' }}>
                           <button
                             className="btn-linkedin-outline"
@@ -196,13 +207,14 @@ const UserManagement = () => {
                             onClick={() => handleDeleteUser(u.userId, u.email)}
                             style={{
                               background: 'transparent',
-                              border: '1px solid #f5c2c0',
-                              color: '#c5221f',
+                              border: '1px solid var(--border)',
+                              color: '#ef4444',
                               borderRadius: '16px',
                               padding: '0.25rem 0.65rem',
                               cursor: 'pointer',
                               fontSize: '0.775rem',
-                              fontWeight: 600
+                              fontWeight: 600,
+                              outline: 'none'
                             }}
                             disabled={isSelf}
                           >
@@ -215,7 +227,7 @@ const UserManagement = () => {
                 })
               ) : (
                 <tr>
-                  <td colSpan="5" style={{ padding: '2rem', textAlign: 'center', color: 'rgba(0,0,0,0.6)' }}>
+                  <td colSpan="5" style={{ padding: '2.5rem', textAlign: 'center', color: 'var(--text-disabled)' }}>
                     No user accounts match your search.
                   </td>
                 </tr>

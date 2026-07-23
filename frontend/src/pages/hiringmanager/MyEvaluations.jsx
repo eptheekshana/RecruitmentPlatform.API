@@ -4,7 +4,6 @@ import { useAuth } from '../../context/AuthContext';
 const MyEvaluations = () => {
   const { token, API_BASE_URL } = useAuth();
   const [evaluations, setEvaluations] = useState([]);
-  const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,7 +28,6 @@ const MyEvaluations = () => {
       if (appRes.ok) {
         appData = await appRes.json();
       }
-      setApplications(appData);
 
       const mappedEvals = evalData.map(ev => {
         const app = appData.find(a => a.applicationId === ev.applicationId);
@@ -56,16 +54,29 @@ const MyEvaluations = () => {
     return 'applied';
   };
 
+  const getBorderColor = (recommendation) => {
+    const r = (recommendation || '').toLowerCase();
+    if (r === 'recommended' || r === 'accepted') return '#10b981'; // Green
+    if (r === 'rejected') return '#ef4444'; // Red
+    return 'var(--primary)'; // Blue/other
+  };
+
   return (
-    <div>
-      <div className="linkedin-card" style={{ padding: '1.25rem 1.5rem', marginBottom: '1rem' }}>
-        <h1 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)', marginBottom: '0.2rem' }}>My Evaluation History</h1>
-        <p style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.85rem' }}>Review candidate ratings and decision remarks submitted by you.</p>
+    <div className="fade-in">
+      {/* Header card */}
+      <div className="linkedin-card" style={{ padding: '1.25rem 1.5rem', marginBottom: '1.25rem' }}>
+        <h1 style={{ fontSize: '1.35rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.2rem' }}>
+          My Evaluation History
+        </h1>
+        <p style={{ color: 'var(--text-sub)', fontSize: '0.85rem' }}>
+          Review scorecard ratings and decision feedback records submitted by you.
+        </p>
       </div>
 
+      {/* List layout */}
       {loading ? (
         <div className="linkedin-card text-center" style={{ padding: '3rem' }}>
-          <p style={{ color: 'rgba(0,0,0,0.6)' }}>Loading evaluation history...</p>
+          <p style={{ color: 'var(--text-sub)' }}>Loading evaluation history...</p>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
@@ -77,16 +88,16 @@ const MyEvaluations = () => {
                 style={{
                   padding: '1.25rem',
                   margin: 0,
-                  borderLeft: `4px solid ${ev.recommendation === 'Recommended' || ev.recommendation === 'Accepted' ? '#057642' : ev.recommendation === 'Rejected' ? '#c5221f' : '#0a66c2'}`
+                  borderLeft: `4px solid ${getBorderColor(ev.recommendation)}`
                 }}
               >
-                <div className="flex justify-between items-start" style={{ marginBottom: '0.75rem' }}>
+                <div className="flex justify-between items-start" style={{ marginBottom: '0.75rem', gap: '0.5rem' }}>
                   <div className="flex gap-3 items-center">
                     <div style={{
                       width: '40px',
                       height: '40px',
                       borderRadius: '50%',
-                      background: '#0a66c2',
+                      background: 'var(--primary)',
                       color: '#fff',
                       fontWeight: 700,
                       display: 'flex',
@@ -96,26 +107,30 @@ const MyEvaluations = () => {
                       {ev.candidateName[0]}
                     </div>
                     <div>
-                      <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'rgba(0,0,0,0.9)', margin: 0 }}>{ev.candidateName}</h3>
-                      <p style={{ color: 'rgba(0,0,0,0.6)', fontSize: '0.8rem', margin: 0 }}>Target Position: <strong>{ev.jobTitle}</strong></p>
+                      <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-main)', margin: 0 }}>
+                        {ev.candidateName}
+                      </h3>
+                      <p style={{ color: 'var(--text-sub)', fontSize: '0.8rem', margin: 0 }}>
+                        Target Position: <strong style={{ color: 'var(--primary)' }}>{ev.jobTitle}</strong>
+                      </p>
                     </div>
                   </div>
-                  <div className="flex flex-col items-end gap-1">
+                  <div className="flex flex-col items-end gap-1" style={{ flexShrink: 0 }}>
                     <span className={`status-badge ${getStatusClass(ev.recommendation)}`}>
                       {ev.recommendation}
                     </span>
-                    <span style={{ fontSize: '0.75rem', color: 'rgba(0,0,0,0.6)' }}>
+                    <span style={{ fontSize: '0.725rem', color: 'var(--text-disabled)' }}>
                       Evaluated {new Date(ev.createdDate).toLocaleDateString()}
                     </span>
                   </div>
                 </div>
 
-                <div style={{ background: '#fafafa', padding: '0.85rem', borderRadius: '6px', border: '1px solid #eeeeee' }}>
-                  <div className="flex justify-between items-center" style={{ marginBottom: '0.35rem' }}>
-                    <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'rgba(0,0,0,0.6)' }}>Scorecard Rating:</span>
-                    <span style={{ fontWeight: 700, color: '#057642', fontSize: '0.9rem' }}>{ev.score} / 10</span>
+                <div style={{ background: 'var(--border-subtle)', padding: '0.85rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                    <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-sub)' }}>Scorecard Rating Rating:</span>
+                    <span style={{ fontWeight: 700, color: '#10b981', fontSize: '0.9rem' }}>{ev.score} / 10</span>
                   </div>
-                  <p style={{ margin: 0, fontSize: '0.85rem', color: 'rgba(0,0,0,0.9)', fontStyle: 'italic' }}>
+                  <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-main)', fontStyle: 'italic', lineHeight: 1.4 }}>
                     "{ev.comments}"
                   </p>
                 </div>
@@ -123,7 +138,7 @@ const MyEvaluations = () => {
             ))
           ) : (
             <div className="linkedin-card text-center" style={{ padding: '3rem' }}>
-              <p style={{ color: 'rgba(0,0,0,0.6)' }}>No candidate evaluation history recorded yet.</p>
+              <p style={{ color: 'var(--text-sub)' }}>No candidate evaluation history recorded yet.</p>
             </div>
           )}
         </div>
